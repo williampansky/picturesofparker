@@ -1,0 +1,30 @@
+// @see https://getuikit.com/docs/width#responsive-width
+/* stylelint-disable */
+$breakpoint-small:      640px   !default;
+$breakpoint-medium:     960px   !default;
+$breakpoint-desktop:    1024px  !default; // standard 'corporate-sized' desktops
+$breakpoint-large:      1200px  !default;
+$breakpoint-xlarge:     1600px  !default;
+
+@mixin breakpoint($point) {
+    @if $point == xlarge {
+        @media (min-width: $breakpoint-xlarge)  { @content ; }
+    }
+
+    @else if $point == large {
+        @media (min-width: $breakpoint-large)   { @content ; }
+    }
+
+    @else if $point == desktop {
+        @media (min-width: $breakpoint-desktop) { @content ; }
+    }
+
+    @else if $point == medium {
+        @media (min-width: $breakpoint-medium)  { @content ; }
+    }
+
+    @else if $point == small {
+        @media (min-width: $breakpoint-small)   { @content ; }
+    }
+}
+/* stylelint-enable */

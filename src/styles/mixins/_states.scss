@@ -1,0 +1,9 @@
+@mixin danger-border {
+    border-color: $color-danger;
+}
+@mixin danger-color {
+    animation-duration: 150ms;
+    /* stylelint-disable */
+    color: $color-danger !important;
+    /* stylelint-enable */
+}

@@ -5,14 +5,11 @@
 module.exports = {
     root: true,
     env: {
-        browser: true,
         node: true
     },
-    extends: [
-        '@nuxtjs',
-        '@vue/standard',
-        // 'plugin:vue/essential',
-        'plugin:prettier/recommended'
+    'extends': [
+        'plugin:vue/essential',
+        '@vue/standard'
     ],
     rules: {
         /**
@@ -21,7 +18,8 @@ module.exports = {
          * @memberof ESLint
          * @see [Docs]{@link https://eslint.org/docs/rules/curly}
          */
-        curly: ['error', 'multi-or-nest', 'consistent'],
+        'curly': ['error', 'multi-or-nest', 'consistent'],
+
 
         /**
          * @summary This rule enforces consistent use of
@@ -32,29 +30,29 @@ module.exports = {
          */
         'comma-dangle': 'off',
 
+
         /**
          * @summary This rule enforces a consistent indentation style.
          * @method indent
          * @memberof ESLint
          * @see [Docs]{@link https://eslint.org/docs/rules/indent}
          */
-        indent: ['error', 4],
+        'indent': ['error', 4],
+
 
         /**
-         * @summary This rule enforces consistent spacing between keys and
-         * values in object literal properties. In the case of long lines,
+         * @summary This rule enforces consistent spacing between keys and 
+         * values in object literal properties. In the case of long lines, 
          * it is acceptable to add a new line wherever whitespace is allowed.
          * @method key-spacing
          * @memberof ESLint
          * @see [Docs]{@link https://eslint.org/docs/rules/key-spacing}
          */
-        'key-spacing': [
-            'error',
-            {
-                // align: 'value',
-                mode: 'minimum'
-            }
-        ],
+        'key-spacing': ['error', {
+            // align: 'value',
+            mode: 'minimum'
+        }],
+
 
         /**
          * @summary This rule disallows calls to methods of the console object.
@@ -64,6 +62,7 @@ module.exports = {
          */
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
 
+
         /**
          * @summary This rule disallows debugger statements.
          * @method no-debugger
@@ -71,6 +70,7 @@ module.exports = {
          * @see [Docs]{@link https://eslint.org/docs/rules/no-debugger}
          */
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+
 
         /**
          * @summary This rule aims to reduce the scrolling required
@@ -82,38 +82,33 @@ module.exports = {
          */
         'no-multiple-empty-lines': 'off',
 
+
         /**
-         * @summary This rule aims to disallow multiple whitespace around
-         * logical expressions, conditional expressions, declarations,
+         * @summary This rule aims to disallow multiple whitespace around 
+         * logical expressions, conditional expressions, declarations, 
          * array elements, object properties, sequences & function parameters.
          * @method no-multi-spaces
          * @memberof ESLint
          * @see [Docs]{@link https://eslint.org/docs/rules/no-multi-spaces}
          */
-        'no-multi-spaces': [
-            'error',
-            {
-                exceptions: {
-                    ImportDeclaration: true,
-                    VariableDeclarator: true
-                }
-            }
-        ],
+        'no-multi-spaces': ['error', { exceptions: { 
+            'ImportDeclaration': true,
+            'VariableDeclarator': true,
+        }}],
+
 
         /**
-         * @summary This rule disallows trailing whitespace (spaces, tabs,
+         * @summary This rule disallows trailing whitespace (spaces, tabs, 
          * and other Unicode whitespace characters) at the end of lines.
          * @method no-trailing-spaces
          * @memberof ESLint
          * @see [Docs]{@link https://eslint.org/docs/rules/no-trailing-spaces}
          */
-        'no-trailing-spaces': [
-            'error',
-            {
-                skipBlankLines: true,
-                ignoreComments: true
-            }
-        ],
+        'no-trailing-spaces': ['error', {
+            'skipBlankLines': true,
+            'ignoreComments': true
+        }],
+
 
         /**
          * @summary This rule enforces consistent use of semicolons.
@@ -121,7 +116,8 @@ module.exports = {
          * @memberof ESLint
          * @see [Github]{@link https://eslint.org/docs/rules/semi#rule-details}
          */
-        semi: [2, 'always'],
+        'semi': [2, 'always'],
+
 
         /**
          * @summary This rule aims to enforce consistent spacing before
@@ -133,6 +129,7 @@ module.exports = {
          */
         'space-before-function-paren': ['error', 'never'],
 
+
         /**
          * @summary Require or disallow spaces before/after unary operators.
          * @method space-unary-ops
@@ -140,15 +137,14 @@ module.exports = {
          * @see [Github]{@link https://eslint.org/docs/rules/space-unary-ops}
          */
         'space-unary-ops': [
-            2,
-            {
-                words: true,
-                nonwords: false,
-                overrides: {
-                    typeof: false
-                }
-            }
-        ],
+            2, {
+              "words": true,
+              "nonwords": false,
+              "overrides": {
+                "typeof": false
+              }
+        }],
+
 
         /**
          * @summary This rule enforces consistent spacing style
@@ -157,14 +153,12 @@ module.exports = {
          * @memberof ESLint
          * @see [Github]{@link https://github.com/vuejs/eslint-plugin-vue/blob/v4.7.1/docs/rules/html-closing-bracket-spacing.md}
          */
-        'vue/html-closing-bracket-spacing': [
-            'error',
-            {
-                startTag: 'never',
-                endTag: 'never',
-                selfClosingTag: 'always'
-            }
-        ],
+        'vue/html-closing-bracket-spacing': ['error', {
+            'startTag': 'never',
+            'endTag': 'never',
+            'selfClosingTag': 'always'
+        }],
+
 
         /**
          * @summary This rule enforces the quotes style of HTML attributes.
@@ -174,6 +168,7 @@ module.exports = {
          */
         'vue/html-quotes': ['error', 'double'],
 
+
         /**
          * @summary This rule enforces a consistent
          * indentation style in `<template>` tags.
@@ -181,16 +176,13 @@ module.exports = {
          * @memberof ESLint
          * @see [Github]{@link https://github.com/vuejs/eslint-plugin-vue/blob/v4.7.1/docs/rules/html-indent.md}
          */
-        'vue/html-indent': [
-            'error',
-            4,
-            {
-                attribute: 0,
-                closeBracket: 0,
-                alignAttributesVertically: true,
-                ignores: []
-            }
-        ],
+        'vue/html-indent': ['error', 4, {
+            'attribute': 0,
+            'closeBracket': 0,
+            'alignAttributesVertically': true,
+            'ignores': []
+        }],
+
 
         /**
          * @summary Limits the maximum number of attributes/properties
@@ -199,16 +191,14 @@ module.exports = {
          * @memberof ESLint
          * @see [Github]{@link https://github.com/vuejs/eslint-plugin-vue/blob/v4.7.1/docs/rules/max-attributes-per-line.md}
          */
-        'vue/max-attributes-per-line': [
-            2,
-            {
-                singleline: 1,
-                multiline: {
-                    max: 1,
-                    allowFirstLine: false
-                }
+        'vue/max-attributes-per-line': [2, {
+            'singleline': 1,
+            'multiline': {
+                'max': 1,
+                'allowFirstLine': false
             }
-        ],
+        }],
+
 
         /**
          * @summary Attribute sorted order enforcement.
@@ -216,23 +206,20 @@ module.exports = {
          * @memberof ESLint
          * @see [Github]{@link https://github.com/vuejs/eslint-plugin-vue/blob/v4.7.1/docs/rules/attributes-order.md}
          */
-        'vue/attributes-order': [
-            2,
-            {
-                order: [
-                    'DEFINITION',
-                    'LIST_RENDERING',
-                    'CONDITIONALS',
-                    'RENDER_MODIFIERS',
-                    'GLOBAL',
-                    'UNIQUE',
-                    'BINDING',
-                    'OTHER_ATTR',
-                    'EVENTS',
-                    'CONTENT'
-                ]
-            }
-        ]
+        'vue/attributes-order': [2, {
+            order: [
+                'DEFINITION',
+                'LIST_RENDERING',
+                'CONDITIONALS',
+                'RENDER_MODIFIERS',
+                'GLOBAL',
+                'UNIQUE',
+                'BINDING',
+                'OTHER_ATTR',
+                'EVENTS',
+                'CONTENT',
+            ]
+        }]
     },
     overrides: [
         {
@@ -242,7 +229,7 @@ module.exports = {
              */
             files: ['*.vue'],
             rules: {
-                indent: 'off',
+                'indent': 'off',
                 /**
                  * @summary This rule is similar to core indent rule,
                  * but it has an option for inside of `<script>` tag.
@@ -250,19 +237,14 @@ module.exports = {
                  * @memberof ESLint
                  * @see [Github]{@link https://github.com/vuejs/eslint-plugin-vue/blob/v4.7.1/docs/rules/script-`indent`.md}
                  */
-                'vue/script-indent': [
-                    'error',
-                    4,
-                    {
-                        baseIndent: 0,
-                        switchCase: 0,
-                        ignores: []
-                    }
-                ]
+                'vue/script-indent': ['error', 4, {
+                    'baseIndent': 0,
+                    'switchCase': 0,
+                    'ignores': []
+                }],
             }
         }
     ],
-    plugins: ['prettier'],
     parserOptions: {
         parser: 'babel-eslint'
     }
