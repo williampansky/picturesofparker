@@ -1,0 +1,21 @@
+# ==============================================================
+# @summary Root ESLint ignore paths/globs.
+# @name .eslintignore
+# @see https://eslint.org/docs/user-guide/configuring#eslintignore
+# @description You can tell ESLint to ignore specific files and 
+# directories by creating an .eslintignore file in your project’s 
+# root directory. This file is a plain text file where each line is a 
+# glob pattern indicating which paths should be omitted from linting.
+# ==============================================================
+
+.DS_Store
+/node_modules
+/**/*.md
+/jsdoc
+/uikit
+jsdocs.config.js
+vue.config.js
+
+# /dist ignored
+# @see https://github.com/vuejs/vue-cli/issues/1453#issuecomment-434940568
+# /dist

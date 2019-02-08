@@ -1,0 +1,584 @@
+{
+	// Place your snippets for vue here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+    // }
+
+    
+    // ================================================
+    // @desc If you wish to use these snippets while working in this project, install the following extension:
+    // @name: Project Snippets
+    // @link: https://marketplace.visualstudio.com/items?itemName=rebornix.project-snippets
+    // @note Snippets with dollar signs ($) must be escaped with double back-slashes; e.g: \\$
+    // ================================================
+
+    
+    // VUE => BASIC COMPONENT SCAFFOLD
+	"Vue Component Scaffold": {
+		"prefix": "vue scaffold",
+		"body": [
+            "<template>",
+            "    <div></div>",
+            "</template>",
+            "",
+            "",
+            "<script>",
+            "/**",
+            " * @summary moduleSummaryHere",
+            " * ",
+            " * @module ModuleName",
+            " * @exports path/to/ModuleName.vue",
+            " * ",
+            " * @author YourName",
+            " * @version 0.1.0",
+            " * ",
+            " * @requires requiredThingNameHere",
+            " * ",
+            " * @prop {Type} propname=default - prop summary",
+            " * ",
+            " * @description",
+            " * moduleDescriptionHere",
+            " * ",
+            " * ```jsx",
+            "exampleGoesHere",
+            " * ```",
+            " */",
+            "",
+            "import Component1 from '@/path/to/Component1.vue';",
+            "",
+            "export default {",
+            "    name: 'ModuleName',",
+            "",
+            "    components: {",
+            "        Component1,",
+            "    },",
+            "",
+            "    data() {",
+            "        return {};",
+            "    },",
+            "",
+            "    props: {",
+            "        propname: {",
+            "            type: String,",
+            "            default: null",
+            "        }",
+            "    },",
+            "",
+            "    computed: {},",
+            "    mounted() {},",
+            "    beforeDestroy() {},",
+            "",
+            "    methods: {",
+            "        /**",
+            "         * @summary methodSummary",
+            "         * @method methodName",
+            "         * @inner",
+            "         */",
+            "        methodName() {}",
+            "    },",
+            "};",
+            "</script>",
+            "",
+            "",
+            "<style lang=\"scss\">",
+            "// Unscoped styles",
+            "</style>",
+            "",
+            "",
+            "<style lang=\"scss\" scoped>",
+            "// Scoped styles",
+            "</style>",
+            "",
+		],
+		"description": "Skeleton scaffolding layout for a new Vue component."
+    },
+    
+
+    // ESLint => DISABLE
+	"ESLint Disable": {
+		"prefix": "lint disable",
+		"body": [
+			"/* eslint-disable */"
+		],
+		"description": "Disable ESLint."
+	},
+
+
+	// ESLint => DISABLE NEXT LINE
+	"ESLint Disable Next Line": {
+		"prefix": "lint next",
+		"body": [
+			"/* eslint-disable-next-line */"
+		],
+		"description": "Disable ESLint on the next line of code."
+	},
+
+
+	// ESLint => ENABLE
+	"ESLint Enable": {
+		"prefix": "lint enable",
+		"body": [
+			"/* eslint-enable */"
+		],
+		"description": "Enable ESLint."
+	},
+    
+    
+	// DOCS => BASICS
+	"JSDoc Basic": {
+        "prefix": "doc basic",
+		"body": [
+            "/**",
+			" * descriptionHere",
+			" * ",
+			" * @name commentName",
+			" * @file path/to/file.js",
+			" * @author YourName",
+			" * @version 1.0.0",
+			" */"
+		],
+		"description": "A basic JSDoc comment block."
+	},
+    
+    
+	// DOCS => MODULES
+	"JSDoc Module": {
+        "prefix": "doc module",
+		"body": [
+            "/**",
+			" * @summary moduleSummaryHere",
+			" * ",
+			" * @module moduleName",
+			" * @exports path/to/file.vue",
+			" * ",
+			" * @author YourName",
+			" * @version 1.0.0",
+			" * ",
+			" * @requires requiredModuleName",
+			" * ",
+			" * @prop {Type} propName=default - propSummary",
+			" * ",
+			" * @description",
+			" * moduleDescriptionHere",
+			" * ",
+            " * ```jsx",
+			"exampleGoesHere",
+            " * ```",
+			" */"
+		],
+		"description": "A module JSDoc comment block."
+	},
+    
+    
+	// DOCS => METHODS
+	"JSDoc Method": {
+        "prefix": "doc method",
+		"body": [
+            "/**",
+			" * @summary methodSummaryHere",
+			" * ",
+			" * @method methodName",
+			" * ",
+            " * @description",
+            " * methodDescriptionHere",
+            " * ```jsx",
+			" * exampleGoesHere ",
+            " * ```",
+			" */"
+		],
+		"description": "A method JSDoc comment block."
+	},
+    
+    
+	// DOCS => FUNCTIONS
+	"JSDoc Function": {
+        "prefix": "doc function",
+		"body": [
+            "/**",
+			" * @function functionName",
+			" * @description functionSummaryHere",
+			" * ",
+			" * @param {Type} paramName Description of parameter.",
+			" * ",
+			" * @throws {ReferenceError} If any of the params aren't found or were entered incorrectly.",
+			" * ",
+			" * @author YourName",
+			" * @version 1.0.0",
+			" */"
+		],
+		"description": "A basic JSDoc comment block."
+    },
+    
+
+	// DOCS => PROPERTY
+	"JSDoc Property": {
+		"prefix": "doc prop",
+		"body": [
+			"@prop {Type} propName=default - propSummary"
+		],
+		"description": "A JSDoc property comment."
+	},
+
+
+	// DOCS => ARGUMENT
+	"JSDoc Argument": {
+		"prefix": "doc arg",
+		"body": [
+			"@arg {Type} argName=default - argSummary"
+		],
+		"description": "A JSDoc argument comment."
+	},
+
+
+	// DOCS => PARAMETER
+	"JSDoc Parameter": {
+		"prefix": "doc param",
+		"body": [
+			"@param {Type} paramName=default - paramSummary"
+		],
+		"description": "A JSDoc parameter comment."
+	},
+    
+
+    // STYLELINT => DISABLE
+    "Stylelint Disable": {
+        "prefix": "lint disable",
+        "body": [
+            "/* stylelint-disable */"
+        ],
+        "description": "Disable Stylelint."
+    },
+
+
+    // STYLELINT => DISABLE NEXT LINE
+    "Stylelint Disable Next Line": {
+        "prefix": "lint next",
+        "body": [
+            "/* stylelint-disable-next-line */"
+        ],
+        "description": "Disable Stylelint on the next line of code."
+    },
+
+
+    // STYLELINT => ENABLE
+    "Stylelint Enable": {
+        "prefix": "lint enable",
+        "body": [
+            "/* stylelint-enable */"
+        ],
+        "description": "Enable Stylelint."
+    },
+
+
+    // IMPORTS => MIXINS => loading
+    "Loading Mixin": { "prefix": "import loading", "body": [ "import loading from '@/mixins/loading.js';" ], "description": "Import ./mixins/loading.js"
+    },
+    // IMPORTS => MIXINS => helpers.numbers
+    "Numbers Mixin": { "prefix": "import numbers", "body": [ "import numberHelpers from '@/mixins/helpers.numbers.js';" ], "description": "Import ./mixins/helpers.numbers.js"
+    },
+    // IMPORTS => MIXINS => custom-vuelidate
+    "Vuelidate Mixin": { "prefix": "import custom vuelidate", "body": [ "import customVuelidate from '@/mixins/custom-vuelidate.js';" ], "description": "Import ./mixins/custom-vuelidate.js"
+    },
+
+
+
+
+    // IMPORTS => COMPONENTS
+    "AppBadge": { "prefix":"import AppBadge", "body":"import AppBadge from '@/components/AppBadge.vue';", "description": "Import AppBadge.vue" },
+    "AppDrop": { "prefix":"import AppDrop", "body":"import AppDrop from '@/components/AppDrop.vue';", "description": "Import AppDrop.vue" },
+    "AppIcon": { "prefix":"import AppIcon", "body":"import AppIcon from '@/components/AppIcon.vue';", "description": "Import AppIcon.vue" },
+    "AppNumber": { "prefix":"import AppNumber", "body":"import AppNumber from '@/components/AppNumber.vue';", "description": "Import AppNumber.vue" },
+    "AppNotification": { "prefix":"import AppNotification", "body":"import AppNotification from '@/components/AppNotification.vue';", "description": "Import AppNotification.vue" },
+    "AppTransition": { "prefix":"import AppTransition", "body":"import AppTransition from '@/components/AppTransition.vue';", "description": "Import AppTransition.vue" },
+
+    // IMPORTS => COMPONENTS => ALERTS
+    "AppAlert": { "prefix":"import AppAlert", "body":"import AppAlert from '@/components/alerts/AppAlert.vue';", "description": "Import AppAlert.vue" },
+
+    // IMPORTS => COMPONENTS => BUTTONS
+    "AppButton": { "prefix":"import AppButton", "body":"import AppButton from '@/components/buttons/AppButton.vue';", "description": "Import AppButton.vue" },
+    "BlankButton": { "prefix":"import BlankButton", "body":"import BlankButton from '@/components/buttons/BlankButton.vue';", "description": "Import BlankButton.vue" },
+    "CircleIconButton": { "prefix":"import CircleIconButton", "body":"import CircleIconButton from '@/components/buttons/CircleIconButton.vue';", "description": "Import CircleIconButton.vue" },
+    "DashboardButton": { "prefix":"import DashboardButton", "body":"import DashboardButton from '@/components/buttons/DashboardButton.vue';", "description": "Import DashboardButton.vue" },
+    "RemoveButton": { "prefix":"import RemoveButton", "body":"import RemoveButton from '@/components/buttons/RemoveButton.vue';", "description": "Import RemoveButton.vue" },
+    "TextButton": { "prefix":"import TextButton", "body":"import TextButton from '@/components/buttons/TextButton.vue';", "description": "Import TextButton.vue" },
+
+    // IMPORTS => COMPONENTS => CARDS
+    "AppCard": { "prefix":"import AppCard", "body":"import AppCard from '@/components/cards/AppCard.vue';", "description":"Import AppCard.vue" },
+    "RateCard": { "prefix":"import RateCard", "body":"import RateCard from '@/components/cards/RateCard.vue';", "description":"Import RateCard.vue" },
+    "RoomCard": { "prefix":"import RoomCard", "body":"import RoomCard from '@/components/cards/RoomCard.vue';", "description":"Import RoomCard.vue" },
+
+    // IMPORTS => COMPONENTS => FORMS
+    "FormCheckbox": { "prefix":"import FormCheckbox", "body":"import FormCheckbox from '@/components/forms/FormCheckbox.vue';", "description":"Import FormCheckbox.vue" },
+    "FormCountrySelect": { "prefix":"import FormCountrySelect", "body":"import FormCountrySelect from '@/components/forms/FormCountrySelect.vue';", "description":"Import FormCountrySelect.vue" },
+    "FormInput": { "prefix":"import FormInput", "body":"import FormInput from '@/components/forms/FormInput.vue';", "description":"Import FormInput.vue" },
+    "FormMultiselect": { "prefix":"import FormMultiselect", "body":"import FormMultiselect from '@/components/forms/FormMultiselect.vue';", "description":"Import FormMultiselect.vue" },
+    "FormRadio": { "prefix":"import FormRadio", "body":"import FormRadio from '@/components/forms/FormRadio.vue';", "description":"Import FormRadio.vue" },
+    "FormSelect": { "prefix":"import FormSelect", "body":"import FormSelect from '@/components/forms/FormSelect.vue';", "description":"Import FormSelect.vue" },
+    "FormStateSelect": { "prefix":"import FormStateSelect", "body":"import FormStateSelect from '@/components/forms/FormStateSelect.vue';", "description":"Import FormStateSelect.vue" },
+    "FormTextarea": { "prefix":"import FormTextarea", "body":"import FormTextarea from '@/components/forms/FormTextarea.vue';", "description":"Import FormTextarea.vue" },
+
+    // IMPORTS => COMPONENTS => LAYOUT
+    "LayoutTwoColumn": { "prefix":"import LayoutTwoColumn", "body":"import LayoutTwoColumn from '@/components/layout/LayoutTwoColumn.vue';", "description":"Import LayoutTwoColumn.vue" },
+
+    // IMPORTS => COMPONENTS => LOADERS
+    "CardPlaceholder": { "prefix":"import CardPlaceholder", "body":"import CardPlaceholder from '@/components/loaders/CardPlaceholder.vue';", "description":"Import CardPlaceholder.vue" },
+
+    // IMPORTS => COMPONENTS => MODALS
+    "AppModal": { "prefix":"import AppModal", "body":"import AppModal from '@/components/modals/AppModal.vue';", "description":"Import AppModal.vue" },
+    "ErrorsModal": { "prefix":"import ErrorsModal", "body":"import ErrorsModal from '@/components/modals/ErrorsModal.vue';", "description":"Import ErrorsModal.vue" },
+    "ModalFull": { "prefix":"import ModalFull", "body":"import ModalFull from '@/components/modals/ModalFull.vue';", "description": "Import ModalFull.vue" },
+    "ModalFullPrompt": { "prefix":"import ModalFullPrompt", "body":"import ModalFullPrompt from '@/components/modals/ModalFullPrompt.vue';", "description": "Import ModalFullPrompt.vue" },
+    "ModalPrompt": { "prefix":"import ModalPrompt", "body":"import ModalPrompt from '@/components/modals/ModalPrompt.vue';", "description": "Import ModalPrompt.vue" },
+    "ModalWide": { "prefix":"import ModalWide", "body":"import ModalWide from '@/components/modals/ModalWide.vue';", "description": "Import ModalWide.vue" },
+
+    // IMPORTS => COMPONENTS => NAV
+    "ScrollspyNav": { "prefix":"import ScrollspyNav", "body":"import ScrollspyNav from '@/components/nav/ScrollspyNav.vue';", "description": "Import ScrollspyNav.vue" },
+    "SessionTabSwitcher": { "prefix":"import SessionTabSwitcher", "body":"import SessionTabSwitcher from '@/components/nav/SessionTabSwitcher.vue';", "description": "Import SessionTabSwitcher.vue" },
+
+    // IMPORTS => COMPONENTS => SECTIONS
+    "CollapsibleSection": { "prefix":"import CollapsibleSection", "body":"import CollapsibleSection from '@/components/sections/CollapsibleSection.vue';", "description": "Import CollapsibleSection.vue" },
+
+    // IMPORTS => COMPONENTS => TABLES
+    "AppTable": { "prefix":"import AppTable", "body":"import AppTable from '@/components/tables/AppTable.vue';", "description": "Import AppTable.vue" },
+
+    // IMPORTS => COMPONENTS => TYPOGRAPHY
+    "DeveloperLabel": { "prefix":"import DeveloperLabel", "body":"import DeveloperLabel from '@/components/typography/DeveloperLabel.vue';", "description": "Import DeveloperLabel.vue" },
+    "HeadingLine": { "prefix":"import HeadingLine", "body":"import HeadingLine from '@/components/typography/HeadingLine.vue';", "description": "Import HeadingLine.vue" },
+    "TextLabel": { "prefix":"import TextLabel", "body":"import TextLabel from '@/components/typography/TextLabel.vue';", "description": "Import TextLabel.vue" },
+    "TextLeader": { "prefix":"import TextLeader", "body":"import TextLeader from '@/components/typography/TextLeader.vue';", "description": "Import TextLeader.vue" },
+    "TwoTierTextBlock": { "prefix":"import TwoTierTextBlock", "body":"import TwoTierTextBlock from '@/components/typography/TwoTierTextBlock.vue';", "description": "Import TwoTierTextBlock.vue" },
+
+
+    // COMPONENTS => AppIcon
+    "[Component] AppIcon": {
+        "prefix": "AppIcon",
+        "body": [
+            "<AppIcon icon=\"$0\" />"
+        ],
+        "description": "AppIcon component element"
+    },
+
+
+    // COMPONENTS => TwoTierTextBlock
+    "[Component] TwoTierTextBlock": {
+        "prefix": "TwoTierTextBlock",
+        "body": [
+            "<TwoTierTextBlock",
+            "subtitle=\"SUBTITLE\"",
+            "title=\"TITLE\" />"
+        ],
+        "description": "TwoTierTextBlock component element"
+    },
+
+
+    // COMPONENTS => AppNotification
+    "[Event] AppNotification": {
+        "prefix": "emit notification",
+        "body": [
+            "this.\\$root.\\$emit('show-notification', {",
+            "    message: 'message',",
+            "    type: 'type',",
+            "});"
+        ],
+        "description": "Emit notification"
+    },
+
+
+    // MIXINS => CUSTOM-VUELIDATE => clearErrors()
+    "[Mixin] clearErrors": {
+        "prefix": "mixin clearErrors",
+        "body": [
+            "@blur=\"clearErrors(key='KEY', group='GROUP')\""
+        ],
+        "description": "Provides clearErrors() method from custom-vuelidate.js"
+    },
+
+
+    // MIXINS => NUMBERS => formattedNumber()
+    "[Mixin] formattedNumber": {
+        "prefix": "mixin formattedNumber",
+        "body": [
+            "formattedNumber($0)"
+        ],
+        "description": "Format a number with commas and fixed to two decimals."
+    },
+
+
+    // MIXINS => NUMBERS => differenceBetween()
+    "[Mixin] differenceBetween": {
+        "prefix": "mixin differenceBetween",
+        "body": [
+            "differenceBetween(a, b)"
+        ],
+        "description": "Get the difference between two numbers."
+    },
+
+
+    // MIXINS => NUMBERS => addCommasToNumbers()
+    "[Mixin] addCommasToNumbers": {
+        "prefix": "mixin addCommasToNumbers",
+        "body": [
+            "addCommasToNumbers($0)"
+        ],
+        "description": "Adds commas to every third number."
+    },
+
+
+    // COMPONENTS => SmoothReflow
+    "SmoothReflow": {
+        "prefix": "smoothreflow",
+        "body": [
+            "<SmoothReflow>$0</SmoothReflow>"
+        ],
+        "description": "SmoothReflow component."
+    },
+
+
+    // $store.session.getters => guestName
+    "Guest Name": {
+        "prefix": "$store guestName",
+        "body": [
+            "this.\\$store.getters.guestName"
+        ],
+        "description": "Returns formatted guest name."
+    },
+
+
+    // $mq => :class
+    "$mq class": {
+        "prefix": "$mq class",
+        "body": [
+            ":class=\"\\$mq | mq({ s: 'class', m: 'class', l: 'class', xl: 'class' })\""
+        ],
+        "description": "$mq controlled class function."
+    },
+
+
+    // SCSS => MIXINS => Animation
+    "[Sass, Mixin] Animation": {
+        "prefix": "animation",
+        "body": [
+            "@include animation('$0');"
+        ],
+        "description": "Sass @animation mixin."
+    },
+
+
+    // SCSS => MIXINS => display-flex
+    "[Sass, Mixin] Display Flex": {
+        "prefix": "display-flex",
+        "body": [
+            "@include display-flex(row nowrap, center, space-between);"
+        ],
+        "description": "Frequently used display:flex mixin settings."
+    },
+
+
+    // SCSS => MIXINS => position-absolute
+    "[Sass, Mixin] Position Absolute": {
+        "prefix": "position-absolute",
+        "body": [
+            "@include position-absolute(top, right, bottom, left);"
+        ],
+        "description": "Applies `position: absolute` and any supplied positioning parameters."
+    },
+
+
+    // SCSS => MIXINS => position-fixed
+    "[Sass, Mixin] Position Fixed": {
+        "prefix": "position-fixed",
+        "body": [
+            "@include position-fixed(top, right, bottom, left);"
+        ],
+        "description": "Applies `position: fixed` and any supplied positioning parameters."
+    },
+
+
+    // SCSS => MIXINS => position-icon
+    "[Sass, Mixin] Position Icon": {
+        "prefix": "position-icon",
+        "body": [
+            "@include position-icon(bottom);"
+        ],
+        "description": "Relative icon 1px fix. Tweaks positioning of icons for visual aesthetics."
+    },
+
+
+    // SCSS => MIXINS => linear-gradient
+    "[Sass, Mixin] Linear Gradient": {
+        "prefix": "linear-gradient",
+        "body": [
+            "@include linear-gradient(direction, color_stops);"
+        ],
+        "description": "Linear gradient mixin."
+    },
+
+
+    // SCSS => MIXINS => size
+    "[Sass, Mixin] Size": {
+        "prefix": "size",
+        "body": [
+            "@include size(width, height);"
+        ],
+        "description": "Defines width (required), and height (optional)."
+    },
+
+
+    // SCSS => MIXINS => breakpoints => small
+    "[Sass, Mixin] Breakpoint(small)": {
+        "prefix": "breakpoint 1-small",
+        "body": [
+            "@include breakpoint('small') {$0}"
+        ],
+        "description": "640px"
+    },
+
+
+    // SCSS => MIXINS => breakpoints => medium
+    "[Sass, Mixin] Breakpoint(medium)": {
+        "prefix": "breakpoint 2-medium",
+        "body": [
+            "@include breakpoint('medium') {$0}"
+        ],
+        "description": "960px"
+    },
+
+
+    // SCSS => MIXINS => breakpoints => desktop
+    "[Sass, Mixin] Breakpoint(desktop)": {
+        "prefix": "breakpoint 3-desktop",
+        "body": [
+            "@include breakpoint('desktop') {$0}"
+        ],
+        "description": "1024px"
+    },
+
+
+    // SCSS => MIXINS => breakpoints => large
+    "[Sass, Mixin] Breakpoint(large)": {
+        "prefix": "breakpoint 4-large",
+        "body": [
+            "@include breakpoint('large') {$0}"
+        ],
+        "description": "1200px"
+    },
+
+
+    // SCSS => MIXINS => breakpoints => xlarge
+    "[Sass, Mixin] Breakpoint(xlarge)": {
+        "prefix": "breakpoint 5-xlarge",
+        "body": [
+            "@include breakpoint('xlarge') {$0}"
+        ],
+        "description": "1600px"
+    },
+}
