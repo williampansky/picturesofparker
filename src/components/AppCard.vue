@@ -2,9 +2,8 @@
     <article
     v-masonry-tile
     class="card">
-        <AppImage :src="src" />
         <header>
-            <h1>{{ title }}</h1>
+            <AppImage :src="src" />
         </header>
         <footer v-if="tags.length">
             <AppTag
@@ -42,8 +41,38 @@ export default {
 
 <style lang="scss" scoped>
 article {
-    img {
+    background: #fff;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.0675),
+        0 1px 2px rgba(0, 0, 0, 0.24);
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &:hover {
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+            0 10px 10px rgba(0, 0, 0, 0.12);
+    }
+
+    header {
+        box-sizing: border-box;
         max-width: 40vw;
+        max-height: auto;
+        overflow: hidden;
+    }
+
+    img {
+        box-sizing: border-box;
+        height: auto;
+        max-width: 100%;
+        vertical-align: middle;
+    }
+
+    footer {
+        display: none;
+        box-sizing: border-box;
+        @include position-absolute(auto, auto, 10px, 5px);
     }
 }
 </style>
