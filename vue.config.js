@@ -9,15 +9,36 @@
  */
 
 const path = require('path');
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 // const workboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
     outputDir: 'dist',
 
     /**
-     * @prop {String} assetsDir=media - Assets will be referenced using /media as the base URL
+     * @prop {String} assetsDir=media - Assets will
+     * be referenced using /assets as the base URL.
      */
-    assetsDir: 'media',
+    assetsDir: 'assets',
+
+    configureWebpack: {
+        plugins: [
+            new OptimizeCSSPlugin({
+                assetNameRegExp: /\.css$/g,
+                cssProcessor: require('cssnano'),
+                cssProcessorPluginOptions: {
+                    preset: ['default', {
+                        safe: true,
+                        map: { inline: false },
+                        discardComments: {
+                            removeAll: true
+                        }
+                    }],
+                },
+                canPrint: true
+            }),
+        ]
+    },
 
     chainWebpack: config => {
         // Development only plugins

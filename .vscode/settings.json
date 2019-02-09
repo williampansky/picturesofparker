@@ -21,12 +21,12 @@
         "ignorePath": ".eslintignore",
         "ignore": true
     },
-    "eslint.workingDirectories": ["./src"],
+    // "eslint.workingDirectories": ["."],
     "search.exclude": {
         "**/bower_components": true,
         "**/jspm_packages": true,
         "**/node_modules": true,
         "**/ui/docs": true
     },
-    "prettier.semi": true
+    // "prettier.semi": true
 }

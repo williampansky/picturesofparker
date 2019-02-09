@@ -15,6 +15,10 @@
         <meta name="robots" content="noindex, nofollow">
         <meta name="theme-color" content="#333">
 
+        <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+
         <% for (key in htmlWebpackPlugin.files.css) { %>
             <link
             href="<%= htmlWebpackPlugin.files.css[key] %>" rel="stylesheet" />
@@ -33,5 +37,10 @@
         type="text/javascript"
         src="<%= htmlWebpackPlugin.files.chunks[key].entry %>"></script>
         <% } %>
+
+        <script
+        async
+        defer
+        src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.0.0/masonry.pkgd.min.js"></script>
     </body>
 </html>

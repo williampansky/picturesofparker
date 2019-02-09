@@ -101,18 +101,13 @@ em {
 //_____________________________________
 // TYPOGRAPHY => cursor:default
 // Applies default cursor across the board for the following tags
-/* stylelint-disable */
 em,
 h1, h2, h3, h4, h5, h6,
 label,
-p,
-span,
-strong,
+p, span, strong,
 th, td {
     cursor: default;
-    cursor: inherit;
 }
-/* stylelint-enable */
 
 
 //_____________________________________

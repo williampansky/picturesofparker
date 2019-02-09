@@ -1,17 +1,16 @@
 <template>
-    <figure>
-        <!-- <figcaption>Image</figcaption> -->
-        <picture>
+    <!-- <figure> -->
+    <!-- <figcaption>Image</figcaption> -->
+    <!-- <picture>
             <source
-            srcset="~/static/test-vertical.jpg"
+            :srcset="src"
             media="(min-width: 600px)"
-            >
-            <img
-            src="~/static/test-vertical.jpg"
-            alt="MDN"
-            >
-        </picture>
-    </figure>
+            > -->
+    <img
+    :src="src"
+    >
+    <!-- </picture>
+    </figure> -->
 </template>
 
 
@@ -22,6 +21,11 @@ export default {
         return {
             max: false
         };
+    },
+    props: {
+        src: {
+            type: String
+        }
     }
 };
 </script>
@@ -30,9 +34,14 @@ export default {
 <style lang="scss" scoped>
 picture {
     display: block;
+    // max-width: 40vw;
 }
 
-img {
-    width: 100vw;
+figure {
+    margin: 0;
 }
+
+// img {
+//     width: 100vw;
+// }
 </style>

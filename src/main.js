@@ -17,6 +17,9 @@ import store from './store';
 import router from './router';
 import axios from 'axios';
 import SmoothReflow from './components/SmoothReflow';
+import { VueMasonryPlugin } from 'vue-masonry';
+
+Vue.use(VueMasonryPlugin);
 
 
 
@@ -103,6 +106,8 @@ Vue.use(VueMq, {
  * Plugin for VueJS 2.x accepts shortcuts globaly and in a single listener.
  */
 Vue.use(require('vue-shortkey'));
+Vue.use(require('normalize.css'));
+Vue.use(require('milligram'));
 
 
 

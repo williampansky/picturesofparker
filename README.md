@@ -1,22 +1,26 @@
 # picturesofparker
 
-> My marvelous Nuxt.js project
+           __.                                              
+        .-".'                      .--.            _..._    
+      .' .'                     .'    \       .-""  __ ""-. 
+     /  /                     .'       : --..:__.-""  ""-. \
+    :  :                     /         ;.d$$    sbp_.-""-:_:
+    ;  :                    : ._       :P .-.   ,"TP        
+    :   \                    \  T--...-; : d$b  :d$b        
+     \   `.                   \  `..'    ; $ $  ;$ $        
+      `.   "-.                 ).        : T$P  :T$P        
+        \..---^..             /           `-'    `._`._     
+       .'        "-.       .-"                     T$$$b    
+      /             "-._.-"               ._        '^' ;   
+     :                                    \.`.         /    
+     ;                                -.   \`."-._.-'-'     
+    :                                 .'\   \ \ \ \         
+    ;  ;                             /:  \   \ \ . ;        
+> Art by Blazej Kozlowski
 
-## Build Setup
+## What this app does
+This site/webapp/whatcha-callits features a plethora of photos of our dog.
 
-``` bash
-# install dependencies
-$ yarn install
-
-# serve with hot reload at localhost:3000
-$ yarn run dev
-
-# build for production and launch server
-$ yarn run build
-$ yarn start
-
-# generate static project
-$ yarn run generate
-```
-
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+- **Taggable:** Photos can be tagged; e.g: `sleeping` or `park`.
+- **Searchable:** Results drawn from the queried tag(s).
+- **Downloadable:** Photos can easily be downloaded to your device.
