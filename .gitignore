@@ -16,6 +16,11 @@ node_modules
 
 
 # ====================================================
+# Auth files
+/src/auth/credentials.json
+
+
+# ====================================================
 # Map files; only needed for local development sourcemaps
 *.map
 

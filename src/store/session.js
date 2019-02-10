@@ -8,6 +8,8 @@
 
 const defaultState = () => {
     return {
+        modalOpen: false,
+        unsplash: [],
         stay: {
             // date: {
             //     start: new Date(),
@@ -22,9 +24,12 @@ export default {
     state: defaultState(),
 
     mutations: {
-        // setSessionId(state, id) {
-        //     state.id = id;
-        // },
+        openModal(state) { state.modalOpen = true; },
+        closeModal(state) { state.modalOpen = false; },
+
+        setUnsplashRequest(state, images) {
+            state.unsplash = images;
+        }
     },
 
 
@@ -35,6 +40,14 @@ export default {
         state(state) {
             return state;
         },
+
+        modal(state) {
+            return state.modalOpen;
+        },
+
+        unsplash(state) {
+            return state.unsplash;
+        }
     },
 
 

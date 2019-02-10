@@ -1,18 +1,20 @@
 <template>
-    <article
-    v-if="active"
-    class="modal">
-        <header>
-            <AppImage :src="src" />
-        </header>
-        <footer v-if="tags.length">
-            <AppTag
-            v-for="(tag, idx) in tags"
-            :key="idx"
-            :index="idx"
-            :text="tag.text" />
-        </footer>
-    </article>
+    <transition name="modal">
+        <article
+        v-if="active"
+        class="modal">
+            <header>
+                <AppImage :src="src" />
+            </header>
+            <footer v-if="tags.length">
+                <AppTag
+                v-for="(tag, idx) in tags"
+                :key="idx"
+                :index="idx"
+                :text="tag.text" />
+            </footer>
+        </article>
+    </transition>
 </template>
 
 
@@ -37,10 +39,10 @@ export default {
 
 <style lang="scss" scoped>
 article {
-    animation-name: scale-up;
-    animation-duration: 400ms;
-    animation-timing-function: ease-in-out;
-    animation-fill-mode: both;
+    // animation-name: scale-up;
+    // animation-duration: 400ms;
+    // animation-timing-function: ease-in-out;
+    // animation-fill-mode: both;
     background: rgba(0, 0, 0, 0.6);
     height: 100vh;
     overflow-y: auto;
@@ -67,6 +69,16 @@ article {
     }
 }
 
+.modal-enter-active,
+.modal-leave-active {
+    transition: opacity 0.5s;
+}
+
+.modal-enter,
+.modal-leave-to {
+    opacity: 0;
+}
+
 @keyframes scale-up {
     0% {
         opacity: 0;
@@ -77,5 +89,12 @@ article {
         opacity: 1;
         transform: scale(1);
     }
+}
+</style>
+
+
+<style lang="scss">
+.modal-open {
+    overflow: hidden;
 }
 </style>

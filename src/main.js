@@ -17,10 +17,20 @@ import store from './store';
 import router from './router';
 import axios from 'axios';
 import SmoothReflow from './components/SmoothReflow';
-import { VueMasonryPlugin } from 'vue-masonry';
+import VueGAPI from 'vue-gapi';
+import VueMasonry from 'vue-masonry-css';
+Vue.use(VueMasonry);
 
-Vue.use(VueMasonryPlugin);
+const apiConfig = {
+    apiKey: 'AIzaSyBLaIVlzIONej2pSizmPHghYkZ6HSaOX5o',
+    clientId: '630128986577-3kkovmdhru71pnr701lmo8p1tunqfkfk.apps.googleusercontent.com',
+    discoveryDocs: ['https://photoslibrary.googleapis.com/$discovery/rest?version=v1'],
+    scope: 'https://www.googleapis.com/auth/photoslibrary.readonly'
+    // see all available scopes here: https://developers.google.com/identity/protocols/googlescopes'
+};
 
+// Use the plugin and pass along the configuration
+Vue.use(VueGAPI, apiConfig);
 
 
 

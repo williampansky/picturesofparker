@@ -18,7 +18,7 @@
 */
 import Vue  from 'vue';
 import Vuex from 'vuex';
-// import createPersistedState from 'vuex-persistedstate';
+import createPersistedState from 'vuex-persistedstate';
 
 
 /**
@@ -32,10 +32,9 @@ import session from './store/session';
 
 Vue.use(Vuex);
 export default new Vuex.Store({
-    // plugins: [
-    //     logrocketPlugin,
-    //     // createPersistedState()
-    // ],
+    plugins: [
+        createPersistedState()
+    ],
     strict: false,
 
     modules: {

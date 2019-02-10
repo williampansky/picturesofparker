@@ -1,7 +1,5 @@
 <template>
-    <article
-    v-masonry-tile
-    class="card">
+    <article>
         <header>
             <AppImage :src="src" />
         </header>
@@ -57,8 +55,6 @@ article {
 
     header {
         box-sizing: border-box;
-        max-width: 40vw;
-        max-height: auto;
         overflow: hidden;
     }
 

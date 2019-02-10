@@ -41,6 +41,20 @@ module.exports = {
     },
 
     chainWebpack: config => {
+        /**
+         * @method chainWebpack
+         * @memberof config:vue
+         * @desc disable preload/prefetch directives in link elements
+         */
+        config.plugins.delete('preload');
+        config.plugins.delete('prefetch');
+
+        config.plugin('html')
+            .tap(args => {
+                args[0].inject = false;
+                return args;
+            });
+
         // Development only plugins
         if (process.env.NODE_ENV === 'development') {
             console.log('NODE_ENV === development')
