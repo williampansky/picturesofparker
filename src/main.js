@@ -22,8 +22,6 @@ import VueMasonry from 'vue-masonry-css';
 Vue.use(VueMasonry);
 
 const apiConfig = {
-    apiKey: 'AIzaSyBLaIVlzIONej2pSizmPHghYkZ6HSaOX5o',
-    clientId: '630128986577-3kkovmdhru71pnr701lmo8p1tunqfkfk.apps.googleusercontent.com',
     discoveryDocs: ['https://photoslibrary.googleapis.com/$discovery/rest?version=v1'],
     scope: 'https://www.googleapis.com/auth/photoslibrary.readonly'
     // see all available scopes here: https://developers.google.com/identity/protocols/googlescopes'
