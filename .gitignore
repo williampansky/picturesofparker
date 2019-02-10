@@ -13,6 +13,7 @@ node_modules
 # Although we don't want compiled files managed in version control, it is
 # necessary for now and could change depending on the deployment process.
 # /dist
+src/auth
 
 
 # ====================================================
