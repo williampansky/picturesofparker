@@ -2,6 +2,7 @@
     <transition name="modal">
         <article
         v-if="active"
+        :class="ratio"
         class="modal">
             <header>
                 <AppImage :src="src" />
@@ -29,6 +30,7 @@ export default {
     },
     props: {
         active: { type: Boolean, default: false },
+        ratio: { type: String },
         src: { type: String },
         tags: { type: Array, default: () => [] },
         title: { type: String }
@@ -39,11 +41,7 @@ export default {
 
 <style lang="scss" scoped>
 article {
-    // animation-name: scale-up;
-    // animation-duration: 400ms;
-    // animation-timing-function: ease-in-out;
-    // animation-fill-mode: both;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.875);
     height: 100vh;
     overflow-y: auto;
     width: 100vw;
@@ -54,13 +52,22 @@ article {
 
     header {
         height: 100vh;
+        padding: 20px;
         @include display-flex(column nowrap, center, center);
     }
 
     img {
         object-fit: cover;
-        height: 100vh;
         margin: 0 auto;
+    }
+
+    &.horizontal img {
+        height: auto;
+        width: 100vw;
+    }
+
+    &.vertical img {
+        height: 100vh;
         width: auto;
     }
 

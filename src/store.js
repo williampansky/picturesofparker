@@ -22,12 +22,10 @@ import createPersistedState from 'vuex-persistedstate';
 
 
 /**
- * @method session
+ * @method googlephotos
  * @memberof store
- * @description
- * The guest session store module for managing session information.
  */
-import session from './store/session';
+// import googlephotos from './store/googlephotos';
 
 
 Vue.use(Vuex);
@@ -38,16 +36,31 @@ export default new Vuex.Store({
     strict: false,
 
     modules: {
-        session
+        // googlephotos
     },
 
     state: {
-        authError: ''
+        authError: '',
+        googlephotos: [],
+        modalOpen: false,
     },
 
     mutations: {
-        setAuthError(state, error) {
-            state.authError = error;
+        setAuthError(state, error) { state.authError = error; },
+        openModal(state) { state.modalOpen = true; },
+        closeModal(state) { state.modalOpen = false; },
+        setGooglePhotosRequest(state, array) {
+            state.googlephotos = array;
+        },
+    },
+
+    getters: {
+        googlephotos(state) {
+            return state.googlephotos;
+        },
+
+        modal(state) {
+            return state.modalOpen;
         }
-    }
+    },
 });

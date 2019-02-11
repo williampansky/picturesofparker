@@ -1,6 +1,11 @@
 <template>
-    <article>
-        <header>
+    <b-card
+    :img-src="src"
+    :title="title"
+    img-top
+    tag="article"
+    class="mb-2">
+        <!-- <header>
             <AppImage :src="src" />
         </header>
         <footer v-if="tags.length">
@@ -9,19 +14,19 @@
             :key="idx"
             :index="idx"
             :text="tag.text" />
-        </footer>
-    </article>
+        </footer> -->
+    </b-card>
 </template>
 
 
 <script>
-import AppImage from '@/components/AppImage.vue';
-import AppTag from '@/components/AppTag.vue';
+// import AppImage from '@/components/AppImage.vue';
+// import AppTag from '@/components/AppTag.vue';
 export default {
     name: 'AppCard',
     components: {
-        AppImage,
-        AppTag
+        // AppImage,
+        // AppTag
     },
     data() {
         return {
@@ -54,6 +59,7 @@ article {
     }
 
     header {
+        cursor: pointer;
         box-sizing: border-box;
         overflow: hidden;
     }
@@ -61,7 +67,9 @@ article {
     img {
         box-sizing: border-box;
         height: auto;
-        max-width: 100%;
+        // max-width: 100%;
+        /* stylelint-disable-next-line */
+        width: -webkit-fill-available;
         vertical-align: middle;
     }
 

@@ -1,21 +1,23 @@
 <template>
     <main class="padding">
         <masonry
-        :cols="{ default: 3, 320: 2, 640: 3 }"
+        :cols="{ default: 3, 320: 2, 360: 2 }"
         :gutter="20"
         @scrollReachBottom="getData()">
             <AppCard
-            v-for="(image, index) in images"
+            v-for="(image, index) in images.mediaItems"
             :key="index"
-            :src="image.urls.small"
+            :src="image.baseUrl"
             :tags="image.tags"
-            :class="{ 'vertical': imageRatio(image) }"
+            :title="image.description"
+            :class="imageOrientation(image)"
             class="grid-item"
-            @click.native="openAppModal(image)" />
+            @click.native="openAppModal(image, imageOrientation(image))" />
         </masonry>
 
         <AppModal
         :active="modal.active"
+        :ratio="modal.ratio"
         :src="modal.src"
         :tags="modal.tags"
         @click.native="closeAppModal()" />
@@ -26,7 +28,7 @@
 <script>
 /**
  * @module TheHome
- * @version 0.1.5
+ * @version 0.1.6
  */
 import AppCard from '@/components/AppCard.vue';
 import AppModal from '@/components/AppModal.vue';
@@ -44,8 +46,10 @@ export default {
             images: [],
             modal: {
                 active: false,
+                ratio: null,
                 src: null,
-                tags: []
+                tags: [],
+                title: null
             }
         };
     },
@@ -56,30 +60,48 @@ export default {
 
     mounted() {
         this.populateGallery();
-        this.login();
     },
 
     computed: {
         ...mapGetters([
-            'unsplash'
+            'googlephotos'
         ])
     },
 
     methods: {
-        login() {
-            this.$getGapiClient()
-                .then(gapi => {
-                    console.log(gapi);
-                    gapi.client.directory.users.photos.get('https://photoslibrary.googleapis.com/v1/sharedAlbums/wLNhEZECrSFWAnZT7');
-                    // ...
+        getPhotos() {
+            if (!this.googlephotos.length) {
+                this.$gapi._libraryInit('client', {
+                    discoveryDocs: [
+                        'https://content.googleapis.com/discovery/v1/apis/photoslibrary/v1/rest'
+                    ],
+                    scope: 'https://www.googleapis.com/auth/photoslibrary https://www.googleapis.com/auth/photoslibrary.sharing https://www.googleapis.com/auth/photoslibrary.readonly https://www.googleapis.com/auth/photoslibrary.readonly.appcreateddata'
+                }).then(client => {
+                    return client.photoslibrary.mediaItems.search({
+                        albumId: 'ANYhfjkLh7AIP69wENU0zbHwygGRBORy3HedJ_jFWwkY6-dZjCCypwic0drrK7k27GLvZ91XfiMC',
+                        pageSize: 100
+                    }).then(response => {
+                        // console.log(response.result);
+                        this.$store.commit(
+                            'setGooglePhotosRequest', response.result
+                        );
+                    });
                 });
+            }
         },
-        openAppModal(value) {
+
+        populateGallery() {
+            this.images = this.googlephotos;
+        },
+
+        openAppModal(value, ratio) {
             this.$store.commit('openModal');
             this.modal = {
                 active: true,
-                src: value.urls.regular,
-                tags: value.tags
+                ratio: ratio,
+                src: value.baseUrl,
+                tags: value.tags,
+                title: value.description
             };
         },
 
@@ -87,39 +109,23 @@ export default {
             this.$store.commit('closeModal');
             this.modal = {
                 active: false,
+                ratio: null,
                 src: null,
-                tags: []
+                tags: [],
+                title: null
             };
         },
 
-        imageRatio(image) {
-            if (image.height > image.width) return true;
-        },
+        imageOrientation(image) {
+            // let orientation;
+            // let height = image.mediaMetadata.height;
+            // let width = image.mediaMetadata.width;
 
-        populateGallery() {
-            this.images = this.unsplash;
-        },
+            // if (width < height) orientation = 'landscape';
+            // else if (width > height) orientation = 'portrait';
+            // else orientation = 'even';
 
-        getPhotos() {
-            if (!this.unsplash.length) {
-                this.$axios.get('https://api.unsplash.com/photos', {
-                    params: {
-                        client_id: `e0189fb4f38b295efd2a61a1d073d62987\
-                        c1ef03acc3631e979b84ede659a42d`
-                    }
-                })
-                    .then((response) => {
-                        this.$store.commit(
-                            'setUnsplashRequest', response.data
-                        );
-                    }).catch((error) => {
-                        console.error(error);
-                    });
-            }
-        },
-
-        getData() {
-            console.log('End.');
+            // return orientation;
         }
     }
 };

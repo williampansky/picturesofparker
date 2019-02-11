@@ -17,18 +17,29 @@ import store from './store';
 import router from './router';
 import axios from 'axios';
 import SmoothReflow from './components/SmoothReflow';
-import VueGAPI from 'vue-gapi';
+import VueGoogleApi from 'vue-google-api';
 import VueMasonry from 'vue-masonry-css';
+import BootstrapVue from 'bootstrap-vue';
 Vue.use(VueMasonry);
+Vue.use(BootstrapVue);
+Vue.use(require('bootstrap/dist/css/bootstrap.css'));
+Vue.use(require('bootstrap-vue/dist/bootstrap-vue.css'));
 
 const apiConfig = {
-    discoveryDocs: ['https://photoslibrary.googleapis.com/$discovery/rest?version=v1'],
-    scope: 'https://www.googleapis.com/auth/photoslibrary.readonly'
-    // see all available scopes here: https://developers.google.com/identity/protocols/googlescopes'
+    apiKey: 'AIzaSyBLaIVlzIONej2pSizmPHghYkZ6HSaOX5o',
+    clientId: '630128986577-3kkovmdhru71pnr701lmo8p1tunqfkfk.apps.googleusercontent.com',
+    client_secret: 'h7FDWDbPYi4gHqEK7IzaVsp7',
+    project_id: 'picturesofparker-1549716936565',
+    discoveryDocs: [
+        'https://content.googleapis.com/discovery/v1/apis/photoslibrary/v1/rest'
+    ],
+    scope: 'https://www.googleapis.com/auth/photoslibrary https://www.googleapis.com/auth/photoslibrary.sharing https://www.googleapis.com/auth/photoslibrary.readonly https://www.googleapis.com/auth/photoslibrary.readonly.appcreateddata'
+    // see all available scopes here:
+    // https://developers.google.com/identity/protocols/googlescopes'
 };
 
 // Use the plugin and pass along the configuration
-Vue.use(VueGAPI, apiConfig);
+Vue.use(VueGoogleApi, apiConfig);
 
 
 
@@ -114,8 +125,8 @@ Vue.use(VueMq, {
  * Plugin for VueJS 2.x accepts shortcuts globaly and in a single listener.
  */
 Vue.use(require('vue-shortkey'));
-Vue.use(require('normalize.css'));
-Vue.use(require('milligram'));
+// Vue.use(require('normalize.css'));
+// Vue.use(require('milligram'));
 
 
 

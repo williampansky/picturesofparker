@@ -368,10 +368,10 @@
 
         # Disallow qualifying a selector by type.
         # e.g: 
-        #       a.foo { margin: 0; }  <= Violation
-        #       .foo { margin: 0; }   <= Acceptable
+        #       a.foo { margin: 0; }  <= Acceptable
+        #       .foo { margin: 0; }   <= Violation
         # -------------------------------------
-        "selector-no-qualifying-type": true,
+        # "selector-no-qualifying-type": false,
 
 
         # Disallow vendor prefixes for selectors.
