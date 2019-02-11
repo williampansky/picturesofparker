@@ -26,10 +26,6 @@ Vue.use(require('bootstrap/dist/css/bootstrap.css'));
 Vue.use(require('bootstrap-vue/dist/bootstrap-vue.css'));
 
 const apiConfig = {
-    apiKey: 'AIzaSyBLaIVlzIONej2pSizmPHghYkZ6HSaOX5o',
-    clientId: '630128986577-3kkovmdhru71pnr701lmo8p1tunqfkfk.apps.googleusercontent.com',
-    client_secret: 'h7FDWDbPYi4gHqEK7IzaVsp7',
-    project_id: 'picturesofparker-1549716936565',
     discoveryDocs: [
         'https://content.googleapis.com/discovery/v1/apis/photoslibrary/v1/rest'
     ],
