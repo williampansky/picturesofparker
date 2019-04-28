@@ -17,9 +17,12 @@ import store from './store';
 import router from './router';
 import axios from 'axios';
 import SmoothReflow from './components/SmoothReflow';
-import { VueMasonryPlugin } from 'vue-masonry';
+import UIkit from 'uikit';
+import '@/assets/styles/styles.scss';
+import Icons from 'uikit/dist/js/uikit-icons';
 
-Vue.use(VueMasonryPlugin);
+UIkit.use(Icons);
+window.UIkit = UIkit;
 
 
 

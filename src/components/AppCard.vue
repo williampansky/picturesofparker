@@ -1,6 +1,5 @@
 <template>
     <article
-    v-masonry-tile
     class="card">
         <header>
             <AppImage :src="src" />

@@ -1,17 +1,17 @@
 <template>
     <div>
-        <div
-        v-masonry
-        gutter="10"
-        transition-duration="0.3s"
-        item-selector=".card">
-            <AppCard
+        <AppGrid
+        gutter
+        masonry>
+            <div
             v-for="(image, index) in images"
-            :key="index"
-            :src="image.src"
-            :tags="image.tags"
-            @click.native="openAppModal(image)" />
-        </div>
+            :key="index">
+                <AppCard
+                :src="image.src"
+                :tags="image.tags"
+                @click.native="openAppModal(image)" />
+            </div>
+        </AppGrid>
 
         <AppModal
         :active="modal.active"
@@ -25,17 +25,18 @@
 <script>
 /**
  * @module TheHome
- * @version 0.1.1
- * https://github.com/shershen08/vue-masonry
- * https://masonry.desandro.com/options.html
+ * @version 0.1.2
  */
 import AppCard from '@/components/AppCard.vue';
+import AppGrid from '@/components/AppGrid.vue';
 import AppModal from '@/components/AppModal.vue';
+
 export default {
     name: 'TheHome',
 
     components: {
         AppCard,
+        AppGrid,
         AppModal
     },
 
