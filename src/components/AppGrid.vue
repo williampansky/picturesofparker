@@ -4,7 +4,7 @@
     :class="[
         gutter ? 'uk-grid-small' : 'uk-grid-collapse'
     ]"
-    class="uk-grid uk-child-width-1-3@m">
+    class="uk-grid uk-child-width-auto">
         <slot></slot>
     </div>
 </template>

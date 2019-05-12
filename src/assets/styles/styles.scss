@@ -5,11 +5,11 @@
 // $global-link-color: #DA7D02;
 
 // 2. Import default variables and available mixins.
-@import '~uikit/src/scss/variables.scss';
-@import '~uikit/src/scss/mixins.scss';
+@import "~uikit/src/scss/variables.scss";
+@import "~uikit/src/scss/mixins.scss";
 
 // 3. Your custom mixin overwrites.
 //@import "theme/accordion-mixins.scss";
 
 // 4. Import UIkit.
-@import '~uikit/src/scss/uikit.scss';
+@import "~uikit/src/scss/uikit.scss";

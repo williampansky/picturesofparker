@@ -1,7 +1,7 @@
 <template>
     <article
-    class="card">
-        <header>
+    class="uk-card uk-card-default">
+        <header class="uk-card-media-top">
             <AppImage :src="src" />
         </header>
         <footer v-if="tags.length">

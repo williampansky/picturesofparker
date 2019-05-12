@@ -18,7 +18,7 @@
 */
 import Vue  from 'vue';
 import Vuex from 'vuex';
-// import createPersistedState from 'vuex-persistedstate';
+import createPersistedState from 'vuex-persistedstate';
 
 
 /**
@@ -32,10 +32,9 @@ import session from './store/session';
 
 Vue.use(Vuex);
 export default new Vuex.Store({
-    // plugins: [
-    //     logrocketPlugin,
-    //     // createPersistedState()
-    // ],
+    plugins: [
+        createPersistedState()
+    ],
     strict: false,
 
     modules: {
@@ -43,12 +42,23 @@ export default new Vuex.Store({
     },
 
     state: {
-        authError: ''
+        authError: '',
+        photos: []
     },
 
     mutations: {
         setAuthError(state, error) {
             state.authError = error;
+        },
+
+        setPhotos(state, value) {
+            state.photos = value;
+        }
+    },
+
+    getters: {
+        getPhotos(state) {
+            return state.photos;
         }
     }
 });
