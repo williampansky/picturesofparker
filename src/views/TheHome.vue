@@ -123,8 +123,8 @@ export default {
             this.$axios
                 .get(endpoint + method, {
                     params: {
-                        api_key: key,
-                        user_id: user,
+                        api_key: key === String ? key : 'undefined',
+                        user_id: user === String ? user : 'undefined',
                         format: 'json',
                         nojsoncallback: 1
                     }
