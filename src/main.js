@@ -18,7 +18,7 @@ import router from './router';
 import axios from 'axios';
 import SmoothReflow from './components/SmoothReflow';
 import UIkit from 'uikit';
-import '@/assets/styles/styles.scss';
+import '@/styles/vendor/uikit.scss';
 import Icons from 'uikit/dist/js/uikit-icons';
 
 UIkit.use(Icons);
@@ -109,8 +109,8 @@ Vue.use(VueMq, {
  * Plugin for VueJS 2.x accepts shortcuts globaly and in a single listener.
  */
 Vue.use(require('vue-shortkey'));
-Vue.use(require('normalize.css'));
-Vue.use(require('milligram'));
+// Vue.use(require('normalize.css'));
+// Vue.use(require('milligram'));
 
 
 

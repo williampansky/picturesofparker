@@ -1,24 +1,28 @@
 <template>
-    <div>
-        <AppGrid
-        gutter
-        masonry>
-            <div
-            v-for="(image, index) in images"
-            :key="index">
-                <AppCard
-                :src="image.src"
-                :tags="image.tags"
-                @click.native="openAppModal(image)" />
-            </div>
-        </AppGrid>
+    <main>
+        <section class="uk-container">
+            <AppGrid
+            gutter
+            masonry>
+                <div
+                v-for="(image, index) in images"
+                :key="index">
+                    <AppCard
+                    :src="constructPhotoUrl(image)"
+                    :tags="image.tags"
+                    @click.native="openAppModal(image)" />
+                </div>
+            </AppGrid>
+        </section>
 
-        <AppModal
-        :active="modal.active"
-        :src="modal.src"
-        :tags="modal.tags"
-        @click.native="closeAppModal()" />
-    </div>
+        <ImageModal
+        v-if="modal.active"
+        :imageProp="modal.image"
+        :apiKey="apiKey"
+        close="outside"
+        variation="image"
+        @close="closeAppModal()" />
+    </main>
 </template>
 
 
@@ -29,7 +33,10 @@
  */
 import AppCard from '@/components/AppCard.vue';
 import AppGrid from '@/components/AppGrid.vue';
-import AppModal from '@/components/AppModal.vue';
+// import AppModal from '@/components/AppModal.vue';
+import ImageModal from '@/components/ImageModal.vue';
+// import credentials from '@/auth/credentials.json';
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'TheHome',
@@ -37,22 +44,14 @@ export default {
     components: {
         AppCard,
         AppGrid,
-        AppModal
+        ImageModal
     },
 
     data() {
         return {
-            images: [
-                {
-                    src: 'media/test-horizontal.jpg',
-                    tags: [
-                        { text: 'walkies' }
-                    ]
-                },
-                {
-                    src: 'media/test-vertical.jpg'
-                }
-            ],
+            apiKey: null,
+            error: null,
+            images: [],
             modal: {
                 active: false,
                 src: null,
@@ -61,11 +60,29 @@ export default {
         };
     },
 
+    created() {
+        // grab photos if not set in localStorage
+        const photoArray = this.getPhotos;
+        if (photoArray && photoArray.length) this.images = this.getPhotos;
+        else this.getPhotosFromApi();
+
+        // apply credentials.json key to $vm.data
+        // this.apiKey = credentials.key;
+        this.apiKey = process.env.FLICKR_KEY;
+    },
+
+    computed: {
+        ...mapGetters([
+            'getPhotos'
+        ])
+    },
+
     methods: {
         openAppModal(value) {
             this.modal = {
                 active: true,
-                src: value.src,
+                image: value,
+                src: this.constructPhotoUrl(value),
                 tags: value.tags
             };
         },
@@ -73,10 +90,69 @@ export default {
         closeAppModal() {
             this.modal = {
                 active: false,
+                image: null,
                 src: null,
                 tags: []
             };
         },
+
+        constructPhotoUrl(value) {
+            // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.(jpg|gif|png)
+            return 'https://farm' + value.farm +
+                '.staticflickr.com/' + value.server +
+                '/' + value.id + '_' + value.secret +
+                '.jpg';
+        },
+
+        getPhotosFromApi() {
+            const endpoint = 'https://api.flickr.com/services/rest/?method=';
+            const method = 'flickr.people.getPhotos';
+            this.$axios
+                .get(endpoint + method, {
+                    params: {
+                        // api_key: credentials.key,
+                        // user_id: credentials.user,
+                        api_key: process.env.FLICKR_KEY,
+                        user_id: process.env.FLICKR_USER,
+                        format: 'json',
+                        nojsoncallback: 1
+                    }
+                })
+                .then(response => {
+                    const data = response.data.photos.photo;
+                    this.images = data;
+                    this.commitPhotosToStore(data);
+                })
+                .catch(error => {
+                    this.error = error;
+                    console.log(error);
+                });
+        },
+
+        commitPhotosToStore(value) {
+            this.$store.commit('setPhotos', value);
+        }
     }
 };
 </script>
+
+
+<style lang="scss" scoped>
+main {
+    $gutter: 15px;
+    padding-top: $gutter;
+    padding-bottom: $gutter;
+
+    @include breakpoint('small') {
+        $gutter: 30px;
+        padding-top: $gutter;
+        padding-bottom: $gutter;
+    }
+
+    @include breakpoint('medium') {
+        $gutter: 40px;
+        padding-top: $gutter;
+        padding-bottom: $gutter;
+    }
+}
+</style>

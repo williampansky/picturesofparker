@@ -41,7 +41,19 @@ module.exports = {
     },
 
     chainWebpack: config => {
-        // Development only plugins
+        /**
+         * @method chainWebpack
+         * @memberof config:vue
+         * @desc disable preload/prefetch directives in link elements
+         */
+        config.plugins.delete('preload');
+        config.plugins.delete('prefetch');
+
+        /**
+         * @method chainWebpack_development
+         * @memberof config:vue
+         * @desc Development only chainWebpack options
+         */
         if (process.env.NODE_ENV === 'development') {
             console.log('NODE_ENV === development')
         }
@@ -67,8 +79,12 @@ module.exports = {
 
     baseUrl: undefined,
     runtimeCompiler: true,
-    productionSourceMap: undefined,
-    parallel: undefined,
+
+    // Speed up build
+    productionSourceMap: false,
+
+    // Multi-thread babel transpiling
+    parallel: true,
 
     css: {
         sourceMap: true

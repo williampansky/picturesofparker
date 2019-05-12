@@ -7,8 +7,12 @@
             media="(min-width: 600px)"
             > -->
     <img
+    v-if="preload"
     :src="src"
-    >
+    rel="preload">
+    <img
+    v-else
+    :src="src">
     <!-- </picture>
     </figure> -->
 </template>
@@ -23,8 +27,13 @@ export default {
         };
     },
     props: {
+        preload: {
+            type: Boolean,
+            default: false
+        },
         src: {
-            type: String
+            type: String,
+            default: ''
         }
     }
 };
