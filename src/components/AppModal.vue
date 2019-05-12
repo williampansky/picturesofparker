@@ -1,7 +1,8 @@
 <template>
     <article
     v-if="active"
-    class="modal">
+    uk-modal
+    class="uk-modal">
         <header>
             <AppImage :src="src" />
         </header>

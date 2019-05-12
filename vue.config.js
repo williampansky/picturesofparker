@@ -9,7 +9,7 @@
  */
 
 const path = require('path');
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+// const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 // const workboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
@@ -22,22 +22,22 @@ module.exports = {
     assetsDir: 'assets',
 
     configureWebpack: {
-        plugins: [
-            new OptimizeCSSPlugin({
-                assetNameRegExp: /\.css$/g,
-                cssProcessor: require('cssnano'),
-                cssProcessorPluginOptions: {
-                    preset: ['default', {
-                        safe: true,
-                        map: { inline: false },
-                        discardComments: {
-                            removeAll: true
-                        }
-                    }],
-                },
-                canPrint: true
-            }),
-        ]
+        // plugins: [
+        //     new OptimizeCSSPlugin({
+        //         assetNameRegExp: /\.css$/g,
+        //         cssProcessor: require('cssnano'),
+        //         cssProcessorPluginOptions: {
+        //             preset: ['default', {
+        //                 safe: true,
+        //                 map: { inline: false },
+        //                 discardComments: {
+        //                     removeAll: true
+        //                 }
+        //             }],
+        //         },
+        //         canPrint: true
+        //     }),
+        // ]
     },
 
     chainWebpack: config => {
