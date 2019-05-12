@@ -26,7 +26,8 @@
         "**/bower_components": true,
         "**/jspm_packages": true,
         "**/node_modules": true,
-        "**/ui/docs": true
+        "**/ui/docs": true,
+        "**/dist": true
     },
     // "prettier.semi": true
 }

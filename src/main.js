@@ -17,12 +17,12 @@ import store from './store';
 import router from './router';
 import axios from 'axios';
 import SmoothReflow from './components/SmoothReflow';
-import UIkit from 'uikit'
-import '@/assets/styles/styles.scss'
-import Icons from 'uikit/dist/js/uikit-icons'
+import UIkit from 'uikit';
+import '@/styles/vendor/uikit.scss';
+import Icons from 'uikit/dist/js/uikit-icons';
 
-UIkit.use(Icons)
-window.UIkit = UIkit
+UIkit.use(Icons);
+window.UIkit = UIkit;
 
 
 

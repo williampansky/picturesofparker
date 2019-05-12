@@ -1,28 +1,28 @@
 <template>
-    <div>
-        <AppGrid
-        gutter
-        masonry>
-            <div
-            v-for="(image, index) in images"
-            :key="index">
-                <AppCard
-                :src="constructPhotoUrl(image)"
-                :tags="image.tags"
-                @click.native="openAppModal(image)" />
-            </div>
-        </AppGrid>
+    <main>
+        <section class="uk-container">
+            <AppGrid
+            gutter
+            masonry>
+                <div
+                v-for="(image, index) in images"
+                :key="index">
+                    <AppCard
+                    :src="constructPhotoUrl(image)"
+                    :tags="image.tags"
+                    @click.native="openAppModal(image)" />
+                </div>
+            </AppGrid>
+        </section>
 
-        <AppModal
+        <ImageModal
         v-if="modal.active"
-        @click.native="closeAppModal()"
-        @close="modal.active === false">
-            <template slot="body">
-                <img
-                :src="modal.src">
-            </template>
-        </AppModal>
-    </div>
+        :imageProp="modal.image"
+        :apiKey="apiKey"
+        close="outside"
+        variation="image"
+        @close="closeAppModal()" />
+    </main>
 </template>
 
 
@@ -33,8 +33,9 @@
  */
 import AppCard from '@/components/AppCard.vue';
 import AppGrid from '@/components/AppGrid.vue';
-import AppModal from '@/components/AppModal.vue';
-import credentials from '@/auth/credentials.json';
+// import AppModal from '@/components/AppModal.vue';
+import ImageModal from '@/components/ImageModal.vue';
+// import credentials from '@/auth/credentials.json';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -43,11 +44,12 @@ export default {
     components: {
         AppCard,
         AppGrid,
-        AppModal
+        ImageModal
     },
 
     data() {
         return {
+            apiKey: null,
             error: null,
             images: [],
             modal: {
@@ -59,9 +61,14 @@ export default {
     },
 
     created() {
+        // grab photos if not set in localStorage
         const photoArray = this.getPhotos;
         if (photoArray && photoArray.length) this.images = this.getPhotos;
         else this.getPhotosFromApi();
+
+        // apply credentials.json key to $vm.data
+        // this.apiKey = credentials.key;
+        this.apiKey = process.env.FLICKR_KEY;
     },
 
     computed: {
@@ -74,6 +81,7 @@ export default {
         openAppModal(value) {
             this.modal = {
                 active: true,
+                image: value,
                 src: this.constructPhotoUrl(value),
                 tags: value.tags
             };
@@ -82,6 +90,7 @@ export default {
         closeAppModal() {
             this.modal = {
                 active: false,
+                image: null,
                 src: null,
                 tags: []
             };
@@ -101,8 +110,10 @@ export default {
             this.$axios
                 .get(endpoint + method, {
                     params: {
-                        api_key: credentials.key,
-                        user_id: credentials.user,
+                        // api_key: credentials.key,
+                        // user_id: credentials.user,
+                        api_key: process.env.FLICKR_KEY,
+                        user_id: process.env.FLICKR_USER,
                         format: 'json',
                         nojsoncallback: 1
                     }
@@ -124,3 +135,24 @@ export default {
     }
 };
 </script>
+
+
+<style lang="scss" scoped>
+main {
+    $gutter: 15px;
+    padding-top: $gutter;
+    padding-bottom: $gutter;
+
+    @include breakpoint('small') {
+        $gutter: 30px;
+        padding-top: $gutter;
+        padding-bottom: $gutter;
+    }
+
+    @include breakpoint('medium') {
+        $gutter: 40px;
+        padding-top: $gutter;
+        padding-bottom: $gutter;
+    }
+}
+</style>

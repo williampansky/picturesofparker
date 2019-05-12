@@ -4,6 +4,9 @@
         <header class="uk-card-media-top">
             <AppImage :src="src" />
         </header>
+        <!-- <header
+        :style="'background-image: url(' + src + ');'"
+        class="uk-background-cover uk-card-media-top" /> -->
         <footer v-if="tags.length">
             <AppTag
             v-for="(tag, idx) in tags"
@@ -56,15 +59,22 @@ article {
 
     header {
         box-sizing: border-box;
-        max-width: 40vw;
-        max-height: auto;
+        max-width: none;
+        max-height: none;
         overflow: hidden;
     }
+
+    // .uk-background-cover {
+    //     height: 250px;
+    //     max-width: none;
+    //     width: auto;
+    // }
 
     img {
         box-sizing: border-box;
         height: auto;
         max-width: 100%;
+        width: 100%;
         vertical-align: middle;
     }
 

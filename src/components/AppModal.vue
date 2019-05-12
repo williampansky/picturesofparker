@@ -9,7 +9,7 @@
             { 'uk-modal-xlarge': size === 'xlarge' }
         ]"
         class="uk-modal uk-open"
-        @click.prevent="$emit('close')">
+        @click="closeModal()">
             <article
             ref="dialog"
             :class="[
@@ -19,12 +19,15 @@
                 { 'uk-margin-auto-top': position === 'bottom'  }
             ]"
             class="uk-modal-dialog"
-            >
+            @click.stop>
                 <button
+                :class="close === 'outside'
+                    ? 'uk-modal-close-outside'
+                    : 'uk-modal-close-default'"
                 uk-close
                 type="button"
-                class="uk-modal-close-outside"
-                @click="$emit('close')" />
+                class="uk-close uk-icon"
+                @click="closeModal()" />
 
                 <header
                 v-show="$slots.title || title"
@@ -49,6 +52,7 @@
 
                 <div
                 v-show="$slots.body"
+                :class="{ 'uk-padding-remove': variation === 'image' }"
                 class="uk-modal-body">
                     <slot name="body"></slot>
                 </div>
@@ -174,46 +178,9 @@ export default {
     },
 
     methods: {
-        // /**
-        //  * @method enter
-        //  * @summary On the enter transition, Vue needs to know when the modal is shown and all
-        //  * animations from UIkit are complete.
-        //  */
-        // enter(el, done) {
-        //     document.body.appendChild(el);
-
-        //     el.style.display = 'block';
-        //     el.style.opacity = 1;
-        //     el.classList.add('uk-open');
-
-        //     el.querySelector('.uk-modal-dialog').style.opacity = 1;
-
-        //     setTimeout(() => {
-        //         done();
-        //     }, 100);
-        // },
-
-        // /**
-        //  * @method leave
-        //  * @summary On the leave transition, Vue needs to know when the modal is completely hidden, after
-        //  * UIkit's animations are complete.
-        //  */
-        // leave(el, done) {
-        //     el.classList.remove('uk-open');
-        //     el.style.display = 'none';
-        //     el.style.opacity = '0';
-
-        //     done();
-        // },
-
-        // /**
-        //  * @method beforeLeave
-        //  * @summary When Vue triggers the removal of the modal, it needs to communicate it to UIkit
-        //  */
-        // beforeLeave(el) {
-        //     // UIkit.modal(el).hide();
-        //     // this.$emit('close');
-        // }
+        closeModal() {
+            this.$emit('close');
+        }
     }
 };
 </script>
@@ -221,11 +188,6 @@ export default {
 
 <style lang="scss">
 /* stylelint-disable */
-// .modal-leave-active {
-    // This is to wait for the uk-modal-dialog transition
-    // transition-duration: 0.3s !important;
-// }
-
 .modal-enter,
 .modal-leave-to {
     opacity: 0 !important;
@@ -258,6 +220,10 @@ export default {
             transform: translateY(0);
             opacity: 1;
         }
+    }
+
+    .uk-modal-dialog {
+        width: auto;
     }
 
     .uk-modal-header,
@@ -306,7 +272,6 @@ export default {
     transform: translate(0, -100%);
     color: #fff;
 }
-/* stylelint-enable */
 </style>
 
 
