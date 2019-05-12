@@ -35,7 +35,6 @@ import AppCard from '@/components/AppCard.vue';
 import AppGrid from '@/components/AppGrid.vue';
 // import AppModal from '@/components/AppModal.vue';
 import ImageModal from '@/components/ImageModal.vue';
-// import credentials from '@/auth/credentials.json';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -66,9 +65,12 @@ export default {
         if (photoArray && photoArray.length) this.images = this.getPhotos;
         else this.getPhotosFromApi();
 
+
         // apply credentials.json key to $vm.data
-        // this.apiKey = credentials.key;
-        this.apiKey = process.env.FLICKR_KEY;
+        if (process.env.NODE_ENV === 'development')
+            this.apiKey = process.env.VUE_APP_APIKEY;
+        else
+            this.apiKey = process.env.FLICKR_KEY;
     },
 
     computed: {
@@ -107,13 +109,22 @@ export default {
         getPhotosFromApi() {
             const endpoint = 'https://api.flickr.com/services/rest/?method=';
             const method = 'flickr.people.getPhotos';
+            let key;
+            let user;
+
+            if (process.env.NODE_ENV === 'development') {
+                key = process.env.VUE_APP_APIKEY;
+                user = process.env.VUE_APP_APIUSER;
+            } else {
+                key = process.env.FLICKR_KEY;
+                user = process.env.FLICKR_USER;
+            }
+
             this.$axios
                 .get(endpoint + method, {
                     params: {
-                        // api_key: credentials.key,
-                        // user_id: credentials.user,
-                        api_key: process.env.FLICKR_KEY,
-                        user_id: process.env.FLICKR_USER,
+                        api_key: key,
+                        user_id: user,
                         format: 'json',
                         nojsoncallback: 1
                     }
