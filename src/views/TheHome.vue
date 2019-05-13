@@ -64,24 +64,23 @@ export default {
 
     created() {
         // apply credentials.json key to $vm.data
-        if (process.env.NODE_ENV === 'development') {
-            this.api = {
-                key: process.env.VUE_APP_APIKEY,
-                user: process.env.VUE_APP_APIUSER
-            };
-        } else {
+        if (process.env.NODE_ENV === 'production') {
             this.api = {
                 key: process.env.API_KEY,
                 user: process.env.USER_ID
             };
+        } else {
+            this.api = {
+                key: process.env.VUE_APP_APIKEY,
+                user: process.env.VUE_APP_APIUSER
+            };
         }
+
+        this.consoleLogs();
     },
 
     mounted() {
-        // grab photos if not set in localStorage
-        const photoArray = this.getPhotos;
-        if (photoArray && photoArray.length) this.images = this.getPhotos;
-        else this.getPhotosFromApi();
+        this.refreshApi();
     },
 
     computed: {
@@ -91,6 +90,23 @@ export default {
     },
 
     methods: {
+        consoleLogs() {
+            if (process.env.NODE_ENV === 'production') {
+                console.log('NODE_ENV:', process.env.NODE_ENV);
+                console.log('USER_ID:', process.env.USER_ID);
+                console.log('this.api.user:', this.api.user);
+            } else {
+                console.log('NODE_ENV:', process.env.NODE_ENV);
+                console.log('VUE_APP_APIUSER:', process.env.VUE_APP_APIUSER);
+                console.log('this.api.user:', this.api.user);
+            }
+        },
+        refreshApi() {
+            // grab photos if not set in localStorage
+            const photoArray = this.getPhotos;
+            if (photoArray && photoArray.length) this.images = this.getPhotos;
+            else this.getPhotosFromApi();
+        },
         openAppModal(value) {
             this.modal = {
                 active: true,
@@ -110,7 +126,8 @@ export default {
         },
 
         constructPhotoUrl(value) {
-            // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.(jpg|gif|png)
+            // https://farm{farm-id}.staticflickr.com/
+            // {server-id}/{id}_{secret}.(jpg|gif|png)
             return 'https://farm' + value.farm +
                 '.staticflickr.com/' + value.server +
                 '/' + value.id + '_' + value.secret +
@@ -124,8 +141,8 @@ export default {
             this.$axios
                 .get(endpoint + method, {
                     params: {
-                        api_key: this.api.key !== null ? this.api.key : 'undefined',
-                        user_id: this.api.user !== null ? this.api.user : 'undefined',
+                        api_key: process.env.REACT_APP_CUSTOM_API_KEY,
+                        user_id: process.env.REACT_APP_CUSTOM_USER_ID,
                         format: 'json',
                         nojsoncallback: 1
                     }
