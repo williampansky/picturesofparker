@@ -54,15 +54,15 @@ module.exports = {
          * @memberof config:vue
          * @desc Development only chainWebpack options
          */
-        if (process.env.NODE_ENV === 'development') {
-            console.log('NODE_ENV:', process.env.NODE_ENV);
-            console.log('VUE_APP_APIKEY:', process.env.VUE_APP_APIKEY);
-            console.log('VUE_APP_APIUSER:', process.env.VUE_APP_APIUSER);
-        } else if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'production') {
             console.log('NODE_ENV:', process.env.NODE_ENV);
             console.log('REPOSITORY_URL:', process.env.REPOSITORY_URL);
             console.log('API_KEY:', process.env.API_KEY);
             console.log('USER_ID:', process.env.USER_ID);
+        } else if (process.env.NODE_ENV === 'development') {
+            console.log('NODE_ENV:', process.env.NODE_ENV);
+            console.log('VUE_APP_APIKEY:', process.env.VUE_APP_APIKEY);
+            console.log('VUE_APP_APIUSER:', process.env.VUE_APP_APIUSER);
         }
     },
 

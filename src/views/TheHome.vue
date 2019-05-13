@@ -64,15 +64,15 @@ export default {
 
     created() {
         // apply credentials.json key to $vm.data
-        if (process.env.NODE_ENV === 'development') {
-            this.api = {
-                key: process.env.VUE_APP_APIKEY,
-                user: process.env.VUE_APP_APIUSER
-            };
-        } else {
+        if (process.env.NODE_ENV === 'production') {
             this.api = {
                 key: process.env.API_KEY,
                 user: process.env.USER_ID
+            };
+        } else {
+            this.api = {
+                key: process.env.VUE_APP_APIKEY,
+                user: process.env.VUE_APP_APIUSER
             };
         }
 
