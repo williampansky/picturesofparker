@@ -55,8 +55,11 @@
                         <ul class="uk-iconnav">
                             <li
                             v-for="(tag, i) in tags"
-                            :key="i">
-                                <span class="uk-label uk-box-shadow-small">{{
+                            :key="i"
+                            :style="'animation-delay:' + (i + 8) + '00ms;'"
+                            :class="{ 'uk-animation-slide-bottom-small': !loading }">
+                                <span
+                                class="uk-label uk-box-shadow-small">{{
                                     tag._content
                                 }}</span>
                             </li>
@@ -82,7 +85,7 @@
  * @extends components/AppModal.vue
  *
  * @author William Pansky
- * @version 0.0.8
+ * @version 0.1.1
  */
 import AppImage from '@/components/AppImage.vue';
 import AppModal from '@/components/AppModal.vue';
@@ -107,14 +110,7 @@ export default {
                 width: 0
             }],
             showTags: false,
-            tags: [{
-                _content: '',
-                author: '',
-                authorname: '',
-                id: '',
-                machine_tag: '',
-                raw: ''
-            }]
+            tags: []
         };
     },
 
@@ -258,6 +254,7 @@ export default {
 }
 
 .uk-close {
+    animation-delay: 600ms;
     background: white;
     padding: 10px;
     right: 0;
