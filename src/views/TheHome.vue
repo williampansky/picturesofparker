@@ -10,6 +10,7 @@
                     <AppCard
                     :src="constructPhotoUrl(image)"
                     :tags="image.tags"
+                    :title="image.title"
                     @click.native="openAppModal(image)" />
                 </div>
             </AppGrid>

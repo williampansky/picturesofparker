@@ -49,6 +49,19 @@
                 class="
                 uk-modal-body
                 uk-padding-remove">
+                    <div
+                    v-if="showTags"
+                    class="uk-position-bottom-left uk-padding-small">
+                        <ul class="uk-iconnav">
+                            <li
+                            v-for="(tag, i) in tags"
+                            :key="i">
+                                <span class="uk-label uk-box-shadow-small">{{
+                                    tag._content
+                                }}</span>
+                            </li>
+                        </ul>
+                    </div>
                     <AppImage
                     :src="imageLarge.source"
                     preload
@@ -73,6 +86,7 @@
  */
 import AppImage from '@/components/AppImage.vue';
 import AppModal from '@/components/AppModal.vue';
+// import AppTag from '@/components/AppTag.vue';
 
 export default {
     name: 'ImageModal',
@@ -91,6 +105,15 @@ export default {
                 source: '',
                 url: '',
                 width: 0
+            }],
+            showTags: false,
+            tags: [{
+                _content: '',
+                author: '',
+                authorname: '',
+                id: '',
+                machine_tag: '',
+                raw: ''
             }]
         };
     },
@@ -109,6 +132,7 @@ export default {
 
     created() {
         this.getImageSizes();
+        this.getImageTags();
     },
 
     mounted() {
@@ -187,6 +211,29 @@ export default {
             if (w > h) dimension = 'horizontal';
             else dimension = 'vertical';
             this.dimension = dimension;
+        },
+
+        getImageTags(photoId = this.imageProp.id) {
+            const endpoint = 'https://api.flickr.com/services/rest/?method=';
+            const method = 'flickr.tags.getListPhoto';
+            this.$axios
+                .get(endpoint + method, {
+                    params: {
+                        api_key: this.apiKey,
+                        photo_id: this.imageProp.id,
+                        format: 'json',
+                        nojsoncallback: 1
+                    }
+                })
+                .then(response => {
+                    const data = response.data.photo.tags.tag;
+                    this.tags = data;
+                    this.showTags = true;
+                })
+                .catch(error => {
+                    this.error = error;
+                    console.log(error);
+                });
         }
     }
 };
@@ -227,5 +274,9 @@ export default {
         height: 90vh;
         width: auto;
     }
+}
+
+.uk-label {
+    cursor: default;
 }
 </style>
