@@ -94,9 +94,11 @@ export default {
             if (process.env.NODE_ENV === 'production') {
                 console.log('NODE_ENV:', process.env.NODE_ENV);
                 console.log('USER_ID:', process.env.USER_ID);
+                console.log('this.api.user:', this.api.user);
             } else {
                 console.log('NODE_ENV:', process.env.NODE_ENV);
                 console.log('VUE_APP_APIUSER:', process.env.VUE_APP_APIUSER);
+                console.log('this.api.user:', this.api.user);
             }
         },
         refreshApi() {
