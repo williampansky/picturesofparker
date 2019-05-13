@@ -18,7 +18,7 @@
         <ImageModal
         v-if="modal.active"
         :imageProp="modal.image"
-        :apiKey="apiKey"
+        :apiKey="api.key"
         close="outside"
         variation="image"
         @close="closeAppModal()" />
@@ -48,7 +48,10 @@ export default {
 
     data() {
         return {
-            apiKey: null,
+            apiKey: {
+                key: null,
+                user: null
+            },
             error: null,
             images: [],
             modal: {
@@ -60,21 +63,25 @@ export default {
     },
 
     created() {
+        // apply credentials.json key to $vm.data
+        if (process.env.NODE_ENV === 'development') {
+            this.api = {
+                key: process.env.VUE_APP_APIKEY,
+                user: process.env.VUE_APP_APIUSER
+            };
+        } else {
+            this.api = {
+                key: process.env.API_KEY,
+                user: process.env.USER_ID
+            };
+        }
+    },
+
+    mounted() {
         // grab photos if not set in localStorage
         const photoArray = this.getPhotos;
         if (photoArray && photoArray.length) this.images = this.getPhotos;
         else this.getPhotosFromApi();
-
-
-        // apply credentials.json key to $vm.data
-        if (process.env.NODE_ENV === 'development')
-            this.apiKey = process.env.VUE_APP_APIKEY;
-        else
-            this.apiKey = process.env.NETLIFY_FLICKR_KEY;
-    },
-
-    mounted() {
-
     },
 
     computed: {
@@ -113,22 +120,12 @@ export default {
         getPhotosFromApi() {
             const endpoint = 'https://api.flickr.com/services/rest/?method=';
             const method = 'flickr.people.getPhotos';
-            let key;
-            let user;
-
-            if (process.env.NODE_ENV === 'development') {
-                key = process.env.VUE_APP_APIKEY;
-                user = process.env.VUE_APP_APIUSER;
-            } else {
-                key = process.env.NETLIFY_FLICKR_KEY;
-                user = process.env.NETLIFY_FLICKR_USER;
-            }
 
             this.$axios
                 .get(endpoint + method, {
                     params: {
-                        api_key: key === String ? key : 'undefined',
-                        user_id: user === String ? user : 'undefined',
+                        api_key: this.api.key !== null ? this.api.key : 'undefined',
+                        user_id: this.api.user !== null ? this.api.user : 'undefined',
                         format: 'json',
                         nojsoncallback: 1
                     }
@@ -146,7 +143,18 @@ export default {
 
         commitPhotosToStore(value) {
             this.$store.commit('setPhotos', value);
-        }
+        },
+
+        // getApiKey(value) {
+        //     return this.$axios
+        //         .get(value)
+        //         .then(({ data }) => {
+        //             return data.key;
+        //         })
+        //         .catch(error => {
+        //             return error;
+        //         });
+        // }
     }
 };
 </script>
