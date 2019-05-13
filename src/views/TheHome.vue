@@ -141,8 +141,8 @@ export default {
             this.$axios
                 .get(endpoint + method, {
                     params: {
-                        api_key: this.api.key,
-                        user_id: this.api.user,
+                        api_key: process.env.API_KEY,
+                        user_id: process.env.USER_ID,
                         format: 'json',
                         nojsoncallback: 1
                     }
