@@ -48,7 +48,7 @@ export default {
 
     data() {
         return {
-            apiKey: {
+            api: {
                 key: null,
                 user: null
             },
@@ -93,11 +93,8 @@ export default {
     methods: {
         refreshApi() {
             // grab photos if not set in localStorage
-            const key = this.api.key;
-            const user = this.api.user;
-
             setTimeout(() => {
-                if (key !== null && user !== null) {
+                if (this.api.key && this.api.user) {
                     const photoArray = this.getPhotos;
                     if (photoArray && photoArray.length) this.images = this.getPhotos;
                     else this.getPhotosFromApi();
