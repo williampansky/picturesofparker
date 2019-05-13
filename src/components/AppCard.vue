@@ -10,31 +10,32 @@
         <div
         v-if="displayTitle"
         class="uk-card-body">
-            <h1 class="uk-card-title">{{ title }}</h1>
+            <h1
+            class="
+            uk-card-title
+            uk-text-truncate">{{ title }}</h1>
         </div>
+        <!-- <footer
+        v-if="tags"
+        class="uk-card-footer">
+            <span class="uk-text-meta">{{ tags }}</span>
+        </footer> -->
         <!-- <header
         :style="'background-image: url(' + src + ');'"
         class="uk-background-cover uk-card-media-top" /> -->
-        <footer v-if="tags.length">
-            <AppTag
-            v-for="(tag, idx) in tags"
-            :key="idx"
-            :index="idx"
-            :text="tag.text" />
-        </footer>
     </article>
 </template>
 
 
 <script>
 import AppImage from '@/components/AppImage.vue';
-import AppTag from '@/components/AppTag.vue';
+// import AppTag from '@/components/AppTag.vue';
 
 export default {
     name: 'AppCard',
     components: {
         AppImage,
-        AppTag
+        // AppTag
     },
     data() {
         return {
@@ -43,7 +44,8 @@ export default {
     },
     props: {
         src: { type: String, default: '' },
-        tags: { type: Array, default: () => [] },
+        // tags: { type: Array, default: () => ([]) },
+        tags: { type: String },
         title: { type: String, default: '' }
     },
     computed: {
