@@ -141,8 +141,8 @@ export default {
             this.$axios
                 .get(endpoint + method, {
                     params: {
-                        api_key: process.env.REACT_APP_API_KEY,
-                        user_id: process.env.REACT_APP_USER_ID,
+                        api_key: process.env.REACT_APP_CUSTOM_API_KEY,
+                        user_id: process.env.REACT_APP_CUSTOM_USER_ID,
                         format: 'json',
                         nojsoncallback: 1
                     }

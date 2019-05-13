@@ -57,8 +57,8 @@ module.exports = {
         if (process.env.NODE_ENV === 'production') {
             console.log('NODE_ENV:', process.env.NODE_ENV);
             console.log('REPOSITORY_URL:', process.env.REPOSITORY_URL);
-            console.log('API_KEY:', process.env.API_KEY);
-            console.log('USER_ID:', process.env.USER_ID);
+            console.log('API_KEY:', process.env.REACT_APP_CUSTOM_API_KEY);
+            console.log('USER_ID:', process.env.REACT_APP_CUSTOM_USER_ID);
         } else if (process.env.NODE_ENV === 'development') {
             console.log('NODE_ENV:', process.env.NODE_ENV);
             console.log('VUE_APP_APIKEY:', process.env.VUE_APP_APIKEY);
