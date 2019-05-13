@@ -1,9 +1,11 @@
 <template>
     <main>
-        <section class="uk-container">
+        <section class="uk-container uk-container-expand">
             <AppGrid
             gutter
-            masonry>
+            masonry
+            match
+            >
                 <div
                 v-for="(image, index) in images"
                 :key="index">
@@ -59,7 +61,8 @@ export default {
                 active: false,
                 src: null,
                 tags: []
-            }
+            },
+            override: true
         };
     },
 
@@ -97,8 +100,12 @@ export default {
             setTimeout(() => {
                 if (this.api.key && this.api.user) {
                     const photoArray = this.getPhotos;
-                    if (photoArray && photoArray.length) this.images = this.getPhotos;
-                    else this.getPhotosFromApi();
+                    if (this.override === true)
+                        this.getPhotosFromApi();
+                    else if (photoArray && photoArray.length)
+                        this.images = this.getPhotos;
+                    else
+                        this.getPhotosFromApi();
                 }
             }, 2000);
         },
@@ -132,12 +139,14 @@ export default {
         getPhotosFromApi() {
             const endpoint = 'https://api.flickr.com/services/rest/?method=';
             const method = 'flickr.people.getPhotos';
+            const extras = 'description, date_upload, date_taken, sizes, tags, views';
 
             this.$axios
                 .get(endpoint + method, {
                     params: {
                         api_key: this.api.key,
                         user_id: this.api.user,
+                        extras: extras,
                         format: 'json',
                         nojsoncallback: 1
                     }
@@ -158,8 +167,11 @@ export default {
         },
 
         getApiKey(value) {
+            const prefix = 'https://wt-30c7730f9ad0ef866a5444aa1e3835dc-0';
+            const domain = '.sandbox.auth0-extend.com/';
+            const affix = 'picturesofparker';
             return this.$axios
-                .get('https://wt-30c7730f9ad0ef866a5444aa1e3835dc-0.sandbox.auth0-extend.com/picturesofparker')
+                .get(prefix + domain + affix)
                 .then(response => {
                     this.api = {
                         key: response.data.key,
