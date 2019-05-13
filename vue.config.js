@@ -46,8 +46,8 @@ module.exports = {
          * @memberof config:vue
          * @desc disable preload/prefetch directives in link elements
          */
-        config.plugins.delete('preload');
-        config.plugins.delete('prefetch');
+        // config.plugins.delete('preload');
+        // config.plugins.delete('prefetch');
 
         /**
          * @method chainWebpack_development
@@ -56,10 +56,16 @@ module.exports = {
          */
         if (process.env.NODE_ENV === 'development') {
             console.log('NODE_ENV === development')
+            console.log('NODE_ENV:', process.env.NODE_ENV);
+            console.log('REPOSITORY_URL:', process.env.REPOSITORY_URL);
+            console.log('VUE_APP_APIKEY:', process.env.VUE_APP_APIKEY);
+            console.log('VUE_APP_APIUSER:', process.env.VUE_APP_APIUSER);
+            console.log('API_KEY:', process.env.API_KEY);
+            console.log('USER_ID:', process.env.USER_ID);
         }
     },
 
-    filenameHashing: true,
+    filenameHashing: false,
 
     pluginOptions: {
         lintStyleOnBuild: true,
