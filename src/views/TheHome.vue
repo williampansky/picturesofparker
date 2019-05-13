@@ -78,6 +78,13 @@ export default {
     },
 
     mounted() {
+        console.log('NODE_ENV:', process.env.NODE_ENV);
+        console.log('REPOSITORY_URL:', process.env.REPOSITORY_URL);
+        console.log('VUE_APP_APIKEY:', process.env.VUE_APP_APIKEY);
+        console.log('VUE_APP_APIUSER:', process.env.VUE_APP_APIUSER);
+        console.log('API_KEY:', process.env.API_KEY);
+        console.log('USER_ID:', process.env.USER_ID);
+
         // grab photos if not set in localStorage
         const photoArray = this.getPhotos;
         if (photoArray && photoArray.length) this.images = this.getPhotos;
