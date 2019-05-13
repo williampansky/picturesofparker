@@ -91,12 +91,13 @@ export default {
 
     methods: {
         consoleLogs() {
-            // console.log('NODE_ENV:', process.env.NODE_ENV);
-            // console.log('REPOSITORY_URL:', process.env.REPOSITORY_URL);
-            // console.log('VUE_APP_APIKEY:', process.env.VUE_APP_APIKEY);
-            // console.log('VUE_APP_APIUSER:', process.env.VUE_APP_APIUSER);
-            // console.log('API_KEY:', process.env.API_KEY);
-            // console.log('USER_ID:', process.env.USER_ID);
+            if (process.env.NODE_ENV === 'production') {
+                console.log('NODE_ENV:', process.env.NODE_ENV);
+                console.log('USER_ID:', process.env.USER_ID);
+            } else {
+                console.log('NODE_ENV:', process.env.NODE_ENV);
+                console.log('VUE_APP_APIUSER:', process.env.VUE_APP_APIUSER);
+            }
         },
         refreshApi() {
             // grab photos if not set in localStorage
@@ -123,7 +124,8 @@ export default {
         },
 
         constructPhotoUrl(value) {
-            // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.(jpg|gif|png)
+            // https://farm{farm-id}.staticflickr.com/
+            // {server-id}/{id}_{secret}.(jpg|gif|png)
             return 'https://farm' + value.farm +
                 '.staticflickr.com/' + value.server +
                 '/' + value.id + '_' + value.secret +
@@ -137,8 +139,8 @@ export default {
             this.$axios
                 .get(endpoint + method, {
                     params: {
-                        api_key: this.api.key !== null ? this.api.key : 'undefined',
-                        user_id: this.api.user !== null ? this.api.user : 'undefined',
+                        api_key: this.api.key,
+                        user_id: this.api.user,
                         format: 'json',
                         nojsoncallback: 1
                     }
