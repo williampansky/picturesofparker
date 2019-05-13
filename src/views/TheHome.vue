@@ -70,7 +70,11 @@ export default {
         if (process.env.NODE_ENV === 'development')
             this.apiKey = process.env.VUE_APP_APIKEY;
         else
-            this.apiKey = process.env.REACT_APP_FLICKR_KEY;
+            this.apiKey = process.env.NETLIFY_FLICKR_KEY;
+    },
+
+    mounted() {
+
     },
 
     computed: {
@@ -116,8 +120,8 @@ export default {
                 key = process.env.VUE_APP_APIKEY;
                 user = process.env.VUE_APP_APIUSER;
             } else {
-                key = process.env.REACT_APP_FLICKR_KEY;
-                user = process.env.REACT_APP_FLICKR_USER;
+                key = process.env.NETLIFY_FLICKR_KEY;
+                user = process.env.NETLIFY_FLICKR_USER;
             }
 
             this.$axios
