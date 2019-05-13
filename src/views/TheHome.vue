@@ -64,19 +64,20 @@ export default {
 
     created() {
         // apply credentials.json key to $vm.data
-        if (process.env.NODE_ENV === 'production') {
-            this.api = {
-                key: process.env.REACT_APP_CUSTOM_API_KEY,
-                user: process.env.REACT_APP_CUSTOM_USER_ID
-            };
-        } else {
-            this.api = {
-                key: process.env.VUE_APP_APIKEY,
-                user: process.env.VUE_APP_APIUSER
-            };
-        }
+        // if (process.env.NODE_ENV === 'production') {
+        //     this.api = {
+        //         key: process.env.REACT_APP_CUSTOM_API_KEY,
+        //         user: process.env.REACT_APP_CUSTOM_USER_ID
+        //     };
+        // } else {
+        //     this.api = {
+        //         key: process.env.VUE_APP_APIKEY,
+        //         user: process.env.VUE_APP_APIUSER
+        //     };
+        // }
 
-        this.consoleLogs();
+        // this.consoleLogs();
+        this.getApiKey();
     },
 
     mounted() {
@@ -162,16 +163,19 @@ export default {
             this.$store.commit('setPhotos', value);
         },
 
-        // getApiKey(value) {
-        //     return this.$axios
-        //         .get(value)
-        //         .then(({ data }) => {
-        //             return data.key;
-        //         })
-        //         .catch(error => {
-        //             return error;
-        //         });
-        // }
+        getApiKey(value) {
+            return this.$axios
+                .get('https://wt-30c7730f9ad0ef866a5444aa1e3835dc-0.sandbox.auth0-extend.com/picturesofparker')
+                .then(({ data }) => {
+                    this.api = {
+                        key: data.key,
+                        user: data.user
+                    };
+                })
+                .catch(error => {
+                    this.error = error;
+                });
+        }
     }
 };
 </script>
