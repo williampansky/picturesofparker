@@ -91,22 +91,18 @@ export default {
     },
 
     methods: {
-        consoleLogs() {
-            if (process.env.NODE_ENV === 'production') {
-                console.log('NODE_ENV:', process.env.NODE_ENV);
-                console.log('USER_ID:', process.env.USER_ID);
-                console.log('this.api.user:', this.api.user);
-            } else {
-                console.log('NODE_ENV:', process.env.NODE_ENV);
-                console.log('VUE_APP_APIUSER:', process.env.VUE_APP_APIUSER);
-                console.log('this.api.user:', this.api.user);
-            }
-        },
         refreshApi() {
             // grab photos if not set in localStorage
-            const photoArray = this.getPhotos;
-            if (photoArray && photoArray.length) this.images = this.getPhotos;
-            else this.getPhotosFromApi();
+            const key = this.api.key;
+            const user = this.api.user;
+
+            setTimeout(() => {
+                if (key !== null && user !== null) {
+                    const photoArray = this.getPhotos;
+                    if (photoArray && photoArray.length) this.images = this.getPhotos;
+                    else this.getPhotosFromApi();
+                }
+            }, 2000);
         },
         openAppModal(value) {
             this.modal = {
@@ -166,14 +162,15 @@ export default {
         getApiKey(value) {
             return this.$axios
                 .get('https://wt-30c7730f9ad0ef866a5444aa1e3835dc-0.sandbox.auth0-extend.com/picturesofparker')
-                .then(({ data }) => {
+                .then(response => {
                     this.api = {
-                        key: data.key,
-                        user: data.user
+                        key: response.data.key,
+                        user: response.data.user
                     };
                 })
                 .catch(error => {
                     this.error = error;
+                    console.error(error);
                 });
         }
     }
