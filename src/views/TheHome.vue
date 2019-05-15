@@ -7,7 +7,14 @@
             match>
                 <div
                 v-for="(image, index) in images"
-                :key="index">
+                :key="index"
+                :class="$mq | mq({
+                    xs: childWidth(image.height_n, image.width_n),
+                    s: childWidth(image.height_n, image.width_n),
+                    m: '',
+                    l: '',
+                    xl: ''
+                })">
                     <AppCard
                     :src="constructPhotoUrl(image)"
                     :tags="image.tags"
@@ -22,6 +29,7 @@
         <ImageModal
         v-shortkey="{prev: ['arrowleft'], next: ['arrowright']}"
         v-if="modal.active"
+        :fullmodal="$mq | mq({ xs:true, s: true, m: false, l: false, xl: false })"
         :imageProp="modal.image"
         :imageSrc="constructPhotoUrl(modal.image)"
         :imgheight="Number(modal.image.height_l)"
@@ -104,6 +112,16 @@ export default {
             if (index >= this.images.length) index = 0;
             console.log(this.images[index]);
             return this.images[index];
+        },
+
+        /**
+         * @method childWidth
+         * Applies `uk-width-1-2` to vertical images.
+         */
+        childWidth(height, width) {
+            const h = Number(height);
+            const w = Number(width);
+            if (w < h) return 'uk-width-1-2';
         },
 
         refreshApi() {
