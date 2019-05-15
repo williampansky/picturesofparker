@@ -9,8 +9,11 @@
     "todo": "leasot -x -s -I -T bug -r markdown 'src/**/*.vue' > TODO.md"
   },
   "dependencies": {
+    "lozad": "^1.9.0",
     "uikit": "^3.0.2",
     "vue": "^2.6.3",
+    "vue-lazyload": "^1.2.6",
+    "vue-load-image": "^0.1.7",
     "vue-router": "^3.0.1",
     "vue-shortkey": "^3.1.6",
     "vuex": "^3.0.1",

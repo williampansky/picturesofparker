@@ -20,6 +20,8 @@ import SmoothReflow from './components/SmoothReflow';
 import UIkit from 'uikit';
 import '@/styles/vendor/uikit.scss';
 import Icons from 'uikit/dist/js/uikit-icons';
+import LazyLoadDirective from './directives/LazyLoadDirective';
+import VueLazyload from 'vue-lazyload';
 
 UIkit.use(Icons);
 window.UIkit = UIkit;
@@ -55,8 +57,33 @@ Vue.config.productionTip = false;
 
 
 /**
+ * @method LazyLoadDirective
+ * @see [CssTricks]{@link https://css-tricks.com/lazy-loading-images-with-vue-js-directives-and-intersection-observer}
+ */
+Vue.directive('lazyload', LazyLoadDirective);
+
+
+
+
+/**
+ * @method VueLazyload
+ * @see [GitHub]{@link https://github.com/hilongjw/vue-lazyload}
+ */
+Vue.use(VueLazyload, {
+    attempt: 3,
+    error: '',
+    lazyComponent: true,
+    loading: '',
+    preLoad: 1.3,
+});
+
+
+
+
+/**
  * @method keyCodes
  * @see [Docs]{@link https://vuejs.org/v2/api/#keyCodes}
+ * @see [Keycodes]{@link https://keycode.info/}
  *
  * @description
  * Define custom key alias(es) for v-on.
@@ -66,7 +93,9 @@ Vue.config.keyCodes = {
     f2: 113,
     f3: 114,
     f4: 115,
-    f5: 116
+    f5: 116,
+    prev: 37,
+    next: 39
 };
 
 
@@ -123,6 +152,7 @@ Vue.use(require('vue-shortkey'));
  * Transition an elements reflow when the data changes.
  */
 Vue.component('SmoothReflow', SmoothReflow);
+
 
 
 
