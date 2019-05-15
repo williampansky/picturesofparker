@@ -5,19 +5,18 @@
         ref="modal"
         :class="[
             { 'loading': loading },
+            { 'uk-modal-full': fullmodal },
             'image-' + dimension
         ]"
-        class="
-        uk-open
-        uk-modal
-        uk-padding-remove"
+        class="uk-open uk-modal uk-padding-remove"
         @click="closeModal()">
             <article
             ref="dialog"
-            :class="{ 'uk-animation-scale-up': !loading }"
-            class="
-            uk-modal-dialog
-            uk-margin-auto-vertical"
+            :class="[
+                { 'uk-animation-scale-up': !loading },
+                { 'uk-margin-auto-vertical': !fullmodal }
+            ]"
+            class="uk-modal-dialog"
             @click.stop>
                 <button
                 v-if="!loading"
@@ -166,9 +165,15 @@ export default {
             type: Number,
             default: null
         },
+
         imgwidth: {
             type: Number,
             default: null
+        },
+
+        fullmodal: {
+            type: Boolean,
+            default: false
         },
     },
 
@@ -332,7 +337,7 @@ export default {
 
 
 <style lang="scss">
-.image {
+:not(.uk-modal-full).image {
     &-horizontal figure,
     &-horizontal img {
         height: auto;
@@ -344,5 +349,9 @@ export default {
         height: 80vh;
         width: auto;
     }
+}
+
+.uk-modal-full img {
+    height: 100vh;
 }
 </style>
