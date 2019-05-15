@@ -9,6 +9,9 @@
 <script>
 export default {
     name: 'App',
+    mounted() {
+        this.$emit('App mounted()');
+    },
     methods: {
         /**
          * Workbox is a library that bakes in a set of best practices and

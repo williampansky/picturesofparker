@@ -19,11 +19,11 @@
             uk-modal-dialog
             uk-margin-auto-vertical"
             @click.stop>
-                <!-- :class="close === 'outside'
-                    ? 'uk-modal-close-outside'
-                    : 'uk-modal-close-default'" -->
                 <button
                 v-if="!loading"
+                :class="close === 'outside'
+                    ? 'uk-modal-close-outside'
+                    : 'uk-modal-close-default'"
                 uk-close
                 type="button"
                 class="
@@ -38,7 +38,7 @@
                 uk-spinner />
                 <div
                 v-else-if="error !== null"
-                class="uk-modal-body">
+                class="uk-modal-body uk-background-default">
                     <p
                     class="
                     uk-text-lead
@@ -51,7 +51,7 @@
                 uk-padding-remove">
                     <div
                     v-if="showTags"
-                    class="uk-position-bottom-left uk-padding-small">
+                    class="tags uk-position-bottom-left uk-padding-small">
                         <ul class="uk-iconnav">
                             <li
                             v-for="(tag, i) in tags"
@@ -66,8 +66,28 @@
                         </ul>
                     </div>
                     <AppImage
+                    v-if="sizesLoaded && imageLarge.source"
                     :src="imageLarge.source"
-                    preload
+                    :height="imgheight"
+                    :width="imgwidth"
+                    class="uk-box-shadow-xlarge" />
+                    <AppImage
+                    v-else-if="sizesLoaded && imageLarge1600.source"
+                    :src="imageLarge1600.source"
+                    :height="imgheight"
+                    :width="imgwidth"
+                    class="uk-box-shadow-xlarge" />
+                    <AppImage
+                    v-else-if="sizesLoaded && imageOriginal.source"
+                    :src="imageOriginal.source"
+                    :height="imgheight"
+                    :width="imgwidth"
+                    class="uk-box-shadow-xlarge" />
+                    <AppImage
+                    v-else
+                    :src="imageSrc"
+                    :height="imgheight"
+                    :width="imgwidth"
                     class="uk-box-shadow-xlarge" />
                 </div>
             </article>
@@ -94,12 +114,23 @@ import AppModal from '@/components/AppModal.vue';
 export default {
     name: 'ImageModal',
     extends: AppModal,
-    components: { AppImage },
+
+    components: {
+        AppImage
+    },
 
     data() {
         return {
+            count: 0,
             dimension: 'vertical',
             error: null,
+            image: {
+                height: null,
+                label: null,
+                loaded: false,
+                source: null,
+                width: null
+            },
             loading: true,
             sizes: [{
                 height: 0,
@@ -110,6 +141,7 @@ export default {
                 width: 0
             }],
             showTags: false,
+            sizesLoaded: false,
             tags: []
         };
     },
@@ -120,40 +152,33 @@ export default {
             default: () => ({})
         },
 
+        imageSrc: {
+            type: String,
+            default: ''
+        },
+
         apiKey: {
             type: String,
             default: ''
-        }
+        },
+
+        imgheight: {
+            type: Number,
+            default: null
+        },
+        imgwidth: {
+            type: Number,
+            default: null
+        },
     },
 
     created() {
         this.getImageSizes();
         this.getImageTags();
-    },
-
-    mounted() {
-        let count = 0;
-        let interval = setInterval(() => {
-            if (count < 20) {
-                if (this.imageLarge !== null) {
-                    this.getImageDimensions(
-                        this.imageLarge.height,
-                        this.imageLarge.width
-                    );
-
-                    setTimeout(() => {
-                        this.loading = false;
-                        clearInterval(interval);
-                    }, 400);
-                }
-
-                count++;
-            } else {
-                this.error = 'Error loading image.';
-                this.loading = false;
-                clearInterval(interval);
-            }
-        }, 100);
+        this.getImageDimensions(
+            Number(this.imageProp.height_l),
+            Number(this.imageProp.width_l)
+        );
     },
 
     computed: {
@@ -177,6 +202,16 @@ export default {
     },
 
     methods: {
+        imageLoaded(imgElement) {
+            return imgElement.complete && imgElement.naturalHeight !== 0;
+        },
+
+        /**
+         * Returns the available sizes for a photo.
+         * The calling user must have permission to view the photo.
+         * @method getImageSizes
+         * @see [example]{@link https://www.flickr.com/photos/picturesofparker/47783772942/sizes/l/}
+         */
         getImageSizes() {
             const endpoint = 'https://api.flickr.com/services/rest/?method=';
             const method = 'flickr.photos.getSizes';
@@ -192,10 +227,12 @@ export default {
                 .then(response => {
                     const data = response.data.sizes.size;
                     this.sizes = data;
+                    this.sizesLoaded = true;
                 })
                 .catch(error => {
                     this.error = error;
                     console.log(error);
+                    this.sizesLoaded = true;
                 });
         },
 
@@ -207,6 +244,7 @@ export default {
             if (w > h) dimension = 'horizontal';
             else dimension = 'vertical';
             this.dimension = dimension;
+            this.loading = false;
         },
 
         getImageTags(photoId = this.imageProp.id) {
@@ -224,7 +262,7 @@ export default {
                 .then(response => {
                     const data = response.data.photo.tags.tag;
                     this.tags = data;
-                    this.showTags = true;
+                    if (data.length) this.showTags = true;
                 })
                 .catch(error => {
                     this.error = error;
@@ -241,6 +279,11 @@ export default {
     background: none;
 }
 
+// .uk-modal-body {
+//     max-height: 80vh;
+//     max-width: 80vw;
+// }
+
 .loading {
     .uk-modal-dialog {
         background: none;
@@ -253,7 +296,7 @@ export default {
     }
 }
 
-.uk-close {
+.uk-close.uk-modal-close-default {
     animation-delay: 600ms;
     background: white;
     padding: 10px;
@@ -261,19 +304,45 @@ export default {
     top: 0;
 }
 
-.image {
-    &-horizontal img {
-        height: auto;
-        width: 90vw;
-    }
+.tags {
+    z-index: 1;
+}
 
-    &-vertical img {
-        height: 90vh;
-        width: auto;
-    }
+// .image {
+//     &-horizontal img {
+//         height: auto;
+//         width: 80vw;
+//     }
+
+//     &-vertical img {
+//         height: 80vh;
+//         width: auto;
+//     }
+// }
+
+.imageSrc {
+    height: auto;
+    width: 100%;
 }
 
 .uk-label {
     cursor: default;
+}
+</style>
+
+
+<style lang="scss">
+.image {
+    &-horizontal figure,
+    &-horizontal img {
+        height: auto;
+        width: 80vw;
+    }
+
+    &-vertical figure,
+    &-vertical img {
+        height: 80vh;
+        width: auto;
+    }
 }
 </style>

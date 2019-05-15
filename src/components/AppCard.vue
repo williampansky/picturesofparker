@@ -5,7 +5,11 @@
     uk-card-default
     uk-card-small">
         <header class="uk-card-media-top">
-            <AppImage :src="src" />
+            <AppImage
+            :alt="title"
+            :src="src"
+            :height="Number(imgheight)"
+            :width="Number(imgwidth)" />
         </header>
         <div
         v-if="displayTitle"
@@ -46,7 +50,9 @@ export default {
         src: { type: String, default: '' },
         // tags: { type: Array, default: () => ([]) },
         tags: { type: String },
-        title: { type: String, default: '' }
+        title: { type: String, default: '' },
+        imgheight: { type: Number, default: null },
+        imgwidth: { type: Number, default: null },
     },
     computed: {
         displayTitle() {
@@ -101,6 +107,7 @@ article {
         &:before {
             content: '';
             background: rgba(255, 255, 255, 0);
+            pointer-events: none;
             transition: all 150ms cubic-bezier(0.25, 0.8, 0.25, 1);
             @include position-absolute(0, 0, 0, 0);
         }
@@ -142,6 +149,7 @@ article {
 
         header:before {
             background: rgba(255, 255, 255, 0.365);
+            z-index: 1;
         }
     }
 }

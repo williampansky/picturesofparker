@@ -26,6 +26,9 @@ import TheHome from '@/views/TheHome.vue';
 // Views => 404
 import NotFound from '@/views/The404.vue';
 
+// Views => Sandbox
+import TheSandbox from '@/views/TheSandbox.vue';
+
 /**
  * Lazyloading
  * @see [Lazy-Loading]{@link https://router.vuejs.org/guide/advanced/lazy-loading.html}
@@ -49,6 +52,14 @@ const router = new Router({
             component: TheHome,
             meta: {
                 title: DEFAULT_TITLE
+            }
+        },
+        {
+            path:      '/sandbox',
+            name:      'sandbox',
+            component: TheSandbox,
+            meta: {
+                title: DEFAULT_TITLE + ' | Sandbox'
             }
         },
         {
