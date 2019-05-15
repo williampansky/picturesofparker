@@ -4,8 +4,7 @@
             <AppGrid
             gutter
             masonry
-            match
-            >
+            match>
                 <div
                 v-for="(image, index) in images"
                 :key="index">
@@ -13,17 +12,24 @@
                     :src="constructPhotoUrl(image)"
                     :tags="image.tags"
                     :title="image.title"
-                    @click.native="openAppModal(image)" />
+                    :imgheight="Number(image.height_n)"
+                    :imgwidth="Number(image.width_n)"
+                    @click.native="openAppModal(image, index)" />
                 </div>
             </AppGrid>
         </section>
 
         <ImageModal
+        v-shortkey="{prev: ['arrowleft'], next: ['arrowright']}"
         v-if="modal.active"
         :imageProp="modal.image"
+        :imageSrc="constructPhotoUrl(modal.image)"
+        :imgheight="Number(modal.image.height_l)"
+        :imgwidth="Number(modal.image.width_l)"
         :apiKey="api.key"
-        close="outside"
+        close="default"
         variation="image"
+        @shortkey="cycleCurrentPhoto()"
         @close="closeAppModal()" />
     </main>
 </template>
@@ -59,28 +65,16 @@ export default {
             images: [],
             modal: {
                 active: false,
+                image: null,
+                index: null,
                 src: null,
                 tags: []
             },
-            override: true
+            override: false
         };
     },
 
     created() {
-        // apply credentials.json key to $vm.data
-        // if (process.env.NODE_ENV === 'production') {
-        //     this.api = {
-        //         key: process.env.REACT_APP_CUSTOM_API_KEY,
-        //         user: process.env.REACT_APP_CUSTOM_USER_ID
-        //     };
-        // } else {
-        //     this.api = {
-        //         key: process.env.VUE_APP_APIKEY,
-        //         user: process.env.VUE_APP_APIUSER
-        //     };
-        // }
-
-        // this.consoleLogs();
         this.getApiKey();
     },
 
@@ -91,10 +85,27 @@ export default {
     computed: {
         ...mapGetters([
             'getPhotos'
-        ])
+        ]),
+        match() {
+            return this.images.find(img => img.id === this.modal.image.id);
+        },
+        firstImage() {
+            return this.images[0];
+        }
     },
 
     methods: {
+        /**
+         * @see [stackoverflow]{@link https://stackoverflow.com/a/2498500}
+         */
+        next(number) {
+            var index = this.images.indexOf(number);
+            index++;
+            if (index >= this.images.length) index = 0;
+            console.log(this.images[index]);
+            return this.images[index];
+        },
+
         refreshApi() {
             // grab photos if not set in localStorage
             setTimeout(() => {
@@ -109,10 +120,12 @@ export default {
                 }
             }, 2000);
         },
-        openAppModal(value) {
+
+        openAppModal(value, idx) {
             this.modal = {
                 active: true,
                 image: value,
+                index: idx,
                 src: this.constructPhotoUrl(value),
                 tags: value.tags
             };
@@ -122,6 +135,7 @@ export default {
             this.modal = {
                 active: false,
                 image: null,
+                index: null,
                 src: null,
                 tags: []
             };
@@ -139,7 +153,21 @@ export default {
         getPhotosFromApi() {
             const endpoint = 'https://api.flickr.com/services/rest/?method=';
             const method = 'flickr.people.getPhotos';
-            const extras = 'description, date_upload, date_taken, sizes, tags, views';
+            const extras = [
+                'description',
+                'date_upload',
+                'date_taken',
+                'sizes',
+                'tags',
+                'url_h', // Large 1600 (1600 x 900)
+                'url_l', // Large 1024 (1024 x 576)
+                'url_m', // Medium 500 (500 x 281)
+                'url_n', // Small 320 (320 x 180)
+                'url_o', // Original (3840 x 2160)
+                'url_q', // Square 150 (150 x 150)
+                'url_t', // Thumbnail (100 x 56)
+                'views'
+            ].toString();
 
             this.$axios
                 .get(endpoint + method, {
@@ -182,6 +210,19 @@ export default {
                     this.error = error;
                     console.error(error);
                 });
+        },
+
+        cycleCurrentPhoto(event) {
+            /* eslint-disable */
+            switch (event.srcKey) {
+            case 'prev':
+                let match = this.images.find(img => img.id === this.modal.image.id);
+                // this.openAppModal()
+                console.log(this.next(this.match));
+                break
+            case 'next':
+                break
+            }
         }
     }
 };
