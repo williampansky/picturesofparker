@@ -1,6 +1,6 @@
 <template>
     <main>
-        <section class="uk-container uk-container-expand">
+        <!-- <section class="uk-container uk-container-expand">
             <AppGrid
             small
             match
@@ -17,7 +17,9 @@
                     @click.native="openAppModal(image, index)" />
                 </div>
             </AppGrid>
-        </section>
+        </section> -->
+
+        <SwipeModal :images="images" />
 
         <ImageModal
         v-shortkey="{
@@ -50,18 +52,20 @@
  * @module TheHome
  * @version 0.1.6
  */
-import AppCard from '@/components/AppCard.vue';
-import AppGrid from '@/components/AppGrid.vue';
+// import AppCard from '@/components/AppCard.vue';
+// import AppGrid from '@/components/AppGrid.vue';
 import ImageModal from '@/components/ImageModal.vue';
+import SwipeModal from '@/components/SwipeModal.vue';
 import { mapGetters } from 'vuex';
 
 export default {
     name: 'TheHome',
 
     components: {
-        AppCard,
-        AppGrid,
-        ImageModal
+        // AppCard,
+        // AppGrid,
+        ImageModal,
+        SwipeModal
     },
 
     data() {
