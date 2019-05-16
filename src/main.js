@@ -17,16 +17,13 @@ import store from './store';
 import router from './router';
 import axios from 'axios';
 import SmoothReflow from './components/SmoothReflow';
+import VuePreview from './components/vue-preview';
 import UIkit from 'uikit';
 import '@/styles/vendor/uikit.scss';
 import Icons from 'uikit/dist/js/uikit-icons';
-import LazyLoadDirective from './directives/LazyLoadDirective';
-import VueLazyload from 'vue-lazyload';
 
 UIkit.use(Icons);
 window.UIkit = UIkit;
-
-
 
 
 /**
@@ -60,7 +57,16 @@ Vue.config.productionTip = false;
  * @method LazyLoadDirective
  * @see [CssTricks]{@link https://css-tricks.com/lazy-loading-images-with-vue-js-directives-and-intersection-observer}
  */
-Vue.directive('lazyload', LazyLoadDirective);
+// Vue.directive('lazyload', LazyLoadDirective);
+
+
+
+
+/**
+ * @method VuePreview
+ * @see [GitHub]{@link https://github.com/LS1231/vue-preview}
+ */
+Vue.use(VuePreview);
 
 
 
@@ -69,13 +75,13 @@ Vue.directive('lazyload', LazyLoadDirective);
  * @method VueLazyload
  * @see [GitHub]{@link https://github.com/hilongjw/vue-lazyload}
  */
-Vue.use(VueLazyload, {
-    attempt: 3,
-    error: '',
-    lazyComponent: true,
-    loading: '',
-    preLoad: 1.3,
-});
+// Vue.use(VueLazyload, {
+//     attempt: 3,
+//     error: '',
+//     lazyComponent: true,
+//     loading: '',
+//     preLoad: 1.3,
+// });
 
 
 
@@ -138,8 +144,6 @@ Vue.use(VueMq, {
  * Plugin for VueJS 2.x accepts shortcuts globaly and in a single listener.
  */
 Vue.use(require('vue-shortkey'));
-// Vue.use(require('normalize.css'));
-// Vue.use(require('milligram'));
 
 
 

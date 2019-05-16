@@ -1,44 +1,48 @@
 <template>
     <main>
-        <section class="uk-container uk-container-expand">
+        <!-- <section class="uk-container uk-container-expand">
             <AppGrid
-            gutter
-            masonry
-            match>
+            small
+            match
+            masonry>
                 <div
                 v-for="(image, index) in images"
-                :key="index"
-                :class="$mq | mq({
-                    xs: childWidth(image.height_n, image.width_n),
-                    s: childWidth(image.height_n, image.width_n),
-                    m: '',
-                    l: '',
-                    xl: ''
-                })">
+                :key="index">
                     <AppCard
-                    :src="constructPhotoUrl(image)"
                     :tags="image.tags"
                     :title="image.title"
-                    :imgheight="Number(image.height_n)"
+                    :src="constructPhotoUrl(image)"
                     :imgwidth="Number(image.width_n)"
+                    :imgheight="Number(image.height_n)"
                     @click.native="openAppModal(image, index)" />
                 </div>
             </AppGrid>
-        </section>
+        </section> -->
+
+        <SwipeModal :images="images" />
 
         <ImageModal
-        v-shortkey="{prev: ['arrowleft'], next: ['arrowright']}"
+        v-shortkey="{
+            prev: ['arrowleft'],
+            next: ['arrowright']
+        }"
         v-if="modal.active"
-        :fullmodal="$mq | mq({ xs:true, s: true, m: false, l: false, xl: false })"
+        :fullmodal="$mq | mq({
+            xs: true,
+            s:  true,
+            m:  false,
+            l:  false,
+            xl: false
+        })"
         :imageProp="modal.image"
-        :imageSrc="constructPhotoUrl(modal.image)"
-        :imgheight="Number(modal.image.height_l)"
         :imgwidth="Number(modal.image.width_l)"
+        :imgheight="Number(modal.image.height_l)"
+        :imageSrc="constructPhotoUrl(modal.image)"
         :apiKey="api.key"
-        close="default"
         variation="image"
-        @shortkey="cycleCurrentPhoto()"
-        @close="closeAppModal()" />
+        close="default"
+        @close="closeAppModal()"
+        @shortkey.native="cycleCurrentPhoto($event, modal.index)" />
     </main>
 </template>
 
@@ -46,21 +50,22 @@
 <script>
 /**
  * @module TheHome
- * @version 0.1.2
+ * @version 0.1.6
  */
-import AppCard from '@/components/AppCard.vue';
-import AppGrid from '@/components/AppGrid.vue';
-// import AppModal from '@/components/AppModal.vue';
+// import AppCard from '@/components/AppCard.vue';
+// import AppGrid from '@/components/AppGrid.vue';
 import ImageModal from '@/components/ImageModal.vue';
+import SwipeModal from '@/components/SwipeModal.vue';
 import { mapGetters } from 'vuex';
 
 export default {
     name: 'TheHome',
 
     components: {
-        AppCard,
-        AppGrid,
-        ImageModal
+        // AppCard,
+        // AppGrid,
+        ImageModal,
+        SwipeModal
     },
 
     data() {
@@ -94,9 +99,11 @@ export default {
         ...mapGetters([
             'getPhotos'
         ]),
+
         match() {
             return this.images.find(img => img.id === this.modal.image.id);
         },
+
         firstImage() {
             return this.images[0];
         }
@@ -106,11 +113,19 @@ export default {
         /**
          * @see [stackoverflow]{@link https://stackoverflow.com/a/2498500}
          */
+        previous(number) {
+            let index = this.images.indexOf(number);
+            index--;
+            if (index >= this.images.length) index = 0;
+            // console.log(this.images[index]);
+            return this.images[index];
+        },
+
         next(number) {
-            var index = this.images.indexOf(number);
+            let index = this.images.indexOf(number);
             index++;
             if (index >= this.images.length) index = 0;
-            console.log(this.images[index]);
+            // console.log(this.images[index]);
             return this.images[index];
         },
 
@@ -230,16 +245,35 @@ export default {
                 });
         },
 
-        cycleCurrentPhoto(event) {
+        cycleCurrentPhoto(event, index) {
+            console.log(event);
             /* eslint-disable */
             switch (event.srcKey) {
-            case 'prev':
-                let match = this.images.find(img => img.id === this.modal.image.id);
-                // this.openAppModal()
-                console.log(this.next(this.match));
-                break
-            case 'next':
-                break
+                case 'prev':
+                this.$nextTick(() => {
+                    this.modal = {
+                        active: true,
+                        image: this.previous(this.match),
+                        index: index--,
+                        src: this.constructPhotoUrl(
+                            this.previous(this.match)
+                        ),
+                        tags: this.previous(this.match).tags
+                    };
+                });
+
+                case 'next':
+                    this.$nextTick(() => {
+                        this.modal = {
+                            active: true,
+                            image: this.next(this.match),
+                            index: index++,
+                            src: this.constructPhotoUrl(
+                                this.next(this.match)
+                            ),
+                            tags: this.next(this.match).tags
+                        };
+                    });
             }
         }
     }

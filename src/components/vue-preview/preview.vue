@@ -1,0 +1,98 @@
+<template>
+    <article class="uk-container uk-container-expand">
+        <div
+        class="
+        uk-grid
+        uk-grid-view
+        uk-grid-small
+        uk-grid-match
+        uk-child-width-1-2
+        uk-child-width-1-3@m
+        uk-child-width-1-4@l
+        uk-child-width-1-6@xl"
+        uk-grid="masonry:true;"
+        itemtype="http://schema.org/ImageGallery">
+            <figure
+            v-for="(item, index) in slides"
+            :key="index"
+            itemscope
+            itemprop="associatedMedia"
+            itemtype="http://schema.org/ImageObject">
+                <a
+                :href="item.src"
+                :data-size="'' + item.w + 'x' + item.h"
+                itemprop="contentUrl"
+                >
+                    <img
+                    :src="item.msrc"
+                    :alt="item.alt"
+                    itemprop="thumbnail" />
+                </a>
+                <figcaption
+                style="display: none;"
+                itemprop="caption description">{{
+                    item.title
+                }}</figcaption>
+            </figure>
+        </div>
+        <div
+        class="pswp"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+            <div class="pswp__bg"></div>
+            <div class="pswp__scroll-wrap">
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+                <div class="pswp__ui pswp__ui--hidden">
+
+                    <div class="pswp__top-bar">
+                        <div class="pswp__counter"></div>
+                        <button
+                        class="pswp__button pswp__button--close"
+                        title="Close (Esc)"></button>
+                        <button
+                        class="pswp__button pswp__button--share"
+                        title="Share"></button>
+                        <button
+                        class="pswp__button pswp__button--fs"
+                        title="Toggle fullscreen"></button>
+                        <button
+                        class="pswp__button pswp__button--zoom"
+                        title="Zoom in/out"></button>
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                                <div class="pswp__preloader__cut">
+                                    <div class="pswp__preloader__donut"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                        <div class="pswp__share-tooltip"></div>
+                    </div>
+                    <button
+                    class="pswp__button pswp__button--arrow--left"
+                    title="Previous (arrow left)">
+                    </button>
+                    <button
+                    class="pswp__button pswp__button--arrow--right"
+                    title="Next (arrow right)">
+                    </button>
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</template>
+
+
+<style>
+@import '~photoswipe/dist/photoswipe.css';
+@import '~photoswipe/dist/default-skin/default-skin.css';
+</style>
