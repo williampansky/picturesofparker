@@ -15,14 +15,10 @@
         <meta name="robots" content="noindex, nofollow">
         <meta name="theme-color" content="#333">
 
-        <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
-
-        <% for (key in htmlWebpackPlugin.files.css) { %>
+        <!-- <% for (key in htmlWebpackPlugin.files.css) { %>
             <link
             href="<%= htmlWebpackPlugin.files.css[key] %>" rel="stylesheet" />
-        <% } %>
+        <% } %> -->
     </head>
     <body>
         <noscript>
@@ -32,10 +28,10 @@
 
         <div id="app"></div>
         
-        <% for (key in htmlWebpackPlugin.files.chunks) { %>
+        <!-- <% for (key in htmlWebpackPlugin.files.chunks) { %>
         <script
         type="text/javascript"
         src="<%= htmlWebpackPlugin.files.chunks[key].entry %>"></script>
-        <% } %>
+        <% } %> -->
     </body>
 </html>
