@@ -1,6 +1,7 @@
 <template>
     <vue-preview
     :slides="computedImages"
+    @open="handleOpen($event)"
     @close="handleClose"></vue-preview>
 </template>
 
@@ -24,18 +25,58 @@ export default {
         }
     },
 
+    data() {
+        return {
+            modal: {}
+        };
+    },
+
     computed: {
         computedImages() {
             return this.images.map(img => {
                 return {
-                    src: img.url_o, // Large 1600 (1600 x 900)
-                    msrc: img.url_m, // Medium 500 (500 x 281)
+                    /**
+                     * vue-preview required key/value pairs:
+                     * — src    (large endpoint)
+                     * — msrc   (mobile endpoint)
+                     * — alt    (image alt text)
+                     * — title  (image title)
+                     * — h      (image height)
+                     * — w      (image width)
+                     * — pid    (custom url hash)
+                     */
+                    // Large 1600 (1600 x 900) or Original (3840 x 2160)
+                    src: img.url_h
+                        ? img.url_h
+                        : img.url_o,
+                    // return Medium 500 (500 x 281) or Thumbnail (100 x 56)
+                    msrc: img.url_m
+                        ? img.url_m
+                        : img.url_t,
+                    // return description string or default
                     alt: img.description._content
                         ? img.description._content
                         : 'A picture of Parker.',
-                    title: img.title,
-                    w: Number(img.width_o),
-                    h: Number(img.height_o),
+                    // return title string or default
+                    title: img.title
+                        ? img.title
+                        : 'A picture of Parker.',
+                    // return Large 1600 height or Original height
+                    h: img.height_h
+                        ? Number(img.height_h)
+                        : Number(img.height_o),
+                    // return Large 1600 width or Original width
+                    w: img.width_h
+                        ? Number(img.width_h)
+                        : Number(img.width_o),
+                    // return kebab-cased title or img.id
+                    pid: img.title
+                        ? this.parseTitle(img.title)
+                        : img.id,
+
+                    /**
+                     * additional api key/value pairs
+                     */
                     id: img.id,
                     owner: img.owner,
                     secret: img.secret,
@@ -49,26 +90,36 @@ export default {
                     datetaken: img.datetaken,
                     datetakengranularity: img.datetakengranularity,
                     datetakenunknown: img.datetakenunknown,
+                    // return tags comma-separated or null
+                    tags: img.tags
+                        ? this.parseTags(img.tags)
+                        : '',
                     views: img.views,
-                    tags: img.tags,
+                    // size => Large 1600 (1600 x 900)
                     url_h: img.url_h,
                     height_h: Number(img.height_h),
                     width_h: Number(img.width_h),
+                    // size => Large 1024 (1024 x 576)
                     url_l: img.url_l,
                     height_l: Number(img.height_l),
                     width_l: Number(img.width_l),
+                    // size => Medium 500 (500 x 281)
                     url_m: img.url_m,
                     height_m: Number(img.height_m),
                     width_m: Number(img.width_m),
+                    // size => Small 320 (320 x 180)
                     url_n: img.url_n,
                     height_n: Number(img.height_n),
                     width_n: Number(img.width_n),
+                    // size => Original (3840 x 2160)
                     url_o: img.url_o,
                     height_o: Number(img.height_o),
                     width_o: Number(img.width_o),
+                    // size => Square 150 (150 x 150)
                     url_q: img.url_q,
                     height_q: Number(img.height_q),
                     width_q: Number(img.width_q),
+                    // size => Thumbnail (100 x 56)
                     url_t: img.url_t,
                     height_t: Number(img.height_t),
                     width_t: Number(img.width_t),
@@ -107,139 +158,57 @@ export default {
     // },
 
     methods: {
-        handleClose() {
-            // console.log('close event');
+        handleClose() { this.modal = {}; },
+        handleOpen(payload) { this.modal = payload; },
+
+        /**
+         * Parses string param & returns it kebab-cased.
+         * @method parseTitle
+         * @param {String} string String to parse & return with dashes
+         * @see [StackOverflow]{@link https://stackoverflow.com/a/1983661}
+         */
+        parseTitle(string) {
+            return string.replace(/\W+/g, '-').toLowerCase();
         },
 
-        // resizeMasonryItem(item) {
-        //     /**
-        //      * Get the grid object, its row-gap,
-        //      * and the size of its implicit rows.
-        //      */
-        //     // const grid = document.querySelector('.masonry');
-        //     const grid = document.querySelector('.masonry');
-
-        //     const rowGap = parseInt(
-        //         window.getComputedStyle(grid).getPropertyValue('grid-row-gap')
-        //     );
-
-        //     const rowHeight = parseInt(
-        //         window.getComputedStyle(grid).getPropertyValue('grid-auto-rows')
-        //     );
-
-        //     /*
-        //      * Spanning for any brick = S
-        //      * Grid's row-gap = G
-        //      * Size of grid's implicitly create row-track = R
-        //      * Height of item content = H
-        //      * Net height of the item = H1 = H + G
-        //      * Net height of the implicit row-track = T = G + R
-        //      * S = H1 / T
-        //      */
-        //     const rowSpan = Math.ceil(
-        //         (item.querySelector('.masonry-content')
-        //             .getBoundingClientRect()
-        //             .height + rowGap
-        //         ) / (rowHeight + rowGap)
-        //     );
-
-        //     /**
-        //      * Set the spanning as calculated above (S)
-        //      */
-        //     item.style.gridRowEnd = 'span ' + rowSpan;
-
-        //     /**
-        //      * Make the images take all the
-        //      * available space in the cell/item.
-        //      */
-        //     item.querySelector('.masonry-content')
-        //         .style.height = rowSpan * 10 + 'px';
-        // },
-
-        // resizeAllMasonryItems() {
-        //     // Get all item class objects in one list
-        //     const allItems = document.querySelectorAll('.masonry-item');
-
-        //     /*
-        //      * Loop through the above list & execute
-        //      * the spanning function to each
-        //      * list-item (i.e. each masonry item)
-        //      */
-        //     for (let i = 0; i > allItems.length; i++)
-        //         this.resizeMasonryItem(allItems[i]);
-        // },
-
-        // waitForImages() {
-        //     const allItems = document.querySelectorAll('.masonry-item');
-        //     for (let i = 0; i < allItems.length; i++) {
-        //         imagesLoaded(allItems[i], instance => {
-        //             let item = instance.elements[0];
-        //             this.resizeMasonryItem(item);
-        //         });
-        //     }
-        // }
+        /**
+         * Parses string param & returns it with commas.
+         * @method parseTags
+         * @param {String} string String to parse & return with commas
+         * @see [StackOverflow]{@link https://stackoverflow.com/a/1983661}
+         */
+        parseTags(string) {
+            return string.replace(/\W+/g, ', ').toLowerCase();
+        },
     }
-
 };
 </script>
 
 
 <style lang="scss">
-/* stylelint-disable */
-// figure {
-//     margin: 0 !important;
-// }
+.grid-item {
+    &-link {
+        display: block;
+    }
 
-figure a {
-    display: block;
+    &-image {
+        width: 100%;
+    }
 }
 
-figure img {
-    width: 100%;
+// photoswipe (pswp) modal dialog
+.pswp {
+    // add transition for keypresses
+    // .pswp__container {
+    //     transition: transform 200ms ease-in-out;
+    // }
+
+    // caption/title
+    .pswp__caption__center {
+        cursor: default;
+        margin: 0;
+        max-width: none;
+        @include display-flex(row nowrap, center, space-between);
+    }
 }
-
-// .masonry {
-//     display: grid;
-//     grid-auto-rows: 0;
-//     grid-gap: 10px;
-//     grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
-
-//     &-item {
-//         background-color: #eee;
-//         border-radius: 0;
-//         margin: 0;
-//         overflow: hidden;
-//         position: relative;
-//     }
-
-//     &-item a {
-//         display: block;
-//     }
-
-//     &-item img {
-//         position: relative;
-//     }
-
-//     &:after {
-//         align-items: center;
-//         background-color: rgba(0, 0, 0, 0.5);
-//         color: white;
-//         counter-increment: masonry;
-//         display: flex;
-//         font-weight: bold;
-//         height: 100%;
-//         justify-content: center;
-//         left: 0;
-//         position: absolute;
-//         top: 0;
-//         transition: all 100ms ease-in;
-//         width: 100%;
-//     }
-
-//     &:hover, &:focus {
-//         &:after {
-//             background-color: rgba(0, 0, 0, 0.75);
-//         }
-//     }
-// }
 </style>
