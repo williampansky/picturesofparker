@@ -19,6 +19,7 @@
 import Vue  from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
+// import * as Cookies from 'js-cookie';
 
 
 /**
@@ -27,19 +28,32 @@ import createPersistedState from 'vuex-persistedstate';
  * @description
  * The guest session store module for managing session information.
  */
-import session from './store/session';
+// import session from './store/session';
 
 
 Vue.use(Vuex);
 export default new Vuex.Store({
     plugins: [
         createPersistedState()
+        // createPersistedState({
+        //     storage: {
+        //         getItem: key => Cookies.get(key),
+
+        //         // Please see https://github.com/js-cookie/js-cookie#json
+        //         setItem: (key, value) => Cookies.set(key, value, {
+        //             expires: 3,
+        //             secure: true
+        //         }),
+
+        //         removeItem: key => Cookies.remove(key)
+        //     },
+        // })
     ],
     strict: false,
 
-    modules: {
-        session
-    },
+    // modules: {
+    //     session
+    // },
 
     state: {
         authError: '',
