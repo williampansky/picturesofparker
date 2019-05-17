@@ -12,78 +12,93 @@
         uk-child-width-1-6@xl"
         uk-grid="masonry:true;"
         itemtype="http://schema.org/ImageGallery">
+            <!-- @click="$emit('open', item)" -->
             <figure
             v-for="(item, index) in slides"
             :key="index"
+            :data-pswp-index="index"
+            :data-pswp-pid="item.pid"
             itemscope
+            class="grid-item"
             itemprop="associatedMedia"
-            itemtype="http://schema.org/ImageObject">
+            itemtype="http://schema.org/ImageObject"
+            >
                 <a
                 :href="item.src"
                 :data-size="'' + item.w + 'x' + item.h"
                 itemprop="contentUrl"
-                >
+                class="grid-item-link">
                     <img
                     :src="item.msrc"
                     :alt="item.alt"
-                    itemprop="thumbnail" />
+                    itemprop="thumbnail"
+                    class="grid-item-image" />
                 </a>
                 <figcaption
                 style="display: none;"
-                itemprop="caption description">{{
-                    item.title
-                }}</figcaption>
+                class="grid-item-caption"
+                itemprop="caption description">
+                    <span>{{ item.title }}</span>
+                    <span v-if="item.tags">{{ item.tags }}</span>
+                </figcaption>
             </figure>
         </div>
+
+
         <div
         class="pswp"
         tabindex="-1"
         role="dialog"
         aria-hidden="true">
-            <div class="pswp__bg"></div>
+            <div class="pswp__bg" />
             <div class="pswp__scroll-wrap">
                 <div class="pswp__container">
-                    <div class="pswp__item"></div>
-                    <div class="pswp__item"></div>
-                    <div class="pswp__item"></div>
+                    <div class="pswp__item" />
+                    <div class="pswp__item" />
+                    <div class="pswp__item" />
                 </div>
-                <div class="pswp__ui pswp__ui--hidden">
 
+                <div class="pswp__ui pswp__ui--hidden">
                     <div class="pswp__top-bar">
-                        <div class="pswp__counter"></div>
+                        <div class="pswp__counter" />
                         <button
                         class="pswp__button pswp__button--close"
-                        title="Close (Esc)"></button>
+                        title="Close (Esc)" />
                         <button
                         class="pswp__button pswp__button--share"
-                        title="Share"></button>
+                        title="Share" />
                         <button
                         class="pswp__button pswp__button--fs"
-                        title="Toggle fullscreen"></button>
+                        title="Toggle fullscreen" />
                         <button
                         class="pswp__button pswp__button--zoom"
-                        title="Zoom in/out"></button>
+                        title="Zoom in/out" />
                         <div class="pswp__preloader">
                             <div class="pswp__preloader__icn">
                                 <div class="pswp__preloader__cut">
-                                    <div class="pswp__preloader__donut"></div>
+                                    <div class="pswp__preloader__donut" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-                        <div class="pswp__share-tooltip"></div>
+
+                    <div
+                    class="
+                    pswp__share-modal
+                    pswp__share-modal--hidden
+                    pswp__single-tap">
+                        <div class="pswp__share-tooltip" />
                     </div>
+
                     <button
                     class="pswp__button pswp__button--arrow--left"
-                    title="Previous (arrow left)">
-                    </button>
+                    title="Previous (arrow left)" />
                     <button
                     class="pswp__button pswp__button--arrow--right"
-                    title="Next (arrow right)">
-                    </button>
+                    title="Next (arrow right)" />
+
                     <div class="pswp__caption">
-                        <div class="pswp__caption__center"></div>
+                        <div class="pswp__caption__center" />
                     </div>
                 </div>
             </div>
