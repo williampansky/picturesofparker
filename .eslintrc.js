@@ -44,8 +44,8 @@ module.exports = {
 
 
      /**
-      * @summary This rule enforces consistent spacing between keys and 
-      * values in object literal properties. In the case of long lines, 
+      * @summary This rule enforces consistent spacing between keys and
+      * values in object literal properties. In the case of long lines,
       * it is acceptable to add a new line wherever whitespace is allowed.
       * @method key-spacing
       * @memberof ESLint
@@ -87,21 +87,21 @@ module.exports = {
 
 
      /**
-      * @summary This rule aims to disallow multiple whitespace around 
-      * logical expressions, conditional expressions, declarations, 
+      * @summary This rule aims to disallow multiple whitespace around
+      * logical expressions, conditional expressions, declarations,
       * array elements, object properties, sequences & function parameters.
       * @method no-multi-spaces
       * @memberof ESLint
       * @see [Docs]{@link https://eslint.org/docs/rules/no-multi-spaces}
       */
-     'no-multi-spaces': ['error', { exceptions: { 
+     'no-multi-spaces': ['error', { exceptions: {
          'ImportDeclaration': true,
          'VariableDeclarator': true,
      }}],
 
 
      /**
-      * @summary This rule disallows trailing whitespace (spaces, tabs, 
+      * @summary This rule disallows trailing whitespace (spaces, tabs,
       * and other Unicode whitespace characters) at the end of lines.
       * @method no-trailing-spaces
       * @memberof ESLint
@@ -243,7 +243,7 @@ module.exports = {
               */
              'vue/script-indent': ['error', 4, {
                  'baseIndent': 0,
-                 'switchCase': 0,
+                 'switchCase': 1,
                  'ignores': []
              }],
          }

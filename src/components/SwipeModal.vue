@@ -192,11 +192,11 @@ export default {
          */
         parseDateTaken(date, granularity) {
             switch (Number(granularity)) {
-            case 0: return 'Taken on ' + format(date, 'MMMM DD, YYYY');
-            case 4: return 'Taken in ' + format(date, 'MMMM, YYYY');
-            case 6: return 'Taken sometime in ' + format(date, 'YYYY');
-            case 8: return 'Taken in ' + format(date, 'YYYY');
-            default: return 'Taken on ' + format(date, 'MMMM DD, YYYY');
+                case 0: return 'Taken on ' + format(date, 'MMMM DD, YYYY');
+                case 4: return 'Taken in ' + format(date, 'MMMM, YYYY');
+                case 6: return 'Taken sometime in ' + format(date, 'YYYY');
+                case 8: return 'Taken in ' + format(date, 'YYYY');
+                default: return 'Taken on ' + format(date, 'MMMM DD, YYYY');
             }
         },
     }
