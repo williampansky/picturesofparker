@@ -293,7 +293,6 @@ export default {
         },
 
         getPhotosFromApi(key, value, timeout = 8000) {
-            /* eslint-disable */
             switch (key) {
                 case 'tag':
                     this.images = {};
@@ -361,7 +360,6 @@ export default {
                         });
                     break;
             }
-            /* eslint-enable */
         },
 
         commitPhotosToStore(value) {
