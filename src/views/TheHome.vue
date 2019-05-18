@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <div>
         <div
         uk-sticky="
         sel-target: .uk-navbar-container;
@@ -15,7 +15,7 @@
                     </ul> -->
                     <a
                     href="#"
-                    uk-toggle="target: #offcanvas-overlay"
+                    uk-toggle="target: #offcanvas"
                     class="uk-navbar-item uk-icon"
                     uk-icon="icon:menu;" />
                     <!-- <div class="uk-navbar-item">
@@ -23,16 +23,13 @@
                     </div> -->
                 </div>
 
-                <div class="uk-navbar-right">
+                <!-- <div class="uk-navbar-right">
                     <a
                     href="#"
                     class="uk-navbar-item uk-icon"
                     uk-icon="icon:home;">
-                        <!-- <span
-                        class="uk-icon"
-                         /> -->
                     </a>
-                </div>
+                </div> -->
             </nav>
         </div>
 
@@ -67,16 +64,38 @@
         <div
         v-else-if="error.images !== null"
         class="uk-section uk-section-small">
-            <p class="uk-container uk-text-center">
-                <span class="uk-text-danger">{{ error.images }}</span>
-            </p>
+            <div class="uk-container uk-text-center">
+                <p class="uk-text-lead">
+                    <span class="uk-text-danger">{{ error.images }}</span>
+                </p>
+                <p>
+                    <a
+                    href="#"
+                    uk-icon="icon: refresh;"
+                    class="try-again uk-icon"
+                    @click.prevent="getPhotosFromApi()">
+                        <span>Please try again.</span>
+                    </a>
+                </p>
+            </div>
         </div>
         <div
         v-else-if="!loading && error.images === null"
         class="uk-section uk-section-small">
-            <p class="uk-container uk-text-center">
-                <span class="uk-text-danger">Failed to load images.</span>
-            </p>
+            <div class="uk-container uk-text-center">
+                <p class="uk-text-lead">
+                    <span class="uk-text-danger">Failed to load images.</span>
+                </p>
+                <p>
+                    <a
+                    href="#"
+                    uk-icon="icon: refresh;"
+                    class="try-again uk-icon"
+                    @click.prevent="getPhotosFromApi()">
+                        <span>Please try again.</span>
+                    </a>
+                </p>
+            </div>
         </div>
 
         <footer
@@ -134,7 +153,7 @@
         </footer>
 
         <div
-        id="offcanvas-overlay"
+        id="offcanvas"
         uk-offcanvas="overlay:true;"
         class="uk-offcanvas">
             <div class="uk-offcanvas-bar">
@@ -153,7 +172,8 @@
                         <a
                         href="#"
                         class="offcanvas-link"
-                        @click="getPhotosFromApi()">
+                        uk-toggle="#offcanvas"
+                        @click.prevent="getPhotosFromApi()">
                             <span>Photos ({{ getPhotos.total }})</span>
                         </a>
                     </li>
@@ -165,14 +185,15 @@
                         <a
                         href="#"
                         class="offcanvas-link"
-                        @click="getPhotosFromApi('tag', tag)">
+                        uk-toggle="#offcanvas"
+                        @click.prevent="getPhotosFromApi('tag', tag)">
                             <span>{{ tag._content }} ({{ tag.count }})</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
-    </main>
+    </div>
 </template>
 
 
@@ -261,6 +282,7 @@ export default {
                     } else if (photoArray && photoArray.length) {
                         this.images = this.getPhotos;
                         this.success.images = true;
+                        this.loading = false;
                     } else {
                         this.getPhotosFromApi();
                     }
@@ -270,7 +292,7 @@ export default {
             }, 1200);
         },
 
-        getPhotosFromApi(key, value) {
+        getPhotosFromApi(key, value, timeout = 8000) {
             /* eslint-disable */
             switch (key) {
                 case 'tag':
@@ -288,14 +310,15 @@ export default {
                                 extras: this.photoextras,
                                 tags: value._content,
                                 format: 'json',
-                                nojsoncallback: 1
+                                nojsoncallback: 1,
+                                timeout: timeout
                             }
                         })
                         .then(response => {
                             const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
-                            setTimeout(() => { this.loading = false; }, 800);
+                            setTimeout(() => { this.loading = false; }, 1200);
                         })
                         .catch(error => {
                             this.error.images = error.message;
@@ -319,14 +342,15 @@ export default {
                                 user_id: this.api.user,
                                 extras: this.photoextras,
                                 format: 'json',
-                                nojsoncallback: 1
+                                nojsoncallback: 1,
+                                timeout: timeout
                             }
                         })
                         .then(response => {
                             const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
-                            setTimeout(() => { this.loading = false; }, 800);
+                            setTimeout(() => { this.loading = false; }, 1200);
                             this.commitPhotosToStore(data);
                         })
                         .catch(error => {
@@ -427,6 +451,18 @@ export default {
 
 .uk-nav-divider {
     border-top: 1px solid #e5e5e5;
+}
+
+.try-again {
+    @include display-flex(row-reverse nowrap, center, center);
+
+    & span {
+        margin-left: 0.5em;
+    }
+
+    &:hover, &:focus {
+        text-decoration: none;
+    }
 }
 
 .offcanvas-link {

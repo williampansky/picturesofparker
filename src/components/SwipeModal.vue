@@ -46,14 +46,8 @@ export default {
                      * — w      (image width)
                      * — pid    (custom url hash)
                      */
-                    // Large 1600 (1600 x 900) or Original (3840 x 2160)
-                    src: img.url_h
-                        ? img.url_h
-                        : img.url_o,
-                    // return Medium 500 (500 x 281) or Thumbnail (100 x 56)
-                    msrc: img.url_m
-                        ? img.url_m
-                        : img.url_t,
+                    src: this.parseSrc(img),
+                    msrc: this.parseMsrc(img),
                     // return description string or default
                     alt: img.description._content
                         ? img.description._content
@@ -88,9 +82,10 @@ export default {
                     isfamily: img.isfamily,
                     description: img.description,
                     dateupload: img.dateupload,
-                    datetaken: img.datetaken
-                        ? format(img.datetaken, 'MMMM DD, YYYY')
-                        : '',
+                    dateTakenString: this.parseDateTaken(
+                        img.datetaken, img.datetakengranularity
+                    ),
+                    datetaken: img.datetaken,
                     datetakengranularity: img.datetakengranularity,
                     datetakenunknown: img.datetakenunknown,
                     // return tags comma-separated or null
@@ -132,42 +127,38 @@ export default {
         }
     },
 
-    // mounted() {
-    //     /**
-    //      * Resize all the grid items
-    //      * on the load and resize events.
-    //      */
-    //     masonryEvents.forEach(event => {
-    //         window.addEventListener(
-    //             event,
-    //             this.resizeAllMasonryItems()
-    //         );
-    //     });
-
-    //     /**
-    //      * Do a resize once more when
-    //      * all the images finish loading.
-    //      */
-    //     this.waitForImages();
-    // },
-
-    // beforeDestroy() {
-    //     masonryEvents.forEach(event => {
-    //         window.removeEventListener(
-    //             event,
-    //             this.resizeAllMasonryItems()
-    //         );
-    //     });
-    // },
-
     methods: {
         handleClose() { this.modal = {}; },
         handleOpen(payload) { this.modal = payload; },
 
         /**
+         * Parses string param & returns url sizing.
+         * @method parseSrc
+         * @param {Object} img Image object
+         */
+        parseSrc(img) {
+            // return Large 1600 (1600 x 900) or Original (3840 x 2160)
+            return img.url_h ? img.url_h : img.url_o;
+        },
+
+        /**
+         * Parses string param & returns url sizing for mobile devices;
+         * first checks original size url and returns that if it's a gif.
+         * This allows gifs to play during the grid/gallery view.
+         * @method parseMsrc
+         * @param {Object} img Image object
+         */
+        parseMsrc(img) {
+            // check if url_o is a gif, if true - return gif
+            if (img.url_o.match(/(gif)/g)) return img.url_o;
+            else if (img.url_m) return img.url_m; // Medium 500 (500 x 281)
+            else return img.url_t; // Thumbnail (100 x 56)
+        },
+
+        /**
          * Parses string param & returns it kebab-cased.
          * @method parseTitle
-         * @param {String} string String to parse & return with dashes
+         * @param {String} string String to parse
          * @see [StackOverflow]{@link https://stackoverflow.com/a/1983661}
          */
         parseTitle(string) {
@@ -177,11 +168,36 @@ export default {
         /**
          * Parses string param & returns it with commas.
          * @method parseTags
-         * @param {String} string String to parse & return with commas
+         * @param {String} string String to parse
          * @see [StackOverflow]{@link https://stackoverflow.com/a/1983661}
          */
         parseTags(string) {
             return string.replace(/\W+/g, ', ').toLowerCase();
+        },
+
+        /**
+         * Parses string param & returns as a formatted date;
+         * e.g: "2019-05-18 07:55:45" to "May 18, 2019". Also checks
+         * the granularity of the date; which (according to the Flickr API)
+         * determines the accuracy to which we know the date to be true.
+         *
+         * At present, the following granularities are used:
+         * 0 — Y-m-d H:i:s  (returns "May 18, 2019")
+         * 4 — Y-m          (returns "May, 2019")
+         * 6 — Y            (returns "Sometime in 2019")
+         * 8 — Circa...     (returns "Circa 2019")
+         * @method parseDateTaken
+         * @param {String} date String to parse & format
+         * @param {Number} granularity Accuracy of date
+         */
+        parseDateTaken(date, granularity) {
+            switch (Number(granularity)) {
+            case 0: return 'Taken on ' + format(date, 'MMMM DD, YYYY');
+            case 4: return 'Taken in ' + format(date, 'MMMM, YYYY');
+            case 6: return 'Taken sometime in ' + format(date, 'YYYY');
+            case 8: return 'Taken in ' + format(date, 'YYYY');
+            default: return 'Taken on ' + format(date, 'MMMM DD, YYYY');
+            }
         },
     }
 };
