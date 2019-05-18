@@ -36,6 +36,8 @@ window.UIkit = UIkit;
  * Therefore, this file imports axios globally to be used throughout the app;
  * accessible via the variable `this.$axios`.
  */
+const flickrAPI = 'https://api.flickr.com/services/rest/';
+axios.defaults.baseURL = flickrAPI;
 Vue.prototype.$axios = axios;
 
 

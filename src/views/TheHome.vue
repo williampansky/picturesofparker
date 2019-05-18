@@ -1,48 +1,155 @@
 <template>
     <main>
-        <!-- <section class="uk-container uk-container-expand">
-            <AppGrid
-            small
-            match
-            masonry>
-                <div
-                v-for="(image, index) in images"
-                :key="index">
-                    <AppCard
-                    :tags="image.tags"
-                    :title="image.title"
-                    :src="constructPhotoUrl(image)"
-                    :imgwidth="Number(image.width_n)"
-                    :imgheight="Number(image.height_n)"
-                    @click.native="openAppModal(image, index)" />
+        <div
+        uk-sticky="
+        sel-target: .uk-navbar-container;
+        cls-active: uk-navbar-sticky;
+        show-on-up: true;
+        animation: uk-animation-slide-top;">
+            <nav
+            uk-navbar
+            class="uk-navbar-container uk-text-meta">
+                <div class="uk-navbar-left">
+                    <!-- <ul class="uk-navbar-nav">
+                        <li class="uk-active"><a href="#">Active</a></li>
+                    </ul> -->
+                    <a
+                    href="#"
+                    uk-toggle="target: #offcanvas-overlay"
+                    class="uk-navbar-item uk-icon"
+                    uk-icon="icon:menu;" />
+                    <!-- <div class="uk-navbar-item">
+                        <div>Some <a href="#">Link</a></div>
+                    </div> -->
                 </div>
-            </AppGrid>
-        </section> -->
 
-        <SwipeModal :images="images" />
+                <div class="uk-navbar-right">
+                    <a
+                    href="#"
+                    class="uk-navbar-item uk-icon"
+                    uk-icon="icon:home;">
+                        <!-- <span
+                        class="uk-icon"
+                         /> -->
+                    </a>
+                </div>
+            </nav>
+        </div>
 
-        <ImageModal
-        v-shortkey="{
-            prev: ['arrowleft'],
-            next: ['arrowright']
-        }"
-        v-if="modal.active"
-        :fullmodal="$mq | mq({
-            xs: true,
-            s:  true,
-            m:  false,
-            l:  false,
-            xl: false
-        })"
-        :imageProp="modal.image"
-        :imgwidth="Number(modal.image.width_l)"
-        :imgheight="Number(modal.image.height_l)"
-        :imageSrc="constructPhotoUrl(modal.image)"
-        :apiKey="api.key"
-        variation="image"
-        close="default"
-        @close="closeAppModal()"
-        @shortkey.native="cycleCurrentPhoto($event, modal.index)" />
+        <div
+        v-if="success.images"
+        class="uk-section uk-section-small">
+            <SwipeModal
+            :images="images" />
+        </div>
+        <div
+        v-else-if="!error.images"
+        class="uk-section uk-section-small">
+            <div class="uk-container uk-container-expand">
+                <div
+                class="
+                uk-grid
+                uk-grid-small
+                uk-grid-match
+                uk-child-width-1-2
+                uk-child-width-1-3@m
+                uk-child-width-1-4@l
+                uk-child-width-1-6@xl"
+                uk-grid="masonry:true;">
+                    <div
+                    v-for="n in loaders"
+                    :key="n">
+                        <AppLoader />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+        v-else
+        class="uk-section uk-section-small">
+            <p>{{ error.images }}</p>
+        </div>
+
+        <footer class="footer uk-section uk-section-small">
+            <nav
+            uk-navbar
+            class="
+            uk-text-meta
+            uk-container
+            uk-container-expand
+            uk-navbar-container
+            uk-navbar-transparent">
+                <div class="uk-navbar-left">
+                    <span>Copyright ©</span>
+                    <span>&nbsp;{{ new Date().getFullYear() }}&nbsp;</span>
+                    <span>picturesofparker.com</span>
+                </div>
+                <div class="uk-navbar-right">
+                    <ul class="uk-iconnav">
+                        <li>
+                            <a
+                            target="_blank"
+                            href="https://github.com/williampansky/picturesofparker"
+                            rel="noopener noreferrer"
+                            class="footer-link">
+                                <span
+                                class="uk-icon"
+                                uk-icon="icon:github;" />
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                            target="_blank"
+                            href="https://williampansky.com"
+                            class="footer-link">
+                                <span
+                                class="uk-icon"
+                                uk-icon="icon:user;" />
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                            target="_blank"
+                            href="https://flickr.com/api"
+                            rel="noopener noreferrer"
+                            class="footer-link">
+                                <span
+                                class="uk-icon"
+                                uk-icon="icon:flickr;" />
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </footer>
+
+        <div
+        id="offcanvas-overlay"
+        uk-offcanvas="overlay:true;"
+        class="uk-offcanvas">
+            <div class="uk-offcanvas-bar">
+                <button
+                class="uk-offcanvas-close"
+                type="button"
+                uk-close />
+                <p v-if="error.tags">{{ error.tags }}</p>
+                <ul
+                v-if="tags && tags.length"
+                class="uk-nav">
+                    <li class="uk-nav-header">Tags</li>
+                    <li
+                    v-for="(tag, idx) in tags"
+                    :key="idx">
+                        <a
+                        href="#"
+                        class="offcanvas-link"
+                        @click="getPhotosFromApi('tag', tag)">
+                            <span>{{ tag._content }} ({{ tag.count }})</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </main>
 </template>
 
@@ -50,11 +157,9 @@
 <script>
 /**
  * @module TheHome
- * @version 0.1.6
+ * @version 0.2.0
  */
-// import AppCard from '@/components/AppCard.vue';
-// import AppGrid from '@/components/AppGrid.vue';
-import ImageModal from '@/components/ImageModal.vue';
+import AppLoader from '@/components/AppLoader.vue';
 import SwipeModal from '@/components/SwipeModal.vue';
 import { mapGetters } from 'vuex';
 
@@ -62,9 +167,7 @@ export default {
     name: 'TheHome',
 
     components: {
-        // AppCard,
-        // AppGrid,
-        ImageModal,
+        AppLoader,
         SwipeModal
     },
 
@@ -74,16 +177,20 @@ export default {
                 key: null,
                 user: null
             },
-            error: null,
-            images: [],
-            modal: {
-                active: false,
-                image: null,
-                index: null,
-                src: null,
-                tags: []
+            error: {
+                api: null,
+                images: null,
+                tags: null
             },
-            override: false
+            loaders: 20,
+            success: {
+                api: false,
+                images: false,
+                tags: false
+            },
+            images: [],
+            override: false,
+            tags: []
         };
     },
 
@@ -100,93 +207,8 @@ export default {
             'getPhotos'
         ]),
 
-        match() {
-            return this.images.find(img => img.id === this.modal.image.id);
-        },
-
-        firstImage() {
-            return this.images[0];
-        }
-    },
-
-    methods: {
-        /**
-         * @see [stackoverflow]{@link https://stackoverflow.com/a/2498500}
-         */
-        previous(number) {
-            let index = this.images.indexOf(number);
-            index--;
-            if (index >= this.images.length) index = 0;
-            // console.log(this.images[index]);
-            return this.images[index];
-        },
-
-        next(number) {
-            let index = this.images.indexOf(number);
-            index++;
-            if (index >= this.images.length) index = 0;
-            // console.log(this.images[index]);
-            return this.images[index];
-        },
-
-        /**
-         * @method childWidth
-         * Applies `uk-width-1-2` to vertical images.
-         */
-        childWidth(height, width) {
-            const h = Number(height);
-            const w = Number(width);
-            if (w < h) return 'uk-width-1-2';
-        },
-
-        refreshApi() {
-            // grab photos if not set in localStorage
-            setTimeout(() => {
-                if (this.api.key && this.api.user) {
-                    const photoArray = this.getPhotos;
-                    if (this.override === true)
-                        this.getPhotosFromApi();
-                    else if (photoArray && photoArray.length)
-                        this.images = this.getPhotos;
-                    else
-                        this.getPhotosFromApi();
-                }
-            }, 2000);
-        },
-
-        openAppModal(value, idx) {
-            this.modal = {
-                active: true,
-                image: value,
-                index: idx,
-                src: this.constructPhotoUrl(value),
-                tags: value.tags
-            };
-        },
-
-        closeAppModal() {
-            this.modal = {
-                active: false,
-                image: null,
-                index: null,
-                src: null,
-                tags: []
-            };
-        },
-
-        constructPhotoUrl(value) {
-            // https://farm{farm-id}.staticflickr.com/
-            // {server-id}/{id}_{secret}.(jpg|gif|png)
-            return 'https://farm' + value.farm +
-                '.staticflickr.com/' + value.server +
-                '/' + value.id + '_' + value.secret +
-                '.jpg';
-        },
-
-        getPhotosFromApi() {
-            const endpoint = 'https://api.flickr.com/services/rest/?method=';
-            const method = 'flickr.people.getPhotos';
-            const extras = [
+        photoextras() {
+            return [
                 'description',
                 'date_upload',
                 'date_taken',
@@ -201,30 +223,118 @@ export default {
                 'url_t', // Thumbnail (100 x 56)
                 'views'
             ].toString();
+        }
+    },
 
+    methods: {
+        refreshApi() {
+            // grab photos if not set in localStorage
+            setTimeout(() => {
+                if (this.api.key && this.api.user) {
+                    const photoArray = this.getPhotos;
+
+                    if (this.override === true) {
+                        this.getPhotosFromApi();
+                    } else if (photoArray && photoArray.length) {
+                        this.images = this.getPhotos;
+                        this.success.images = true;
+                    } else {
+                        this.getPhotosFromApi();
+                    }
+
+                    this.getTagsList();
+                }
+            }, 1200);
+        },
+
+        getPhotosFromApi(key, value) {
+            /* eslint-disable */
+            switch (key) {
+                case 'tag':
+                    this.images = [];
+                    this.error.images = null;
+                    this.success.images = false;
+                    this.loaders = value.count;
+
+                    this.$axios
+                        .get('?method=flickr.photos.search', {
+                            params: {
+                                api_key: this.api.key,
+                                user_id: this.api.user,
+                                extras: this.photoextras,
+                                tags: value._content,
+                                format: 'json',
+                                nojsoncallback: 1
+                            }
+                        })
+                        .then(response => {
+                            const data = response.data.photos.photo;
+                            this.images = data;
+                            this.success.images = true;
+                        })
+                        .catch(error => {
+                            this.error.images = error.message;
+                            this.success.images = false;
+                            console.log(error);
+                        });
+                    break;
+
+                default:
+                    this.images = [];
+                    this.error.images = null;
+                    this.success.images = false;
+                    this.loaders = 20;
+
+                    this.$axios
+                        .get('?method=flickr.people.getPhotos', {
+                            params: {
+                                api_key: this.api.key,
+                                user_id: this.api.user,
+                                extras: this.photoextras,
+                                format: 'json',
+                                nojsoncallback: 1
+                            }
+                        })
+                        .then(response => {
+                            const data = response.data.photos.photo;
+                            this.images = data;
+                            this.success.images = true;
+                            this.commitPhotosToStore(data);
+                        })
+                        .catch(error => {
+                            this.error.images = error.message;
+                            this.success.images = false;
+                            console.log(error);
+                        });
+                    break;
+            }
+            /* eslint-enable */
+        },
+
+        commitPhotosToStore(value) {
+            this.$store.commit('setPhotos', value);
+        },
+
+        getTagsList() {
             this.$axios
-                .get(endpoint + method, {
+                .get('?method=flickr.tags.getListUserPopular', {
                     params: {
                         api_key: this.api.key,
                         user_id: this.api.user,
-                        extras: extras,
                         format: 'json',
                         nojsoncallback: 1
                     }
                 })
                 .then(response => {
-                    const data = response.data.photos.photo;
-                    this.images = data;
-                    this.commitPhotosToStore(data);
+                    const data = response.data.who.tags.tag;
+                    this.tags = data;
+                    this.success.tags = true;
                 })
                 .catch(error => {
-                    this.error = error;
+                    this.success.tags = false;
+                    this.error.tags = error.message;
                     console.log(error);
                 });
-        },
-
-        commitPhotosToStore(value) {
-            this.$store.commit('setPhotos', value);
         },
 
         getApiKey(value) {
@@ -234,47 +344,17 @@ export default {
             return this.$axios
                 .get(prefix + domain + affix)
                 .then(response => {
+                    this.success.api = true;
                     this.api = {
                         key: response.data.key,
                         user: response.data.user
                     };
                 })
                 .catch(error => {
-                    this.error = error;
+                    this.success.api = false;
+                    this.error.api = error;
                     console.error(error);
                 });
-        },
-
-        cycleCurrentPhoto(event, index) {
-            console.log(event);
-            /* eslint-disable */
-            switch (event.srcKey) {
-                case 'prev':
-                this.$nextTick(() => {
-                    this.modal = {
-                        active: true,
-                        image: this.previous(this.match),
-                        index: index--,
-                        src: this.constructPhotoUrl(
-                            this.previous(this.match)
-                        ),
-                        tags: this.previous(this.match).tags
-                    };
-                });
-
-                case 'next':
-                    this.$nextTick(() => {
-                        this.modal = {
-                            active: true,
-                            image: this.next(this.match),
-                            index: index++,
-                            src: this.constructPhotoUrl(
-                                this.next(this.match)
-                            ),
-                            tags: this.next(this.match).tags
-                        };
-                    });
-            }
         }
     }
 };
@@ -282,21 +362,43 @@ export default {
 
 
 <style lang="scss" scoped>
-main {
-    $gutter: 15px;
-    padding-top: $gutter;
-    padding-bottom: $gutter;
+// main {
+//     $gutter: 15px;
+//     padding-top: $gutter;
+//     padding-bottom: $gutter;
 
-    @include breakpoint('small') {
-        $gutter: 30px;
-        padding-top: $gutter;
-        padding-bottom: $gutter;
+//     @include breakpoint('small') {
+//         $gutter: 30px;
+//         padding-top: $gutter;
+//         padding-bottom: $gutter;
+//     }
+
+//     @include breakpoint('medium') {
+//         $gutter: 40px;
+//         padding-top: $gutter;
+//         padding-bottom: $gutter;
+//     }
+// }
+
+.offcanvas-link {
+    display: block;
+}
+
+.footer {
+    .uk-navbar {
+        @include display-flex(column nowrap, center, center);
+        .uk-navbar-right { margin: 1em auto 0; }
+
+        @include breakpoint('small') {
+            @include display-flex(row nowrap, center, space-between);
+            .uk-navbar-right { margin: 0 0 0 auto; }
+        }
     }
 
-    @include breakpoint('medium') {
-        $gutter: 40px;
-        padding-top: $gutter;
-        padding-bottom: $gutter;
+    .footer-link {
+        &:hover, &:focus {
+            text-decoration: none;
+        }
     }
 }
 </style>
