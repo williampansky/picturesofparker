@@ -41,8 +41,15 @@
                     <div class="caption-left uk-text-meta">
                         <div class="caption-title">{{ item.title }}</div>
                         <div v-if="item.datetaken">
-                            <span>Taken on&nbsp;</span>
-                            <span>{{ item.datetaken }}</span>
+                            <span>{{ item.dateTakenString }}</span>
+                            <meta
+                            :content="item.datetaken"
+                            name="dateCreated"
+                            itemprop="dateCreated" />
+                            <meta
+                            :content="item.dateupload"
+                            name="datePublished"
+                            itemprop="datePublished" />
                         </div>
                     </div>
                     <div
