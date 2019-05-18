@@ -36,10 +36,20 @@
                 </a>
                 <figcaption
                 style="display: none;"
-                class="grid-item-caption"
-                itemprop="caption description">
-                    <span>{{ item.title }}</span>
-                    <span v-if="item.tags">{{ item.tags }}</span>
+                itemprop="caption description"
+                class="grid-item-caption">
+                    <div class="caption-left uk-text-meta">
+                        <div class="caption-title">{{ item.title }}</div>
+                        <div v-if="item.datetaken">
+                            <span>Taken on&nbsp;</span>
+                            <span>{{ item.datetaken }}</span>
+                        </div>
+                    </div>
+                    <div
+                    v-if="item.tags"
+                    class="caption-right uk-text-meta">
+                        <span>{{ item.tags }}</span>
+                    </div>
                 </figcaption>
             </figure>
         </div>

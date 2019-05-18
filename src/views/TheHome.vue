@@ -8,7 +8,7 @@
         animation: uk-animation-slide-top;">
             <nav
             uk-navbar
-            class="uk-navbar-container uk-light uk-text-meta">
+            class="uk-navbar uk-navbar-container uk-container uk-light uk-text-meta">
                 <div class="uk-navbar-left">
                     <!-- <ul class="uk-navbar-nav">
                         <li class="uk-active"><a href="#">Active</a></li>
@@ -37,13 +37,7 @@
         </div>
 
         <div
-        v-if="success.images"
-        class="uk-section uk-section-small">
-            <SwipeModal
-            :images="images.photo" />
-        </div>
-        <div
-        v-else-if="!error.images"
+        v-show="loading && !error.images"
         class="uk-section uk-section-small">
             <div class="uk-container uk-container-expand">
                 <div
@@ -65,12 +59,28 @@
             </div>
         </div>
         <div
-        v-else
+        v-if="!loading && success.images"
         class="uk-section uk-section-small">
-            <p>{{ error.images }}</p>
+            <SwipeModal
+            :images="images.photo" />
+        </div>
+        <div
+        v-else-if="error.images !== null"
+        class="uk-section uk-section-small">
+            <p class="uk-container uk-text-center">
+                <span class="uk-text-danger">{{ error.images }}</span>
+            </p>
+        </div>
+        <div
+        v-else-if="!loading && error.images === null"
+        class="uk-section uk-section-small">
+            <p class="uk-container uk-text-center">
+                <span class="uk-text-danger">Failed to load images.</span>
+            </p>
         </div>
 
-        <footer class="footer uk-section uk-section-small">
+        <footer
+        class="footer uk-section uk-section-small uk-margin-small-bottom">
             <nav
             uk-navbar
             class="
@@ -132,9 +142,11 @@
                 class="uk-offcanvas-close"
                 type="button"
                 uk-close />
+
                 <p v-if="error.tags">{{ error.tags }}</p>
+
                 <ul
-                v-if="tags && tags.length"
+                v-else-if="tags && tags.length"
                 class="uk-nav">
                     <li class="uk-nav-header">Pictures of Parker</li>
                     <li>
@@ -192,6 +204,7 @@ export default {
                 images: null,
                 tags: null
             },
+            loading: true,
             loaders: 20,
             success: {
                 api: false,
@@ -262,9 +275,10 @@ export default {
             switch (key) {
                 case 'tag':
                     this.images = {};
+                    this.loading = true;
                     this.error.images = null;
                     this.success.images = false;
-                    this.loaders = value.count;
+                    this.loaders = Number(value.count);
 
                     this.$axios
                         .get('?method=flickr.photos.search', {
@@ -281,16 +295,19 @@ export default {
                             const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
+                            setTimeout(() => { this.loading = false; }, 800);
                         })
                         .catch(error => {
                             this.error.images = error.message;
                             this.success.images = false;
-                            console.log(error);
+                            this.loading = false;
+                            console.error(error);
                         });
                     break;
 
                 default:
                     this.images = {};
+                    this.loading = true;
                     this.error.images = null;
                     this.success.images = false;
                     this.loaders = 20;
@@ -309,12 +326,14 @@ export default {
                             const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
+                            setTimeout(() => { this.loading = false; }, 800);
                             this.commitPhotosToStore(data);
                         })
                         .catch(error => {
                             this.error.images = error.message;
                             this.success.images = false;
-                            console.log(error);
+                            this.loading = false;
+                            console.error(error);
                         });
                     break;
             }
@@ -412,6 +431,10 @@ export default {
 
 .offcanvas-link {
     display: block;
+
+    &:hover, &:focus {
+        opacity: 0.675;
+    }
 }
 
 .footer {

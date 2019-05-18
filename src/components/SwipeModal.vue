@@ -15,6 +15,7 @@
 // const imagesLoaded = require('imagesloaded');
 // import imagesLoaded from 'imagesloaded';
 // const masonryEvents = ['load', 'resize'];
+import { format } from 'date-fns';
 export default {
     name: 'SwipeModal',
 
@@ -87,7 +88,9 @@ export default {
                     isfamily: img.isfamily,
                     description: img.description,
                     dateupload: img.dateupload,
-                    datetaken: img.datetaken,
+                    datetaken: img.datetaken
+                        ? format(img.datetaken, 'MMMM DD, YYYY')
+                        : '',
                     datetakengranularity: img.datetakengranularity,
                     datetakenunknown: img.datetakenunknown,
                     // return tags comma-separated or null
@@ -210,13 +213,31 @@ export default {
         max-width: none;
         @include display-flex(column nowrap, flex-start, flex-start);
 
-        span:first-of-type {
+        .caption-left,
+        .caption-right {
+            width: 100%;
+        }
+
+        .caption-left + .caption-right {
+            $spacing: 4px;
+            border-top: 1px solid #555;
+            margin-top: calc(#{$spacing} + 2px);
+            padding-top: $spacing;
+        }
+
+        .caption-title {
             color: white;
             font-weight: bold;
         }
 
         @include breakpoint('small') {
-            @include display-flex(row nowrap, center, space-between);
+            @include display-flex(row nowrap, flex-end, space-between);
+            .caption-left + .caption-right {
+                border-top: 0;
+                margin-top: 0;
+                padding-top: 0;
+                text-align: right;
+            }
         }
     }
 }
