@@ -8,7 +8,7 @@
         animation: uk-animation-slide-top;">
             <nav
             uk-navbar
-            class="uk-navbar-container uk-text-meta">
+            class="uk-navbar-container uk-light uk-text-meta">
                 <div class="uk-navbar-left">
                     <!-- <ul class="uk-navbar-nav">
                         <li class="uk-active"><a href="#">Active</a></li>
@@ -40,7 +40,7 @@
         v-if="success.images"
         class="uk-section uk-section-small">
             <SwipeModal
-            :images="images" />
+            :images="images.photo" />
         </div>
         <div
         v-else-if="!error.images"
@@ -136,6 +136,16 @@
                 <ul
                 v-if="tags && tags.length"
                 class="uk-nav">
+                    <li class="uk-nav-header">Pictures of Parker</li>
+                    <li>
+                        <a
+                        href="#"
+                        class="offcanvas-link"
+                        @click="getPhotosFromApi()">
+                            <span>Photos ({{ getPhotos.total }})</span>
+                        </a>
+                    </li>
+                    <!-- <li class="uk-nav-divider"></li> -->
                     <li class="uk-nav-header">Tags</li>
                     <li
                     v-for="(tag, idx) in tags"
@@ -188,7 +198,7 @@ export default {
                 images: false,
                 tags: false
             },
-            images: [],
+            images: {},
             override: false,
             tags: []
         };
@@ -251,7 +261,7 @@ export default {
             /* eslint-disable */
             switch (key) {
                 case 'tag':
-                    this.images = [];
+                    this.images = {};
                     this.error.images = null;
                     this.success.images = false;
                     this.loaders = value.count;
@@ -268,7 +278,7 @@ export default {
                             }
                         })
                         .then(response => {
-                            const data = response.data.photos.photo;
+                            const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
                         })
@@ -280,7 +290,7 @@ export default {
                     break;
 
                 default:
-                    this.images = [];
+                    this.images = {};
                     this.error.images = null;
                     this.success.images = false;
                     this.loaders = 20;
@@ -296,7 +306,7 @@ export default {
                             }
                         })
                         .then(response => {
-                            const data = response.data.photos.photo;
+                            const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
                             this.commitPhotosToStore(data);
@@ -379,6 +389,26 @@ export default {
 //         padding-bottom: $gutter;
 //     }
 // }
+.uk-section-small {
+    padding: 15px 0;
+
+    @include breakpoint('small') {
+        padding: 30px 0;
+    }
+
+    @include breakpoint('medium') {
+        padding: 40px 0;
+    }
+}
+
+
+.uk-sticky .uk-navbar-container {
+    background: linear-gradient(to left, #28a5f5, #1e87f0);
+}
+
+.uk-nav-divider {
+    border-top: 1px solid #e5e5e5;
+}
 
 .offcanvas-link {
     display: block;
