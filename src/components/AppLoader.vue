@@ -1,29 +1,22 @@
 <template>
-    <lazy-component @show="handler">
-        <div
-        class="image__loader"
-        width="100%"
-        height="150px">
-    </lazy-component>
+    <div
+    class="image-loader"
+    />
 </template>
 
 
 <script>
 export default {
-    name: 'AppLoader',
-    methods: {
-        handler(component) {
-            console.log('this component is showing');
-        }
-    }
+    name: 'AppLoader'
 };
 </script>
 
 
 <style lang="scss" scoped>
-.image__loader {
+.image-loader {
     cursor: wait;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18), 0 2px 15px rgba(0, 0, 0, 0.08);
+    // box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18),
+    //     0 2px 15px rgba(0, 0, 0, 0.08);
     height: 100%;
     min-height: 150px;
     position: relative;

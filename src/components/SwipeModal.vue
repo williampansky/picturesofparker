@@ -208,7 +208,16 @@ export default {
         cursor: default;
         margin: 0;
         max-width: none;
-        @include display-flex(row nowrap, center, space-between);
+        @include display-flex(column nowrap, flex-start, flex-start);
+
+        span:first-of-type {
+            color: white;
+            font-weight: bold;
+        }
+
+        @include breakpoint('small') {
+            @include display-flex(row nowrap, center, space-between);
+        }
     }
 }
 </style>
