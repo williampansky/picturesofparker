@@ -12,7 +12,6 @@
         uk-child-width-1-6@xl"
         uk-grid="masonry:true;"
         itemtype="http://schema.org/ImageGallery">
-            <!-- @click="$emit('open', item)" -->
             <figure
             v-for="(item, index) in slides"
             :key="index"
@@ -21,8 +20,7 @@
             itemscope
             class="grid-item"
             itemprop="associatedMedia"
-            itemtype="http://schema.org/ImageObject"
-            >
+            itemtype="http://schema.org/ImageObject">
                 <a
                 :href="item.src"
                 :data-size="'' + item.w + 'x' + item.h"
@@ -39,8 +37,15 @@
                 itemprop="caption description"
                 class="grid-item-caption">
                     <div class="caption-left uk-text-meta">
-                        <div class="caption-title">{{ item.title }}</div>
-                        <div v-if="item.datetaken">
+                        <div
+                        class="caption-title
+                        uk-animation-slide-left-small">{{
+                            item.title
+                        }}</div>
+                        <div
+                        v-if="item.datetaken"
+                        class="uk-animation-slide-left-small"
+                        style="animation-delay:200ms;">
                             <span>{{ item.dateTakenString }}</span>
                             <meta
                             :content="item.datetaken"
@@ -54,7 +59,11 @@
                     </div>
                     <div
                     v-if="item.tags"
-                    class="caption-right uk-text-meta">
+                    style="animation-delay:200ms;"
+                    class="
+                    caption-right
+                    uk-text-meta
+                    uk-animation-slide-left-small">
                         <span>{{ item.tags }}</span>
                     </div>
                 </figcaption>

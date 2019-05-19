@@ -56,7 +56,7 @@
 <script>
 /**
  * @module TheHome
- * @version 0.3.1
+ * @version 0.3.2
  */
 import Placeholder from '@/components/Placeholder.vue';
 import Container from '@/components/Container.vue';
