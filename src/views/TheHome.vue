@@ -8,7 +8,7 @@
         animation: uk-animation-slide-top;">
             <nav
             uk-navbar
-            class="uk-navbar uk-navbar-container uk-container uk-light uk-text-meta">
+            class="uk-navbar uk-navbar-container uk-light uk-text-meta">
                 <div class="uk-navbar-left">
                     <!-- <ul class="uk-navbar-nav">
                         <li class="uk-active"><a href="#">Active</a></li>
