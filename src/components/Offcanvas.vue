@@ -86,8 +86,7 @@ export default {
 
 <style lang="scss" scoped>
 .link {
-    &:hover, &:focus {
-        opacity: 0.675;
-    }
+    span { transition: 200ms ease-in-out; }
+    &:hover, &:focus { span { opacity: 0.625; } }
 }
 </style>
