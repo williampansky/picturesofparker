@@ -157,7 +157,7 @@ export default {
                     } else if (photoArray && photoArray.length) {
                         this.images = this.getPhotos;
                         this.success.images = true;
-                        this.loading = false;
+                        this.loading.images = false;
                     } else {
                         this.getPhotosFromApi();
                     }
@@ -267,7 +267,6 @@ export default {
                     this.success.tags = false;
                     this.error.tags = error.message;
                     this.loading.tags = false;
-                    console.log(error);
                 });
         },
 
