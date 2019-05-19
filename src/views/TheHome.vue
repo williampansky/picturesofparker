@@ -1,198 +1,54 @@
 <template>
     <div>
-        <div
-        uk-sticky="
-        sel-target: .uk-navbar-container;
-        cls-active: uk-navbar-sticky;
-        show-on-up: true;
-        animation: uk-animation-slide-top;">
-            <nav
-            uk-navbar
-            class="uk-navbar uk-navbar-container uk-light uk-text-meta">
-                <div class="uk-navbar-left">
-                    <!-- <ul class="uk-navbar-nav">
-                        <li class="uk-active"><a href="#">Active</a></li>
-                    </ul> -->
-                    <a
-                    href="#"
-                    uk-toggle="target: #offcanvas"
-                    class="uk-navbar-item uk-icon"
-                    uk-icon="icon:menu;" />
-                    <!-- <div class="uk-navbar-item">
-                        <div>Some <a href="#">Link</a></div>
-                    </div> -->
-                </div>
-
-                <!-- <div class="uk-navbar-right">
-                    <a
-                    href="#"
-                    class="uk-navbar-item uk-icon"
-                    uk-icon="icon:home;">
-                    </a>
-                </div> -->
-            </nav>
-        </div>
-
-        <div
-        v-show="loading && !error.images"
-        class="uk-section uk-section-small">
-            <div class="uk-container uk-container-expand">
-                <div
-                class="
-                uk-grid
-                uk-grid-small
-                uk-grid-match
-                uk-child-width-1-2
-                uk-child-width-1-3@m
-                uk-child-width-1-4@l
-                uk-child-width-1-6@xl"
-                uk-grid="masonry:true;">
+        <Navbar />
+        <Section v-show="loading.images && !error.images">
+            <Container expand>
+                <Grid
+                match
+                size="small">
                     <div
                     v-for="n in loaders"
                     :key="n">
-                        <AppLoader />
+                        <Placeholder type="grid-item" />
                     </div>
-                </div>
-            </div>
-        </div>
-        <div
-        v-if="!loading && success.images"
-        class="uk-section uk-section-small">
-            <SwipeModal
-            :images="images.photo" />
-        </div>
-        <div
-        v-else-if="error.images !== null"
-        class="uk-section uk-section-small">
-            <div class="uk-container uk-text-center">
-                <p class="uk-text-lead">
-                    <span class="uk-text-danger">{{ error.images }}</span>
-                </p>
-                <p>
-                    <a
-                    href="#"
-                    uk-icon="icon: refresh;"
-                    class="try-again uk-icon"
-                    @click.prevent="getPhotosFromApi()">
-                        <span>Please try again.</span>
-                    </a>
-                </p>
-            </div>
-        </div>
-        <div
-        v-else-if="!loading && error.images === null"
-        class="uk-section uk-section-small">
-            <div class="uk-container uk-text-center">
-                <p class="uk-text-lead">
-                    <span class="uk-text-danger">Failed to load images.</span>
-                </p>
-                <p>
-                    <a
-                    href="#"
-                    uk-icon="icon: refresh;"
-                    class="try-again uk-icon"
-                    @click.prevent="getPhotosFromApi()">
-                        <span>Please try again.</span>
-                    </a>
-                </p>
-            </div>
-        </div>
-
-        <footer
-        class="footer uk-section uk-section-small uk-margin-small-bottom">
-            <nav
-            uk-navbar
-            class="
-            uk-text-meta
-            uk-container
-            uk-container-expand
-            uk-navbar-container
-            uk-navbar-transparent">
-                <div class="uk-navbar-left">
-                    <span>Copyright ©</span>
-                    <span>&nbsp;{{ new Date().getFullYear() }}&nbsp;</span>
-                    <span>picturesofparker.com</span>
-                </div>
-                <div class="uk-navbar-right">
-                    <ul class="uk-iconnav">
-                        <li>
-                            <a
-                            target="_blank"
-                            href="https://github.com/williampansky/picturesofparker"
-                            rel="noopener noreferrer"
-                            class="footer-link">
-                                <span
-                                class="uk-icon"
-                                uk-icon="icon:github;" />
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                            target="_blank"
-                            href="https://williampansky.com"
-                            class="footer-link">
-                                <span
-                                class="uk-icon"
-                                uk-icon="icon:user;" />
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                            target="_blank"
-                            href="https://flickr.com/api"
-                            rel="noopener noreferrer"
-                            class="footer-link">
-                                <span
-                                class="uk-icon"
-                                uk-icon="icon:flickr;" />
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </footer>
-
-        <div
-        id="offcanvas"
-        uk-offcanvas="overlay:true;"
-        class="uk-offcanvas">
-            <div class="uk-offcanvas-bar">
-                <button
-                class="uk-offcanvas-close"
-                type="button"
-                uk-close />
-
-                <p v-if="error.tags">{{ error.tags }}</p>
-
-                <ul
-                v-else-if="tags && tags.length"
-                class="uk-nav">
-                    <li class="uk-nav-header">Pictures of Parker</li>
-                    <li>
-                        <a
-                        href="#"
-                        class="offcanvas-link"
-                        uk-toggle="#offcanvas"
-                        @click.prevent="getPhotosFromApi()">
-                            <span>Photos ({{ getPhotos.total }})</span>
-                        </a>
-                    </li>
-                    <!-- <li class="uk-nav-divider"></li> -->
-                    <li class="uk-nav-header">Tags</li>
-                    <li
-                    v-for="(tag, idx) in tags"
-                    :key="idx">
-                        <a
-                        href="#"
-                        class="offcanvas-link"
-                        uk-toggle="#offcanvas"
-                        @click.prevent="getPhotosFromApi('tag', tag)">
-                            <span>{{ tag._content }} ({{ tag.count }})</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+                </Grid>
+            </Container>
+        </Section>
+        <Section v-if="!loading.images && success.images">
+            <SwipeModal :images="images.photo" />
+        </Section>
+        <Section v-else-if="error.images !== null">
+            <Container class="uk-text-center">
+                <ErrorMessage :message="error.images" />
+                <p><a
+                href="#"
+                uk-icon="icon: refresh;"
+                class="try-again uk-icon"
+                @click.prevent="getPhotosFromApi()">
+                    <span>Please try again.</span>
+                </a></p>
+            </Container>
+        </Section>
+        <Section v-else-if="!loading.images && error.images === null">
+            <Container class="uk-text-center">
+                <ErrorMessage message="Failed to load images." />
+                <p><a
+                href="#"
+                uk-icon="icon: refresh;"
+                class="try-again uk-icon"
+                @click.prevent="getPhotosFromApi()">
+                    <span>Please try again.</span>
+                </a></p>
+            </Container>
+        </Section>
+        <Footer />
+        <Offcanvas
+        :error="error.tags"
+        :loading="loading.tags"
+        :photos="getPhotos"
+        :tags="tags"
+        @photos-clicked="getPhotosFromApi()"
+        @tag-clicked="getPhotosFromApi('tag', $event)" />
     </div>
 </template>
 
@@ -200,9 +56,16 @@
 <script>
 /**
  * @module TheHome
- * @version 0.2.0
+ * @version 0.3.1
  */
-import AppLoader from '@/components/AppLoader.vue';
+import Placeholder from '@/components/Placeholder.vue';
+import Container from '@/components/Container.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
+import Footer from '@/components/Footer.vue';
+import Grid from '@/components/Grid.vue';
+import Navbar from '@/components/Navbar.vue';
+import Offcanvas from '@/components/Offcanvas.vue';
+import Section from '@/components/Section.vue';
 import SwipeModal from '@/components/SwipeModal.vue';
 import { mapGetters } from 'vuex';
 
@@ -210,7 +73,14 @@ export default {
     name: 'TheHome',
 
     components: {
-        AppLoader,
+        Placeholder,
+        Container,
+        ErrorMessage,
+        Footer,
+        Grid,
+        Navbar,
+        Offcanvas,
+        Section,
         SwipeModal
     },
 
@@ -225,15 +95,19 @@ export default {
                 images: null,
                 tags: null
             },
-            loading: true,
+            images: {},
+            loading: {
+                images: true,
+                tags: true
+            },
             loaders: 20,
+            override: false,
+            showOffcanvas: false,
             success: {
                 api: false,
                 images: false,
                 tags: false
             },
-            images: {},
-            override: false,
             tags: []
         };
     },
@@ -272,7 +146,8 @@ export default {
 
     methods: {
         refreshApi() {
-            // grab photos if not set in localStorage
+            // grab photos from API,
+            // if not set in localStorage
             setTimeout(() => {
                 if (this.api.key && this.api.user) {
                     const photoArray = this.getPhotos;
@@ -296,7 +171,7 @@ export default {
             switch (key) {
                 case 'tag':
                     this.images = {};
-                    this.loading = true;
+                    this.loading.images = true;
                     this.error.images = null;
                     this.success.images = false;
                     this.loaders = Number(value.count);
@@ -317,19 +192,19 @@ export default {
                             const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
-                            setTimeout(() => { this.loading = false; }, 1200);
+                            setTimeout(() => { this.loading.images = false; }, 1200);
                         })
                         .catch(error => {
                             this.error.images = error.message;
                             this.success.images = false;
-                            this.loading = false;
+                            this.loading.images = false;
                             console.error(error);
                         });
                     break;
 
                 default:
                     this.images = {};
-                    this.loading = true;
+                    this.loading.images = true;
                     this.error.images = null;
                     this.success.images = false;
                     this.loaders = 20;
@@ -349,13 +224,13 @@ export default {
                             const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
-                            setTimeout(() => { this.loading = false; }, 1200);
+                            setTimeout(() => { this.loading.images = false; }, 1200);
                             this.commitPhotosToStore(data);
                         })
                         .catch(error => {
                             this.error.images = error.message;
                             this.success.images = false;
-                            this.loading = false;
+                            this.loading.images = false;
                             console.error(error);
                         });
                     break;
@@ -367,11 +242,17 @@ export default {
         },
 
         getTagsList() {
+            this.tags = [];
+            this.loading.tags = true;
+            this.error.tags = null;
+            this.success.tags = false;
+
             this.$axios
                 .get('?method=flickr.tags.getListUserPopular', {
                     params: {
                         api_key: this.api.key,
                         user_id: this.api.user,
+                        count: 15,
                         format: 'json',
                         nojsoncallback: 1
                     }
@@ -380,10 +261,12 @@ export default {
                     const data = response.data.who.tags.tag;
                     this.tags = data;
                     this.success.tags = true;
+                    this.loading.tags = false;
                 })
                 .catch(error => {
                     this.success.tags = false;
                     this.error.tags = error.message;
+                    this.loading.tags = false;
                     console.log(error);
                 });
         },
@@ -413,44 +296,6 @@ export default {
 
 
 <style lang="scss" scoped>
-// main {
-//     $gutter: 15px;
-//     padding-top: $gutter;
-//     padding-bottom: $gutter;
-
-//     @include breakpoint('small') {
-//         $gutter: 30px;
-//         padding-top: $gutter;
-//         padding-bottom: $gutter;
-//     }
-
-//     @include breakpoint('medium') {
-//         $gutter: 40px;
-//         padding-top: $gutter;
-//         padding-bottom: $gutter;
-//     }
-// }
-.uk-section-small {
-    padding: 15px 0;
-
-    @include breakpoint('small') {
-        padding: 30px 0;
-    }
-
-    @include breakpoint('medium') {
-        padding: 40px 0;
-    }
-}
-
-
-.uk-sticky .uk-navbar-container {
-    background: linear-gradient(to left, #28a5f5, #1e87f0);
-}
-
-.uk-nav-divider {
-    border-top: 1px solid #e5e5e5;
-}
-
 .try-again {
     @include display-flex(row-reverse nowrap, center, center);
 
@@ -460,32 +305,6 @@ export default {
 
     &:hover, &:focus {
         text-decoration: none;
-    }
-}
-
-.offcanvas-link {
-    display: block;
-
-    &:hover, &:focus {
-        opacity: 0.675;
-    }
-}
-
-.footer {
-    .uk-navbar {
-        @include display-flex(column nowrap, center, center);
-        .uk-navbar-right { margin: 1em auto 0; }
-
-        @include breakpoint('small') {
-            @include display-flex(row nowrap, center, space-between);
-            .uk-navbar-right { margin: 0 0 0 auto; }
-        }
-    }
-
-    .footer-link {
-        &:hover, &:focus {
-            text-decoration: none;
-        }
     }
 }
 </style>
