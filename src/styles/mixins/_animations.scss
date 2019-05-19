@@ -177,3 +177,29 @@ $animation-close: default;
     );
     background-repeat: no-repeat;
 }
+
+
+
+/**
+ * A Facebook-style loading placeholder animation.
+ * 
+ * @mixin animation-swipe
+ * @see [CodePen]{@link https://codepen.io/pjosh/pen/kXwaWZ}
+ */
+@mixin animation-swipe-dark {
+    @keyframes placeHolderSwipe {
+        from { background-position: -600px 0; }
+        to { background-position: 600px 0; }
+    }
+
+    animation: placeHolderSwipe 1s infinite linear forwards;
+    background-color: $color-gray-darken-40;
+    background-image: linear-gradient(
+        to right,
+        mix(black, $color-gray-darken-40, 5%) 0%,
+        mix(black, $color-gray-darken-40, 10%) 20%,
+        mix(black, $color-gray-darken-40, 15%) 40%,
+        $color-gray-darken-40 100%
+    );
+    background-repeat: no-repeat;
+}
