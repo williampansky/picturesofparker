@@ -28,11 +28,15 @@ export default {
 .grid-item-placeholder {
     cursor: wait;
     height: 100%;
-    min-height: 150px;
+    min-height: 88px;
     position: relative;
     width: 100%;
     @include display-flex(column nowrap, center, space-between);
     @include animation-swipe;
+
+    @include breakpoint('medium') {
+        min-height: 150px;
+    }
 }
 
 .text-item-placeholder {

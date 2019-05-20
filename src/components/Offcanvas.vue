@@ -1,7 +1,7 @@
 <template>
     <aside
     id="offcanvas"
-    uk-offcanvas="overlay:true;"
+    uk-offcanvas="overlay:true; flip:true;"
     class="uk-offcanvas">
         <div class="uk-offcanvas-bar">
             <button
@@ -20,7 +20,7 @@
                 </a></li>
                 <li class="uk-nav-header">Tags</li>
                 <li
-                v-for="(n, i) in 15"
+                v-for="(n, i) in 10"
                 :key="i"><a
                 :style="'animation-delay:' + i + '00ms;'"
                 href="#"

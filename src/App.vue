@@ -1,47 +1,278 @@
 <template>
     <main id="app">
-        <router-view>
-        </router-view>
+        <Navbar />
+
+        <Section v-show="loading.images && !error.images">
+            <Container expand>
+                <Grid
+                match
+                size="small">
+                    <div
+                    v-for="n in loaders"
+                    :key="n">
+                        <Placeholder type="grid-item" />
+                    </div>
+                </Grid>
+            </Container>
+        </Section>
+
+        <Section v-if="!loading.images && success.images">
+            <SwipeModal :images="images.photo" />
+        </Section>
+
+        <Section v-else-if="error.images !== null">
+            <Container class="uk-text-center">
+                <ErrorMessage :message="error.images" />
+                <p><a
+                href="#"
+                uk-icon="icon: refresh;"
+                class="try-again uk-icon"
+                @click.prevent="getPhotosFromApi()">
+                    <span>Please try again.</span>
+                </a></p>
+            </Container>
+        </Section>
+
+        <Section v-else-if="!loading.images && error.images === null">
+            <Container class="uk-text-center">
+                <ErrorMessage message="Failed to load images." />
+                <p><a
+                href="#"
+                uk-icon="icon: refresh;"
+                class="try-again uk-icon"
+                @click.prevent="getPhotosFromApi()">
+                    <span>Please try again.</span>
+                </a></p>
+            </Container>
+        </Section>
+
+        <Footer />
+
+        <Offcanvas
+        :error="error.tags"
+        :loading="loading.tags"
+        :photos="images"
+        :tags="tags"
+        @photos-clicked="getPhotosFromApi()"
+        @tag-clicked="getPhotosFromApi('tag', $event)" />
     </main>
 </template>
 
 
 <script>
+/**
+ * @module App
+ * @version 0.3.4
+ */
+import Container from '@/components/Container.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
+import Footer from '@/components/Footer.vue';
+import Grid from '@/components/Grid.vue';
+import Navbar from '@/components/Navbar.vue';
+import Offcanvas from '@/components/Offcanvas.vue';
+import Placeholder from '@/components/Placeholder.vue';
+import Section from '@/components/Section.vue';
+import SwipeModal from '@/components/SwipeModal.vue';
+
 export default {
     name: 'App',
-    mounted() {
-        this.$emit('App mounted()');
+
+    components: {
+        Container,
+        ErrorMessage,
+        Footer,
+        Grid,
+        Navbar,
+        Offcanvas,
+        Placeholder,
+        Section,
+        SwipeModal
     },
+
+    data() {
+        return {
+            api: {
+                key: null,
+                user: null
+            },
+            error: {
+                api: null,
+                images: null,
+                tags: null
+            },
+            images: {},
+            loading: {
+                images: true,
+                tags: true
+            },
+            loaders: 20,
+            override: false,
+            showOffcanvas: false,
+            success: {
+                api: false,
+                images: false,
+                tags: false
+            },
+            tags: []
+        };
+    },
+
+    created() {
+        this.getApiKey();
+    },
+
+    mounted() {
+        this.pingApi();
+    },
+
+    computed: {
+        photoextras() {
+            return [
+                'description',
+                'date_upload',
+                'date_taken',
+                'sizes',
+                'tags',
+                'url_h', // Large 1600 (1600 x 900)
+                'url_l', // Large 1024 (1024 x 576)
+                'url_m', // Medium 500 (500 x 281)
+                'url_n', // Small 320 (320 x 180)
+                'url_o', // Original (3840 x 2160)
+                'url_q', // Square 150 (150 x 150)
+                'url_t', // Thumbnail (100 x 56)
+                'views'
+            ].toString();
+        }
+    },
+
     methods: {
-        /**
-         * Workbox is a library that bakes in a set of best practices and
-         * removes the boilerplate every developer writes when working
-         * with service workers.
-         *
-         * @method registerServiceWorker
-         * @see [Workbox/Webpack]{@link https://developers.google.com/web/tools/workbox/guides/codelabs/webpack}
-         * @see [Workbox]{@link https://developers.google.com/web/tools/workbox/}
-         */
-        registerServiceWorker() {
-            /**
-             * Check that service workers are registered
-             * @see [Step4]{@link https://developers.google.com/web/tools/workbox/guides/codelabs/webpack#register}
-             */
-            // if ('serviceWorker' in navigator) {
-            //     window.addEventListener('load', () => {
-            //         navigator.serviceWorker.register('/sw.js')
-            //             .then(registration => {
-            //                 console.log(
-            //                     'SW registered: ', registration
-            //                 );
-            //             })
-            //             .catch(registrationError => {
-            //                 console.log(
-            //                     'SW registration failed: ', registrationError
-            //                 );
-            //         });
-            //     });
-            // }
+        pingApi() {
+            // grab photos from API,
+            // if not set in localStorage
+            setTimeout(() => {
+                if (this.api.key && this.api.user) {
+                    this.getPhotosFromApi();
+                    this.getTagsList();
+                }
+            }, 1200);
+        },
+
+        getPhotosFromApi(key, value, timeout = 8000) {
+            switch (key) {
+                case 'tag':
+                    this.images = {};
+                    this.loading.images = true;
+                    this.error.images = null;
+                    this.success.images = false;
+                    this.loaders = Number(value.count);
+
+                    this.$axios
+                        .get('?method=flickr.photos.search', {
+                            params: {
+                                api_key: this.api.key,
+                                user_id: this.api.user,
+                                extras: this.photoextras,
+                                tags: value._content,
+                                format: 'json',
+                                nojsoncallback: 1,
+                                timeout: timeout
+                            }
+                        })
+                        .then(response => {
+                            const data = response.data.photos;
+                            this.images = data;
+                            this.success.images = true;
+                            setTimeout(() => { this.loading.images = false; }, 1200);
+                        })
+                        .catch(error => {
+                            this.error.images = error.message;
+                            this.success.images = false;
+                            this.loading.images = false;
+                            console.error(error);
+                        });
+                    break;
+
+                default:
+                    this.images = {};
+                    this.loading.images = true;
+                    this.error.images = null;
+                    this.success.images = false;
+                    this.loaders = 20;
+
+                    this.$axios
+                        .get('?method=flickr.people.getPhotos', {
+                            params: {
+                                api_key: this.api.key,
+                                user_id: this.api.user,
+                                extras: this.photoextras,
+                                format: 'json',
+                                nojsoncallback: 1,
+                                timeout: timeout
+                            }
+                        })
+                        .then(response => {
+                            const data = response.data.photos;
+                            this.images = data;
+                            this.success.images = true;
+                            setTimeout(() => { this.loading.images = false; }, 1200);
+                        })
+                        .catch(error => {
+                            this.error.images = error.message;
+                            this.success.images = false;
+                            this.loading.images = false;
+                            console.error(error);
+                        });
+                    break;
+            }
+        },
+
+        getTagsList() {
+            this.tags = [];
+            this.loading.tags = true;
+            this.error.tags = null;
+            this.success.tags = false;
+
+            this.$axios
+                .get('?method=flickr.tags.getListUserPopular', {
+                    params: {
+                        api_key: this.api.key,
+                        user_id: this.api.user,
+                        count: 10,
+                        format: 'json',
+                        nojsoncallback: 1
+                    }
+                })
+                .then(response => {
+                    const data = response.data.who.tags.tag;
+                    this.tags = data;
+                    this.success.tags = true;
+                    this.loading.tags = false;
+                })
+                .catch(error => {
+                    this.success.tags = false;
+                    this.error.tags = error.message;
+                    this.loading.tags = false;
+                });
+        },
+
+        getApiKey(value) {
+            const prefix = 'https://wt-30c7730f9ad0ef866a5444aa1e3835dc-0';
+            const domain = '.sandbox.auth0-extend.com/';
+            const affix = 'picturesofparker';
+            return this.$axios
+                .get(prefix + domain + affix)
+                .then(response => {
+                    this.success.api = true;
+                    this.api = {
+                        key: response.data.key,
+                        user: response.data.user
+                    };
+                })
+                .catch(error => {
+                    this.success.api = false;
+                    this.error.api = error;
+                    console.error(error);
+                });
         }
     }
 };
@@ -80,29 +311,6 @@ body {
 
 
 //_____________________________________
-// GLOBALS => :focus event
-// Remove global default outlines
-// Keyboard focus event styles added back on per-component basis
-:focus { outline: none; }
-
-
-//_____________________________________
-// GLOBALS => code
-:not(pre) > code,
-:not(pre) > kbd,
-:not(pre) > samp { color: inherit; } // I dislike UIkit's red-colored <code />
-
-
-
-// TYPOGRAPHY
-// ========================================================================
-// TYPOGRAPHY => resets/overrides
-em {
-    color: inherit;
-}
-
-
-//_____________________________________
 // TYPOGRAPHY => cursor:default
 // Applies default cursor across the board for the following tags
 em,
@@ -126,5 +334,20 @@ p:last-of-type {
 // TYPOGRAPHY => headings
 h1, h2, h3, h4, h5, h6 {
     font-family: $font-condensed;
+}
+
+
+//_____________________________________
+// Error state refresh text + icon
+.try-again {
+    @include display-flex(row-reverse nowrap, center, center);
+
+    & span {
+        margin-left: 0.5em;
+    }
+
+    &:hover, &:focus {
+        text-decoration: none;
+    }
 }
 </style>
