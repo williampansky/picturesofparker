@@ -1,5 +1,5 @@
 <template>
-    <div
+    <header
     uk-sticky="show-on-up: true;
     cls-active: uk-navbar-sticky;
     sel-target: .uk-navbar-container;
@@ -8,6 +8,13 @@
         uk-navbar
         class="uk-navbar uk-navbar-container uk-light uk-text-meta">
             <div class="uk-navbar-left">
+                <a
+                href="https://picturesofparker.com"
+                class="uk-navbar-item menu">
+                    <span>Pictures of Parker</span>
+                </a>
+            </div>
+            <div class="uk-navbar-right">
                 <a
                 href="#"
                 uk-toggle="target: #offcanvas"
@@ -20,7 +27,7 @@
                 </a>
             </div>
         </nav>
-    </div>
+    </header>
 </template>
 
 

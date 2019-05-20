@@ -10,7 +10,6 @@
 
 const path = require('path');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
-// const workboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
     outputDir: 'dist',
@@ -36,7 +35,7 @@ module.exports = {
                     }],
                 },
                 canPrint: true
-            }),
+            })
         ]
     },
 
