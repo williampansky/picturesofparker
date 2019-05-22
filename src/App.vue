@@ -157,7 +157,7 @@ export default {
             }, 1200);
         },
 
-        getPhotosFromApi(key, value, timeout = 8000) {
+        getPhotosFromApi(key, value, page = 1, timeout = 8000) {
             switch (key) {
                 case 'tag':
                     this.images = {};
@@ -172,7 +172,9 @@ export default {
                                 api_key: this.api.key,
                                 user_id: this.api.user,
                                 extras: this.photoextras,
+                                page: page,
                                 tags: value._content,
+                                sort: 'date-taken-desc',
                                 format: 'json',
                                 nojsoncallback: 1,
                                 timeout: timeout
@@ -182,7 +184,9 @@ export default {
                             const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
-                            setTimeout(() => { this.loading.images = false; }, 1200);
+                            setTimeout(() => {
+                                this.loading.images = false;
+                            }, 1200);
                         })
                         .catch(error => {
                             this.error.images = error.message;
@@ -200,11 +204,14 @@ export default {
                     this.loaders = 20;
 
                     this.$axios
-                        .get('?method=flickr.people.getPhotos', {
+                        // .get('?method=flickr.people.getPhotos', {
+                        .get('?method=flickr.photos.search', {
                             params: {
                                 api_key: this.api.key,
                                 user_id: this.api.user,
                                 extras: this.photoextras,
+                                page: page,
+                                sort: 'date-taken-desc',
                                 format: 'json',
                                 nojsoncallback: 1,
                                 timeout: timeout
@@ -214,7 +221,9 @@ export default {
                             const data = response.data.photos;
                             this.images = data;
                             this.success.images = true;
-                            setTimeout(() => { this.loading.images = false; }, 1200);
+                            setTimeout(() => {
+                                this.loading.images = false;
+                            }, 1200);
                         })
                         .catch(error => {
                             this.error.images = error.message;
@@ -237,7 +246,7 @@ export default {
                     params: {
                         api_key: this.api.key,
                         user_id: this.api.user,
-                        count: 10,
+                        count: 30,
                         format: 'json',
                         nojsoncallback: 1
                     }

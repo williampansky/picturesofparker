@@ -42,19 +42,37 @@
                 uk-toggle="#offcanvas"
                 class="link uk-animation-fade"
                 @click.prevent="$emit('photos-clicked')">
-                    <span>Photos ({{ photos.total }})</span>
+                    <span>All Photos ({{ photos.total }})</span>
                 </a></li>
                 <li class="uk-nav-header">Tags</li>
-                <li
-                v-for="(tag, idx) in tags"
-                :key="idx"><a
-                :style="'animation-delay:' + idx + '00ms;'"
-                href="#"
-                uk-toggle="#offcanvas"
-                class="link uk-animation-slide-left-small"
-                @click.prevent="$emit('tag-clicked', tag)">
-                    <span>{{ tag._content }} ({{ tag.count }})</span>
-                </a></li>
+                <ul
+                :class="cloud ? 'tagcloud' : ''"
+                class="uk-nav">
+                    <li
+                    v-for="(tag, idx) in tags"
+                    :key="idx">
+                        <a
+                        v-if="cloud"
+                        :style="`animation-delay: ${idx}00ms;
+                        font-size:calc(0.675em + ${tag.count}px);`"
+                        :class="tag.count >= 25 ? 'max-font-size' : ''"
+                        href="#"
+                        uk-toggle="#offcanvas"
+                        class="link uk-animation-slide-bottom-small"
+                        @click.prevent="$emit('tag-clicked', tag)">
+                            <span>{{ tag._content }} ({{ tag.count }})</span>
+                        </a>
+                        <a
+                        v-else
+                        :style="`animation-delay: ${idx}00ms;`"
+                        href="#"
+                        uk-toggle="#offcanvas"
+                        class="link uk-animation-slide-right-small"
+                        @click.prevent="$emit('tag-clicked', tag)">
+                            <span>{{ tag._content }} ({{ tag.count }})</span>
+                        </a>
+                    </li>
+                </ul>
             </ul>
         </div>
     </aside>
@@ -70,6 +88,11 @@ import ErrorMessage from '@/components/ErrorMessage.vue';
 import Placeholder from '@/components/Placeholder.vue';
 export default {
     name: 'Offcanvas',
+    data() {
+        return {
+            cloud: true
+        };
+    },
     props: {
         error: { type: String, default: null },
         loading: { type: Boolean, default: true },
@@ -86,7 +109,30 @@ export default {
 
 <style lang="scss" scoped>
 .link {
+    font-size: 0.875em;
+    letter-spacing: 0.03em;
     span { transition: 200ms ease-in-out; }
     &:hover, &:focus { span { opacity: 0.625; } }
+}
+
+.tagcloud {
+    margin-left: -10px;
+
+    li {
+        display: inline-block;
+    }
+
+    a {
+        padding: 5px 10px;
+    }
+
+    .max-font-size {
+        /* stylelint-disable */
+        font-size: 26px !important;
+    }
+
+    span {
+        pointer-events: none;
+    }
 }
 </style>

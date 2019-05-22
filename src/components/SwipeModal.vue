@@ -80,12 +80,14 @@ export default {
                     ispublic: img.ispublic,
                     isfriend: img.isfriend,
                     isfamily: img.isfamily,
-                    description: img.description,
+                    description: img.description._content
+                        ? img.description._content
+                        : 'A picture of Parker.',
                     dateupload: img.dateupload,
                     dateTakenString: this.parseDateTaken(
                         img.datetaken, img.datetakengranularity
                     ),
-                    datetaken: img.datetaken,
+                    datetaken: this.formatDate(img.datetaken),
                     datetakengranularity: img.datetakengranularity,
                     datetakenunknown: img.datetakenunknown,
                     // return tags comma-separated or null
@@ -189,6 +191,7 @@ export default {
          * @method parseDateTaken
          * @param {String} date String to parse & format
          * @param {Number} granularity Accuracy of date
+         * @see [format]{@link https://date-fns.org/v1.30.1/docs/format}
          */
         parseDateTaken(date, granularity) {
             switch (Number(granularity)) {
@@ -199,6 +202,18 @@ export default {
                 default: return 'Taken on ' + format(date, 'MMMM DD, YYYY');
             }
         },
+
+        /**
+         * Formats the date param with a default,
+         * optionally overriden, formatter param.
+         * @method parseDateTaken
+         * @param {String} date String to parse & format
+         * @param {String} formatter Date format per date-fns
+         * @see [format]{@link https://date-fns.org/v1.30.1/docs/format}
+         */
+        formatDate(date, formatter = 'MMMM DD, YYYY HH:mmA') {
+            return format(date, formatter);
+        }
     }
 };
 </script>
@@ -223,27 +238,49 @@ export default {
     // }
 
     // caption/title
+    .pswp__caption {
+        position: fixed;
+    }
+
+    .flexr {
+        width: 100%;
+        @include display-flex(row nowrap, center, space-between);
+    }
+
     .pswp__caption__center {
         cursor: default;
         margin: 0;
         max-width: none;
         @include display-flex(column nowrap, flex-start, flex-start);
 
-        .caption-left,
-        .caption-right {
+        .caption-left {
             width: 100%;
         }
+        // .caption-left,
+        // .caption-right {
+        //     width: 100%;
+        // }
 
-        .caption-left + .caption-right {
-            $spacing: 4px;
-            border-top: 1px solid #555;
-            margin-top: calc(#{$spacing} + 2px);
-            padding-top: $spacing;
+        // .caption-left + .caption-right {
+        // }
+
+        .caption-hr {
+            $spacing: 2px;
+            border-color: #555;
+            margin: calc(#{$spacing} + 1px) 0 $spacing 0;
+            width: 100%;
         }
 
         .caption-title {
             color: white;
             font-weight: bold;
+        }
+
+        .caption-tags {
+            display: block;
+            @media (min-width: 320px) {
+                line-height: 1;
+            }
         }
 
         @include breakpoint('small') {
