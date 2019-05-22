@@ -34,17 +34,19 @@
                 </a>
                 <figcaption
                 style="display: none;"
-                itemprop="caption description"
-                class="grid-item-caption">
-                    <div class="caption-left uk-text-meta">
-                        <div
-                        class="caption-title
-                        uk-animation-slide-left-small">{{
-                            item.title
-                        }}</div>
+                class="grid-item-caption uk-text-meta">
+                    <div class="caption-title uk-animation-slide-bottom-small">
+                        <span
+                        itemprop="caption">{{ item.title }}</span>
+                        <meta
+                        :content="item.description"
+                        name="description"
+                        itemprop="description" />
+                    </div>
+                    <div class="flexr">
                         <div
                         v-if="item.datetaken"
-                        class="uk-animation-slide-left-small"
+                        class="uk-animation-slide-bottom-small"
                         style="animation-delay:200ms;">
                             <span>{{ item.dateTakenString }}</span>
                             <meta
@@ -56,16 +58,33 @@
                             name="datePublished"
                             itemprop="datePublished" />
                         </div>
+
+                        <div
+                        v-if="item.tags"
+                        style="animation-delay:400ms;"
+                        class="
+                        caption-right
+                        uk-text-meta
+                        uk-animation-slide-bottom-small">
+                            <span class="caption-tags">{{ item.tags }}</span>
+                        </div>
                     </div>
-                    <div
+                    <!-- <hr
                     v-if="item.tags"
                     style="animation-delay:200ms;"
                     class="
+                    caption-hr
+                    uk-hidden@m
+                    uk-animation-fade" /> -->
+                    <!-- <div
+                    v-if="item.tags"
+                    style="animation-delay:400ms;"
+                    class="
                     caption-right
                     uk-text-meta
-                    uk-animation-slide-left-small">
-                        <span>{{ item.tags }}</span>
-                    </div>
+                    uk-animation-slide-bottom-small">
+                        <span class="caption-tags">{{ item.tags }}</span>
+                    </div> -->
                 </figcaption>
             </figure>
         </div>
@@ -85,7 +104,7 @@
                 </div>
 
                 <div class="pswp__ui pswp__ui--hidden">
-                    <div class="pswp__top-bar">
+                    <div class="pswp__top-bar uk-animation-fade">
                         <div class="pswp__counter" />
                         <button
                         class="pswp__button pswp__button--close"
