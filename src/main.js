@@ -11,6 +11,7 @@
  * that helps you tackle complexity in large Single-Page Applications.
  */
 import Vue from 'vue';
+import store from './store';
 import axios from 'axios';
 import UIkit from 'uikit';
 import App from './App.vue';
@@ -53,5 +54,6 @@ Vue.use(VuePreview);
  * @see [Docs]{@link https://vuejs.org/v2/api/#vm-mount}
  */
 new Vue({
+    store,
     render: h => h(App)
 }).$mount('#app');
