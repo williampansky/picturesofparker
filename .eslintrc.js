@@ -40,7 +40,9 @@ module.exports = {
       * @memberof ESLint
       * @see [Docs]{@link https://eslint.org/docs/rules/indent}
       */
-     'indent': ['error', 4],
+     'indent': ['error', 4, {
+        'SwitchCase': 1
+     }],
 
 
      /**
