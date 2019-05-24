@@ -10,7 +10,7 @@
             uk-close />
 
             <ul
-            v-if="loading && !error"
+            v-if="loading.tags && !errors.tags"
             class="uk-nav">
                 <li class="uk-nav-header">Pictures of Parker</li>
                 <li><a
@@ -22,7 +22,7 @@
                 <li
                 v-for="(n, i) in 10"
                 :key="i"><a
-                :style="'animation-delay:' + i + '00ms;'"
+                :style="`animation-delay: ${i * 50}ms;`"
                 href="#"
                 class="link uk-animation-slide-left-small">
                     <Placeholder type="text-item-dark" />
@@ -30,8 +30,8 @@
             </ul>
 
             <ErrorMessage
-            v-else-if="error"
-            :message="error" />
+            v-else-if="errors.tags"
+            :message="errors.tags" />
 
             <ul
             v-else-if="tags && tags.length"
@@ -54,7 +54,7 @@
                         <a
                         v-if="cloud"
                         :style="`animation-delay: ${idx}00ms;
-                        font-size:calc(0.675em + ${tag.count}px);`"
+                        font-size: calc(0.675em + ${tag.count}px);`"
                         :class="tag.count >= 25 ? 'max-font-size' : ''"
                         href="#"
                         uk-toggle="#offcanvas"
@@ -86,6 +86,7 @@
  */
 import ErrorMessage from '@/components/ErrorMessage.vue';
 import Placeholder from '@/components/Placeholder.vue';
+import { mapGetters } from 'vuex';
 export default {
     name: 'Offcanvas',
     data() {
@@ -94,20 +95,29 @@ export default {
         };
     },
     props: {
-        error: { type: String, default: null },
-        loading: { type: Boolean, default: true },
         photos: { type: Object, default: () => ({}) },
         tags: { type: Array, default: () => ([]) }
     },
     components: {
         ErrorMessage,
         Placeholder
+    },
+    computed: {
+        ...mapGetters([
+            'errors',
+            'loading',
+            'success'
+        ])
     }
 };
 </script>
 
 
 <style lang="scss" scoped>
+.uk-offcanvas-overlay::before {
+    background: rgba(0, 0, 0, 0.465);
+}
+
 .link {
     font-size: 0.875em;
     letter-spacing: 0.03em;

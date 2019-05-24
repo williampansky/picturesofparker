@@ -2,7 +2,7 @@
     <main id="app">
         <Navbar />
 
-        <Section v-show="loading.images && !error.images">
+        <Section v-show="loading.api && !errors.api">
             <Container expand>
                 <Grid
                 match
@@ -16,11 +16,23 @@
             </Container>
         </Section>
 
-        <Section v-if="!loading.images && success.images">
-            <SwipeModal :images="images.photo" />
+        <Section v-if="!loading.api && success.api">
+            <SwipeModal :images="photos.photo" />
         </Section>
 
-        <Section v-else-if="error.images !== null">
+        <Section v-else-if="errors.api">
+            <Container class="uk-text-center">
+                <ErrorMessage :message="error.api" />
+                <p><a
+                href="https://picturesofparker.com"
+                uk-icon="icon: refresh;"
+                class="try-again uk-icon">
+                    <span>Reload page.</span>
+                </a></p>
+            </Container>
+        </Section>
+
+        <Section v-else-if="error.photos">
             <Container class="uk-text-center">
                 <ErrorMessage :message="error.images" />
                 <p><a
@@ -33,7 +45,7 @@
             </Container>
         </Section>
 
-        <Section v-else-if="!loading.images && error.images === null">
+        <Section v-else-if="!loading.photos && errors.photos === null">
             <Container class="uk-text-center">
                 <ErrorMessage message="Failed to load images." />
                 <p><a
@@ -51,8 +63,8 @@
         <Offcanvas
         :error="error.tags"
         :loading="loading.tags"
-        :photos="images"
-        :tags="tags"
+        :photos="photos"
+        :tags="tagslist"
         @photos-clicked="getPhotosFromApi()"
         @tag-clicked="getPhotosFromApi('tag', $event)" />
     </main>
@@ -73,10 +85,12 @@ import Offcanvas from '@/components/Offcanvas.vue';
 import Placeholder from '@/components/Placeholder.vue';
 import Section from '@/components/Section.vue';
 import SwipeModal from '@/components/SwipeModal.vue';
+import api from '@/mixins/api.js';
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'App',
-
+    mixins: [api],
     components: {
         Container,
         ErrorMessage,
@@ -101,31 +115,32 @@ export default {
                 tags: null
             },
             images: {},
-            loading: {
-                images: true,
-                tags: true
-            },
             loaders: 20,
             override: false,
-            showOffcanvas: false,
-            success: {
-                api: false,
-                images: false,
-                tags: false
-            },
-            tags: []
+            showOffcanvas: false
         };
     },
 
     created() {
-        this.getApiKey();
+        // this.getApiKey();
+        this.$store.dispatch('getApiCredentials');
     },
 
     mounted() {
-        this.pingApi();
+        this.getPhotos();
+        this.getTagsList();
     },
 
     computed: {
+        ...mapGetters([
+            'credentials',
+            'errors',
+            'loading',
+            'photos',
+            'success',
+            'tagslist'
+        ]),
+
         photoextras() {
             return [
                 'description',
@@ -153,14 +168,58 @@ export default {
                 if (this.api.key && this.api.user) {
                     this.getPhotosFromApi();
                     this.getTagsList();
+                } else {
+                    this.error = {
+                        api: 'Error obtaining API credentials',
+                        images: null,
+                        tags: null
+                    };
+                    this.loading = {
+                        images: false,
+                        tags: false
+                    };
+                    this.success = {
+                        api: false,
+                        images: false,
+                        tags: false
+                    };
                 }
             }, 1200);
+        },
+
+        getPhotos() {
+            if (
+                this.photos && this.photos.length &&
+                this.photos.photo && this.photos.photo.length
+            ) return;
+
+            if (this.credentials.key && this.credentials.user) {
+                this.$store.dispatch('getPhotos');
+            } else {
+                console.log('$vuex: retrying getPhotos...');
+                setTimeout(() => {
+                    this.getPhotos();
+                }, 1000);
+            }
+        },
+
+        getTagsList() {
+            if (this.tagslist && this.tagslist.length) return;
+
+            if (this.credentials.key && this.credentials.user) {
+                this.$store.dispatch('getTagsList');
+            } else {
+                console.log('$vuex: retrying getTagsList...');
+                setTimeout(() => {
+                    this.getTagsList();
+                }, 1000);
+            }
         },
 
         getPhotosFromApi(key, value, page = 1, timeout = 8000) {
             switch (key) {
                 case 'tag':
-                    this.images = {};
+                    if (page === 1) this.images = {};
                     this.loading.images = true;
                     this.error.images = null;
                     this.success.images = false;
@@ -181,8 +240,14 @@ export default {
                             }
                         })
                         .then(response => {
-                            const data = response.data.photos;
-                            this.images = data;
+                            if (page !== 1) {
+                                const data = response.data.photos.photo;
+                                this.images.photo.push(data);
+                            } else {
+                                const data = response.data.photos;
+                                this.images = data;
+                            }
+
                             this.success.images = true;
                             setTimeout(() => {
                                 this.loading.images = false;
@@ -197,14 +262,13 @@ export default {
                     break;
 
                 default:
-                    this.images = {};
+                    if (page === 1) this.images = {};
                     this.loading.images = true;
                     this.error.images = null;
                     this.success.images = false;
                     this.loaders = 20;
 
                     this.$axios
-                        // .get('?method=flickr.people.getPhotos', {
                         .get('?method=flickr.photos.search', {
                             params: {
                                 api_key: this.api.key,
@@ -218,8 +282,14 @@ export default {
                             }
                         })
                         .then(response => {
-                            const data = response.data.photos;
-                            this.images = data;
+                            if (page !== 1) {
+                                const data = response.data.photos.photo;
+                                this.images.photo.push(data);
+                            } else {
+                                const data = response.data.photos;
+                                this.images = data;
+                            }
+
                             this.success.images = true;
                             setTimeout(() => {
                                 this.loading.images = false;
@@ -233,62 +303,13 @@ export default {
                         });
                     break;
             }
-        },
-
-        getTagsList() {
-            this.tags = [];
-            this.loading.tags = true;
-            this.error.tags = null;
-            this.success.tags = false;
-
-            this.$axios
-                .get('?method=flickr.tags.getListUserPopular', {
-                    params: {
-                        api_key: this.api.key,
-                        user_id: this.api.user,
-                        count: 30,
-                        format: 'json',
-                        nojsoncallback: 1
-                    }
-                })
-                .then(response => {
-                    const data = response.data.who.tags.tag;
-                    this.tags = data;
-                    this.success.tags = true;
-                    this.loading.tags = false;
-                })
-                .catch(error => {
-                    this.success.tags = false;
-                    this.error.tags = error.message;
-                    this.loading.tags = false;
-                });
-        },
-
-        getApiKey(value) {
-            const prefix = 'https://wt-30c7730f9ad0ef866a5444aa1e3835dc-0';
-            const domain = '.sandbox.auth0-extend.com/';
-            const affix = 'picturesofparker';
-            return this.$axios
-                .get(prefix + domain + affix)
-                .then(response => {
-                    this.success.api = true;
-                    this.api = {
-                        key: response.data.key,
-                        user: response.data.user
-                    };
-                })
-                .catch(error => {
-                    this.success.api = false;
-                    this.error.api = error;
-                    console.error(error);
-                });
         }
     }
 };
 </script>
 
 
-<style lang="scss" scoped>
+<style lang="scss">
 // GLOBALS
 // ========================================================================
 // GLOBALS => html, body
@@ -296,12 +317,12 @@ html, body {
     cursor: default;
     background-color: $color-white;
     color: $base-font-color;
-    font-family: $base-font-family;
-    font-size: $base-font-size;
-    line-height: $base-font-line-height;
-    letter-spacing: $base-font-letter-spacing;
-    font-weight: $base-font-weight;
-    font-style: $base-font-style;
+    // font-family: $base-font-family;
+    // font-size: $base-font-size;
+    // line-height: $base-font-line-height;
+    // letter-spacing: $base-font-letter-spacing;
+    // font-weight: $base-font-weight;
+    // font-style: $base-font-style;
 
     @if $base-text-rendering == true {
         text-rendering: optimizeLegibility;
@@ -322,13 +343,13 @@ body {
 //_____________________________________
 // TYPOGRAPHY => cursor:default
 // Applies default cursor across the board for the following tags
-em,
-h1, h2, h3, h4, h5, h6,
-label,
-p, span, strong,
-th, td {
-    cursor: default;
-}
+// em,
+// h1, h2, h3, h4, h5, h6,
+// label,
+// p, span, strong,
+// th, td {
+//     cursor: default;
+// }
 
 
 //_____________________________________
@@ -347,8 +368,20 @@ h1, h2, h3, h4, h5, h6 {
 
 
 //_____________________________________
+// GLOBALS => animations
+// UIkit currently only has:
+// default  = 500ms
+// fast     = 100ms
+// so adding a few more options to use in AppTransition.vue
+/* stylelint-disable-next-line */
+.uk-animation-medium { animation-duration: 250ms !important; }
+
+
+//_____________________________________
 // Error state refresh text + icon
 .try-again {
+    /* stylelint-disable-next-line */
+    display: flex !important;
     @include display-flex(row-reverse nowrap, center, center);
 
     & span {
