@@ -85,6 +85,7 @@ import Offcanvas from '@/components/Offcanvas.vue';
 import Placeholder from '@/components/Placeholder.vue';
 import Section from '@/components/Section.vue';
 import SwipeModal from '@/components/SwipeModal.vue';
+// import InfiniteLoading from 'vue-infinite-loading';
 import api from '@/mixins/api.js';
 import { mapGetters } from 'vuex';
 
@@ -96,6 +97,7 @@ export default {
         ErrorMessage,
         Footer,
         Grid,
+        // InfiniteLoading,
         Navbar,
         Offcanvas,
         Placeholder,
@@ -105,30 +107,57 @@ export default {
 
     data() {
         return {
-            api: {
-                key: null,
-                user: null
-            },
             error: {
                 api: null,
                 images: null,
                 tags: null
             },
-            images: {},
             loaders: 20,
             override: false,
+            infinitepage: 1,
+            scroll: {
+                lastScrollTop: 0,
+                position: 0
+            },
             showOffcanvas: false
         };
     },
 
     created() {
-        // this.getApiKey();
         this.$store.dispatch('getApiCredentials');
     },
 
     mounted() {
+        window.addEventListener('scroll', this.handleScroll);
         this.getPhotos();
         this.getTagsList();
+    },
+
+    updated() {
+        if (this.credentials.key && this.credentials.user) {
+            if (this.loading.credentials === true)
+                this.$store.commit('updateLoadingState', 'credentials');
+            if (this.success.credentials === false)
+                this.$store.commit('updateSuccessState', 'credentials');
+
+            if (this.photos.photo && this.photos.photo.length) {
+                if (this.loading.api === true)
+                    this.$store.commit('updateLoadingState', 'api');
+                if (this.success.api === false)
+                    this.$store.commit('updateSuccessState', 'api');
+            }
+
+            if (this.tagslist && this.tagslist.length) {
+                if (this.loading.tags === true)
+                    this.$store.commit('updateLoadingState', 'tags');
+                if (this.success.tags === false)
+                    this.$store.commit('updateSuccessState', 'tags');
+            }
+        }
+    },
+
+    beforeDestroy() {
+        window.removeEventListener('scroll', this.handleScroll);
     },
 
     computed: {
@@ -139,61 +168,48 @@ export default {
             'photos',
             'success',
             'tagslist'
-        ]),
-
-        photoextras() {
-            return [
-                'description',
-                'date_upload',
-                'date_taken',
-                'sizes',
-                'tags',
-                'url_h', // Large 1600 (1600 x 900)
-                'url_l', // Large 1024 (1024 x 576)
-                'url_m', // Medium 500 (500 x 281)
-                'url_n', // Small 320 (320 x 180)
-                'url_o', // Original (3840 x 2160)
-                'url_q', // Square 150 (150 x 150)
-                'url_t', // Thumbnail (100 x 56)
-                'views'
-            ].toString();
-        }
+        ])
     },
 
     methods: {
-        pingApi() {
-            // grab photos from API,
-            // if not set in localStorage
-            setTimeout(() => {
-                if (this.api.key && this.api.user) {
-                    this.getPhotosFromApi();
-                    this.getTagsList();
-                } else {
-                    this.error = {
-                        api: 'Error obtaining API credentials',
-                        images: null,
-                        tags: null
-                    };
-                    this.loading = {
-                        images: false,
-                        tags: false
-                    };
-                    this.success = {
-                        api: false,
-                        images: false,
-                        tags: false
-                    };
+        // https://stackoverflow.com/a/55391752
+        // https://stackoverflow.com/a/31223774
+        handleScroll(e) {
+            this.scroll.position = e.target.documentElement.scrollTop;
+            const height = window.innerHeight + this.scroll.position;
+            const end = document.body.offsetHeight;
+
+            // https://github.com/qeremy/so/blob/master/so.dom.js#L426
+            var st = window.pageYOffset || document.documentElement.scrollTop;
+
+            // get photos array.length and total photo count
+            const length = this.photos.photo.length;
+            const total = this.photos.total;
+
+            if (st > this.scroll.lastScrollTop) {
+                // downscroll code
+                /**
+                 * @bug currently, the scroll is very sensitive and will
+                 * double load the query. gotta nip that shit.
+                 */
+                if ((height >= end) && (length <= total)) {
+                    this.$store.dispatch('updatePhotos', {
+                        'page': this.photos.page += 1
+                    });
                 }
-            }, 1200);
+            } else {
+                // upscroll code
+            }
+
+            // For Mobile or negative scrolling
+            this.scroll.lastScrollTop = st <= 0 ? 0 : st;
         },
 
         getPhotos() {
-            if (
-                this.photos && this.photos.length &&
-                this.photos.photo && this.photos.photo.length
-            ) return;
+            if (this.photos && this.photos.photo && this.photos.photo.length)
+                return;
 
-            if (this.credentials.key && this.credentials.user) {
+            if (this.credentials && this.credentials.key && this.credentials.user) {
                 this.$store.dispatch('getPhotos');
             } else {
                 console.log('$vuex: retrying getPhotos...');
@@ -204,7 +220,7 @@ export default {
         },
 
         getTagsList() {
-            if (this.tagslist && this.tagslist.length) return;
+            if (this.tagslist.data && this.tagslist.data.length) return;
 
             if (this.credentials.key && this.credentials.user) {
                 this.$store.dispatch('getTagsList');
@@ -213,95 +229,6 @@ export default {
                 setTimeout(() => {
                     this.getTagsList();
                 }, 1000);
-            }
-        },
-
-        getPhotosFromApi(key, value, page = 1, timeout = 8000) {
-            switch (key) {
-                case 'tag':
-                    if (page === 1) this.images = {};
-                    this.loading.images = true;
-                    this.error.images = null;
-                    this.success.images = false;
-                    this.loaders = Number(value.count);
-
-                    this.$axios
-                        .get('?method=flickr.photos.search', {
-                            params: {
-                                api_key: this.api.key,
-                                user_id: this.api.user,
-                                extras: this.photoextras,
-                                page: page,
-                                tags: value._content,
-                                sort: 'date-taken-desc',
-                                format: 'json',
-                                nojsoncallback: 1,
-                                timeout: timeout
-                            }
-                        })
-                        .then(response => {
-                            if (page !== 1) {
-                                const data = response.data.photos.photo;
-                                this.images.photo.push(data);
-                            } else {
-                                const data = response.data.photos;
-                                this.images = data;
-                            }
-
-                            this.success.images = true;
-                            setTimeout(() => {
-                                this.loading.images = false;
-                            }, 1200);
-                        })
-                        .catch(error => {
-                            this.error.images = error.message;
-                            this.success.images = false;
-                            this.loading.images = false;
-                            console.error(error);
-                        });
-                    break;
-
-                default:
-                    if (page === 1) this.images = {};
-                    this.loading.images = true;
-                    this.error.images = null;
-                    this.success.images = false;
-                    this.loaders = 20;
-
-                    this.$axios
-                        .get('?method=flickr.photos.search', {
-                            params: {
-                                api_key: this.api.key,
-                                user_id: this.api.user,
-                                extras: this.photoextras,
-                                page: page,
-                                sort: 'date-taken-desc',
-                                format: 'json',
-                                nojsoncallback: 1,
-                                timeout: timeout
-                            }
-                        })
-                        .then(response => {
-                            if (page !== 1) {
-                                const data = response.data.photos.photo;
-                                this.images.photo.push(data);
-                            } else {
-                                const data = response.data.photos;
-                                this.images = data;
-                            }
-
-                            this.success.images = true;
-                            setTimeout(() => {
-                                this.loading.images = false;
-                            }, 1200);
-                        })
-                        .catch(error => {
-                            this.error.images = error.message;
-                            this.success.images = false;
-                            this.loading.images = false;
-                            console.error(error);
-                        });
-                    break;
             }
         }
     }
