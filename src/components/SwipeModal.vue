@@ -2,7 +2,7 @@
     <vue-preview
     :slides="computedImages"
     @open="handleOpen($event)"
-    @close="handleClose"></vue-preview>
+    @close="handleClose" />
 </template>
 
 
@@ -12,9 +12,6 @@
  * @see [docs]{@link https://github.com/LS1231/vue-preview}
  * @see [masonry]{@link https://codepen.io/chriscoyier/pen/bOQqXv}
  */
-// const imagesLoaded = require('imagesloaded');
-// import imagesLoaded from 'imagesloaded';
-// const masonryEvents = ['load', 'resize'];
 import { format } from 'date-fns';
 export default {
     name: 'SwipeModal',

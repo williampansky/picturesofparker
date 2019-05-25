@@ -67,15 +67,13 @@ export default {
     },
 
     mutations: {
-        updatePhotos(state, data = {}) {
-            state.data = data;
-            // let prop;
-
-            // // Mutate state values individually
-            // for (prop in data) {
-            //     if (typeof state[prop] !== 'undefined')
-            //         state[prop] = data[prop];
-            // }
+        updatePhotosState(state, data = {}) {
+            if (state.data && state.data.photo && state.data.photo.length) {
+                state.data.photo.push(...data);
+                state.data.page += 1;
+            } else {
+                state.data = data;
+            }
         },
 
         updatePhotosError(state, error = {}) {
@@ -98,14 +96,15 @@ export default {
         /**
          * Async/await function for photo retrieval.
          * Doesn't query API again if already retrieved once.
-         * @method getApiCredentials
+         * @method getPhotos
          */
         async getPhotos(
             { commit, state, rootGetters },
             options,
             timeout = 8000
         ) {
-            if (state.length) return Promise.resolve(state);
+            if (state.data && state.data.photo && state.data.photo.length)
+                return Promise.resolve(state);
 
             try {
                 const response = await axios.get(
@@ -125,9 +124,49 @@ export default {
                         }
                     });
                 const data = response.data.photos;
-                commit('updatePhotos', data);
+                commit('updatePhotosState', data);
                 commit('updateLoadingState', 'api', { root: true });
                 commit('updateSuccessState', 'api', { root: true });
+                return data;
+            } catch (error) {
+                commit('updatePhotosError', error);
+                commit('updateErrorsState', 'api', { root: true });
+                Promise.reject(error);
+            }
+        },
+
+        /**
+         * Async/await function to update state.data.photo array.
+         * Doesn't query API again if already retrieved once.
+         * @method updatePhotos
+         */
+        async updatePhotos(
+            { commit, state, rootGetters },
+            options,
+            timeout = 8000
+        ) {
+            if (state.data && !state.data.photo && !state.data.photo.length)
+                return Promise.resolve(state);
+
+            try {
+                const response = await axios.get(
+                    getMethodString(), {
+                        params: {
+                            api_key: rootGetters.credentials.key,
+                            user_id: rootGetters.credentials.user,
+                            extras: options && options.extras
+                                ? options && options.extras : photoextras,
+                            page: options && options.page
+                                ? options && options.page : 1,
+                            sort: options && options.sort
+                                ? options && options.sort : 'date-taken-desc',
+                            format: 'json',
+                            nojsoncallback: 1,
+                            timeout: timeout
+                        }
+                    });
+                const data = response.data.photos.photo;
+                commit('updatePhotosState', data);
                 return data;
             } catch (error) {
                 commit('updatePhotosError', error);
