@@ -61,11 +61,11 @@ export default {
         error: {
             requestUrl: '',
             requestMethod: '',
-            statusCode: '',
+            statusCode: 0,
             status: ''
         },
         data: {},
-        requestCache: {}
+        // requestCache: {}
     },
 
     mutations: {
@@ -100,6 +100,14 @@ export default {
         //         });
         //     }
         // }
+
+        fixPageCount(state) {
+            setTimeout(() => {
+                if (state.data && state.data.page > state.data.pages)
+                    state.data.page = state.data.pages;
+                    // console.log(state.data.page, state.data.pages);
+            }, 1000);
+        }
     },
 
     getters: {
@@ -168,7 +176,7 @@ export default {
         ) {
             if (state.busy === true) return;
 
-            if (state.data.photo.length < state.data.total) {
+            if (state.data.photo && state.data.photo.length < state.data.total) {
                 commit('updatePhotoBusyState', true);
 
                 try {
@@ -181,7 +189,8 @@ export default {
                                     ? options && options.extras : photoextras,
                                 page: state.data.page += 1,
                                 sort: options && options.sort
-                                    ? options && options.sort : 'date-taken-desc',
+                                    ? options && options.sort
+                                    : 'date-taken-desc',
                                 format: 'json',
                                 nojsoncallback: 1,
                                 timeout: timeout
@@ -190,15 +199,16 @@ export default {
                     const data = response.data.photos.photo;
                     commit('updatePhotosState', data);
                     commit('updatePhotoBusyState', false);
-                    return data;
+                    // return data;
+                    Promise.resolve(state);
                 } catch (error) {
                     commit('updatePhotosError', error);
                     commit('updateErrorsState', 'api', { root: true });
                     commit('updatePhotoBusyState', false);
                     Promise.reject(error);
                 }
-            } else {
-                console.log('nope... ');
+
+                commit('fixPageCount');
             }
         }
     }
