@@ -119,7 +119,8 @@ export default {
                 lastScrollTop: 0,
                 position: 0
             },
-            showOffcanvas: false
+            showOffcanvas: false,
+            updateFired: false
         };
     },
 
@@ -177,25 +178,22 @@ export default {
         handleScroll(e) {
             this.scroll.position = e.target.documentElement.scrollTop;
             const height = window.innerHeight + this.scroll.position;
-            const end = document.body.offsetHeight;
+            const end = document.body.offsetHeight - 1000;
 
             // https://github.com/qeremy/so/blob/master/so.dom.js#L426
             var st = window.pageYOffset || document.documentElement.scrollTop;
 
-            // get photos array.length and total photo count
-            const length = this.photos.photo.length;
-            const total = this.photos.total;
-
-            if (st > this.scroll.lastScrollTop) {
+            if (st > this.scroll.lastScrollTop && this.updateFired === false) {
                 // downscroll code
-                /**
-                 * @bug currently, the scroll is very sensitive and will
-                 * double load the query. gotta nip that shit.
-                 */
-                if ((height >= end) && (length <= total)) {
-                    this.$store.dispatch('updatePhotos', {
-                        'page': this.photos.page += 1
+                if (height >= end) {
+                    this.updateFired = true;
+                    this.$nextTick(() => {
+                        this.$emit('dispatch(updatePhotos)');
+                        this.$store.dispatch('updatePhotos');
                     });
+                    setTimeout(() => {
+                        this.updateFired = false;
+                    }, 5000);
                 }
             } else {
                 // upscroll code
@@ -210,9 +208,9 @@ export default {
                 return;
 
             if (this.credentials && this.credentials.key && this.credentials.user) {
+                this.$emit('dispatch(getPhotos)');
                 this.$store.dispatch('getPhotos');
             } else {
-                console.log('$vuex: retrying getPhotos...');
                 setTimeout(() => {
                     this.getPhotos();
                 }, 1000);
@@ -223,9 +221,9 @@ export default {
             if (this.tagslist.data && this.tagslist.data.length) return;
 
             if (this.credentials.key && this.credentials.user) {
+                this.$emit('dispatch(getTagsList)');
                 this.$store.dispatch('getTagsList');
             } else {
-                console.log('$vuex: retrying getTagsList...');
                 setTimeout(() => {
                     this.getTagsList();
                 }, 1000);

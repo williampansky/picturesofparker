@@ -281,7 +281,8 @@ export default {
         }
 
         @include breakpoint('small') {
-            @include display-flex(row nowrap, flex-end, space-between);
+            justify-content: space-between;
+
             .caption-left + .caption-right {
                 border-top: 0;
                 margin-top: 0;
