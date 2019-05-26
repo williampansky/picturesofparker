@@ -57,13 +57,15 @@ const getMethodString = key => {
 
 export default {
     state: {
+        busy: false,
         error: {
             requestUrl: '',
             requestMethod: '',
             statusCode: '',
             status: ''
         },
-        data: {}
+        data: {},
+        requestCache: {}
     },
 
     mutations: {
@@ -83,7 +85,21 @@ export default {
                 statusCode: error.statusCode,
                 status: error.status
             };
-        }
+        },
+
+        updatePhotoBusyState(state, boolean) {
+            state.busy = boolean;
+        },
+
+        // LoadDataFromApi(state, apiUrl) {
+        //     if (!state.requestCache[apiUrl]) {
+        //         state.requestCache[apiUrl] = $.ajax({
+        //             type: 'GET',
+        //             url: apiUrl,
+        //             dataType: "json"
+        //         });
+        //     }
+        // }
     },
 
     getters: {
@@ -106,6 +122,9 @@ export default {
             if (state.data && state.data.photo && state.data.photo.length)
                 return Promise.resolve(state);
 
+            if (state.busy === true) return;
+            commit('updatePhotoBusyState', true);
+
             try {
                 const response = await axios.get(
                     getMethodString(), {
@@ -127,10 +146,12 @@ export default {
                 commit('updatePhotosState', data);
                 commit('updateLoadingState', 'api', { root: true });
                 commit('updateSuccessState', 'api', { root: true });
+                commit('updatePhotoBusyState', false);
                 return data;
             } catch (error) {
                 commit('updatePhotosError', error);
                 commit('updateErrorsState', 'api', { root: true });
+                commit('updatePhotoBusyState', false);
                 Promise.reject(error);
             }
         },
@@ -145,33 +166,39 @@ export default {
             options,
             timeout = 8000
         ) {
-            if (state.data && !state.data.photo && !state.data.photo.length)
-                return Promise.resolve(state);
+            if (state.busy === true) return;
 
-            try {
-                const response = await axios.get(
-                    getMethodString(), {
-                        params: {
-                            api_key: rootGetters.credentials.key,
-                            user_id: rootGetters.credentials.user,
-                            extras: options && options.extras
-                                ? options && options.extras : photoextras,
-                            page: options && options.page
-                                ? options && options.page : 1,
-                            sort: options && options.sort
-                                ? options && options.sort : 'date-taken-desc',
-                            format: 'json',
-                            nojsoncallback: 1,
-                            timeout: timeout
-                        }
-                    });
-                const data = response.data.photos.photo;
-                commit('updatePhotosState', data);
-                return data;
-            } catch (error) {
-                commit('updatePhotosError', error);
-                commit('updateErrorsState', 'api', { root: true });
-                Promise.reject(error);
+            if (state.data.photo.length < state.data.total) {
+                commit('updatePhotoBusyState', true);
+
+                try {
+                    const response = await axios.get(
+                        getMethodString(), {
+                            params: {
+                                api_key: rootGetters.credentials.key,
+                                user_id: rootGetters.credentials.user,
+                                extras: options && options.extras
+                                    ? options && options.extras : photoextras,
+                                page: state.data.page += 1,
+                                sort: options && options.sort
+                                    ? options && options.sort : 'date-taken-desc',
+                                format: 'json',
+                                nojsoncallback: 1,
+                                timeout: timeout
+                            }
+                        });
+                    const data = response.data.photos.photo;
+                    commit('updatePhotosState', data);
+                    commit('updatePhotoBusyState', false);
+                    return data;
+                } catch (error) {
+                    commit('updatePhotosError', error);
+                    commit('updateErrorsState', 'api', { root: true });
+                    commit('updatePhotoBusyState', false);
+                    Promise.reject(error);
+                }
+            } else {
+                console.log('nope... ');
             }
         }
     }

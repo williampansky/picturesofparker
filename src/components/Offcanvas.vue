@@ -53,7 +53,7 @@
                     :key="idx">
                         <a
                         v-if="cloud"
-                        :style="`animation-delay: ${idx}00ms;
+                        :style="`animation-delay: ${idx * 0.0425}s;
                         font-size: calc(0.675em + ${tag.count}px);`"
                         :class="tag.count >= 25 ? 'max-font-size' : ''"
                         href="#"
