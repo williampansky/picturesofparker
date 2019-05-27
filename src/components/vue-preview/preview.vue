@@ -17,6 +17,7 @@
             :key="index"
             :data-pswp-index="index"
             :data-pswp-pid="item.pid"
+            :data-web-url="item.webUrl"
             itemscope
             class="grid-item"
             itemprop="associatedMedia"
@@ -31,6 +32,10 @@
                     :alt="item.alt"
                     itemprop="thumbnail"
                     class="grid-item-image" />
+                    <meta
+                    :content="item.webUrl"
+                    name="contentUrl"
+                    itemprop="contentUrl">
                 </a>
                 <figcaption
                 style="display: none;"

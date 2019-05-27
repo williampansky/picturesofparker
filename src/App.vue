@@ -17,7 +17,9 @@
         </Section>
 
         <Section v-if="!loading.api && success.api">
-            <SwipeModal :images="photos.photo" />
+            <SwipeModal
+            :images="photos.photo"
+            :credentials="credentials" />
         </Section>
 
         <Section v-else-if="errors.api">
