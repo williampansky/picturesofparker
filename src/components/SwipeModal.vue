@@ -20,13 +20,11 @@ export default {
         images: {
             type: Array,
             default: () => ([])
+        },
+        credentials: {
+            type: Object,
+            default: () => ({})
         }
-    },
-
-    data() {
-        return {
-            modal: {}
-        };
     },
 
     computed: {
@@ -81,9 +79,6 @@ export default {
                         ? img.description._content
                         : 'A picture of Parker.',
                     dateupload: img.dateupload,
-                    dateTakenString: this.parseDateTaken(
-                        img.datetaken, img.datetakengranularity
-                    ),
                     datetaken: this.formatDate(img.datetaken),
                     datetakengranularity: img.datetakengranularity,
                     datetakenunknown: img.datetakenunknown,
@@ -120,7 +115,17 @@ export default {
                     url_t: img.url_t,
                     height_t: Number(img.height_t),
                     width_t: Number(img.width_t),
-                    sizes: img.sizes
+                    sizes: img.sizes,
+
+                    /**
+                     * Custom key/value pairs
+                     */
+                    // dateTaken in human-readable string format
+                    dateTakenString: this.parseDateTaken(
+                        img.datetaken, img.datetakengranularity
+                    ),
+                    // webpage url direct link
+                    webUrl: this.buildWebUrl(img.id)
                 };
             });
         }
@@ -210,6 +215,20 @@ export default {
          */
         formatDate(date, formatter = 'MMMM DD, YYYY HH:mmA') {
             return format(date, formatter);
+        },
+
+        /**
+         * Builds direct link to image on flickr.com site; e.g:
+         * https://www.flickr.com/photos/{user-id}/{photo-id} to
+         * https://www.flickr.com/photos/165794294@N08/46958736805
+         * @method buildWebUrl
+         * @param {String} id Id of photo to link to
+         * @see [urls]{@link https://www.flickr.com/services/api/misc.urls.html}
+         */
+        buildWebUrl(id) {
+            const domain = 'https://www.flickr.com/photos';
+            const userId = this.credentials.user;
+            return domain + '/' + userId + '/' + id;
         }
     }
 };
