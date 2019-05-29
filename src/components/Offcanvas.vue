@@ -42,7 +42,7 @@
                 uk-toggle="#offcanvas"
                 class="link uk-animation-fade"
                 @click.prevent="$emit('photos-clicked')">
-                    <span>All Photos ({{ photos.total }})</span>
+                    <span>All Photos</span>
                 </a></li>
                 <li class="uk-nav-header">Tags</li>
                 <ul

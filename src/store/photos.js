@@ -36,6 +36,7 @@ const photoextras = [
     'url_n', // Small 320 (320 x 180)
     'url_o', // Original (3840 x 2160)
     'url_q', // Square 150 (150 x 150)
+    'url_s', // Small 240 (240 x 135)
     'url_t', // Thumbnail (100 x 56)
     'views'
 ].toString();
@@ -58,14 +59,13 @@ const getMethodString = key => {
 export default {
     state: {
         busy: false,
+        data: {},
         error: {
             requestUrl: '',
             requestMethod: '',
             statusCode: 0,
             status: ''
-        },
-        data: {},
-        // requestCache: {}
+        }
     },
 
     mutations: {
@@ -91,21 +91,14 @@ export default {
             state.busy = boolean;
         },
 
-        // LoadDataFromApi(state, apiUrl) {
-        //     if (!state.requestCache[apiUrl]) {
-        //         state.requestCache[apiUrl] = $.ajax({
-        //             type: 'GET',
-        //             url: apiUrl,
-        //             dataType: "json"
-        //         });
-        //     }
-        // }
+        clearPhotosState(state, data = {}) {
+            state.data = data;
+        },
 
         fixPageCount(state) {
             setTimeout(() => {
                 if (state.data && state.data.page > state.data.pages)
                     state.data.page = state.data.pages;
-                    // console.log(state.data.page, state.data.pages);
             }, 1000);
         }
     },
@@ -127,8 +120,19 @@ export default {
             options,
             timeout = 8000
         ) {
-            if (state.data && state.data.photo && state.data.photo.length)
-                return Promise.resolve(state);
+            if (options && options.tag)
+                commit('updateLoadingState', 'api', { root: true });
+
+            if (rootGetters.loading.api === false)
+                commit('updateLoadingState', 'api', { root: true });
+
+            commit('clearPhotosState', {});
+
+            if (state.data &&
+                state.data.photo &&
+                state.data.photo.length &&
+                (!options && !options.tag)
+            ) return Promise.resolve(state);
 
             if (state.busy === true) return;
             commit('updatePhotoBusyState', true);
@@ -145,6 +149,8 @@ export default {
                                 ? options && options.page : 1,
                             sort: options && options.sort
                                 ? options && options.sort : 'date-taken-desc',
+                            tags: options && options.tag
+                                ? options.tag : null,
                             format: 'json',
                             nojsoncallback: 1,
                             timeout: timeout
@@ -210,6 +216,57 @@ export default {
 
                 commit('fixPageCount');
             }
-        }
+        },
+
+        async getTaggedPhotos(
+            { commit, state, rootGetters },
+            options,
+            timeout = 8000
+        ) {
+            if (state.data &&
+                state.data.photo &&
+                state.data.photo.length
+            ) return Promise.resolve(state);
+
+            if (state.busy === true) return;
+            commit('updatePhotoBusyState', true);
+
+            if (options && options.tag) {
+                commit('updateLoadingState', 'api', { root: true });
+                commit('clearPhotosState');
+            }
+
+            try {
+                const response = await axios.get(
+                    getMethodString(options && options.tag ? 'tags' : ''), {
+                        params: {
+                            api_key: rootGetters.credentials.key,
+                            user_id: rootGetters.credentials.user,
+                            extras: options && options.extras
+                                ? options && options.extras : photoextras,
+                            page: options && options.page
+                                ? options && options.page : 1,
+                            sort: options && options.sort
+                                ? options && options.sort : 'date-taken-desc',
+                            tag: options && options.tag
+                                ? options && options.tag : '',
+                            format: 'json',
+                            nojsoncallback: 1,
+                            timeout: timeout
+                        }
+                    });
+                const data = response.data.photos;
+                commit('updatePhotosState', data);
+                commit('updateLoadingState', 'api', { root: true });
+                commit('updateSuccessState', 'api', { root: true });
+                commit('updatePhotoBusyState', false);
+                return data;
+            } catch (error) {
+                commit('updatePhotosError', error);
+                commit('updateErrorsState', 'api', { root: true });
+                commit('updatePhotoBusyState', false);
+                Promise.reject(error);
+            }
+        },
     }
 };
