@@ -41,7 +41,7 @@
                 href="#"
                 uk-icon="icon: refresh;"
                 class="try-again uk-icon"
-                @click.prevent="getPhotosFromApi()">
+                @click.prevent="getPhotos()">
                     <span>Please try again.</span>
                 </a></p>
             </Container>
@@ -54,7 +54,7 @@
                 href="#"
                 uk-icon="icon: refresh;"
                 class="try-again uk-icon"
-                @click.prevent="getPhotosFromApi()">
+                @click.prevent="getPhotos()">
                     <span>Please try again.</span>
                 </a></p>
             </Container>
@@ -67,8 +67,8 @@
         :loading="loading.tags"
         :photos="photos"
         :tags="tagslist"
-        @photos-clicked="getPhotosFromApi()"
-        @tag-clicked="getPhotosFromApi('tag', $event)" />
+        @photos-clicked="getPhotos()"
+        @tag-clicked="getTaggedPhotos($event)" />
     </main>
 </template>
 
@@ -87,7 +87,6 @@ import Offcanvas from '@/components/Offcanvas.vue';
 import Placeholder from '@/components/Placeholder.vue';
 import Section from '@/components/Section.vue';
 import SwipeModal from '@/components/SwipeModal.vue';
-// import InfiniteLoading from 'vue-infinite-loading';
 import api from '@/mixins/api.js';
 import { mapGetters } from 'vuex';
 
@@ -99,7 +98,6 @@ export default {
         ErrorMessage,
         Footer,
         Grid,
-        // InfiniteLoading,
         Navbar,
         Offcanvas,
         Placeholder,
@@ -206,8 +204,9 @@ export default {
         },
 
         getPhotos() {
-            if (this.photos && this.photos.photo && this.photos.photo.length)
-                return;
+            // if (this.photos && this.photos.photo && this.photos.photo.length)
+            //     return;
+            this.loaders = 20;
 
             if (this.credentials && this.credentials.key && this.credentials.user) {
                 this.$emit('dispatch(getPhotos)');
@@ -215,6 +214,18 @@ export default {
             } else {
                 setTimeout(() => {
                     this.getPhotos();
+                }, 1000);
+            }
+        },
+
+        getTaggedPhotos(event) {
+            this.loaders = Number(event.count);
+            if (this.credentials && this.credentials.key && this.credentials.user) {
+                this.$emit(`dispatch(getPhotos, {tag: ${event._content}})`);
+                this.$store.dispatch('getPhotos', { 'tag': event._content });
+            } else {
+                setTimeout(() => {
+                    this.getTaggedPhotos(event);
                 }, 1000);
             }
         },

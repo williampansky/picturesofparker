@@ -111,6 +111,10 @@ export default {
                     url_q: img.url_q,
                     height_q: Number(img.height_q),
                     width_q: Number(img.width_q),
+                    // size => Small 240 (240 x 135)
+                    url_s: img.url_s,
+                    height_s: Number(img.height_s),
+                    width_s: Number(img.width_s),
                     // size => Thumbnail (100 x 56)
                     url_t: img.url_t,
                     height_t: Number(img.height_t),
@@ -137,7 +141,6 @@ export default {
 
         /**
          * Parses string param & returns url sizing.
-         * @method parseSrc
          * @param {Object} img Image object
          */
         parseSrc(img) {
@@ -149,19 +152,17 @@ export default {
          * Parses string param & returns url sizing for mobile devices;
          * first checks original size url and returns that if it's a gif.
          * This allows gifs to play during the grid/gallery view.
-         * @method parseMsrc
          * @param {Object} img Image object
          */
         parseMsrc(img) {
             // check if url_o is a gif, if true - return gif
             if (img.url_o.match(/(gif)/g)) return img.url_o;
-            else if (img.url_m) return img.url_m; // Medium 500 (500 x 281)
+            else if (img.url_n) return img.url_n; // Small 320 (320 x 180)
             else return img.url_t; // Thumbnail (100 x 56)
         },
 
         /**
          * Parses string param & returns it kebab-cased.
-         * @method parseTitle
          * @param {String} string String to parse
          * @see [StackOverflow]{@link https://stackoverflow.com/a/1983661}
          */
@@ -171,7 +172,6 @@ export default {
 
         /**
          * Parses string param & returns it with commas.
-         * @method parseTags
          * @param {String} string String to parse
          * @see [StackOverflow]{@link https://stackoverflow.com/a/1983661}
          */
@@ -190,7 +190,6 @@ export default {
          * 4 — Y-m          (returns "May, 2019")
          * 6 — Y            (returns "Sometime in 2019")
          * 8 — Circa...     (returns "Circa 2019")
-         * @method parseDateTaken
          * @param {String} date String to parse & format
          * @param {Number} granularity Accuracy of date
          * @see [format]{@link https://date-fns.org/v1.30.1/docs/format}
@@ -208,7 +207,6 @@ export default {
         /**
          * Formats the date param with a default,
          * optionally overriden, formatter param.
-         * @method parseDateTaken
          * @param {String} date String to parse & format
          * @param {String} formatter Date format per date-fns
          * @see [format]{@link https://date-fns.org/v1.30.1/docs/format}
@@ -221,7 +219,6 @@ export default {
          * Builds direct link to image on flickr.com site; e.g:
          * https://www.flickr.com/photos/{user-id}/{photo-id} to
          * https://www.flickr.com/photos/165794294@N08/46958736805
-         * @method buildWebUrl
          * @param {String} id Id of photo to link to
          * @see [urls]{@link https://www.flickr.com/services/api/misc.urls.html}
          */
