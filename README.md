@@ -1,4 +1,5 @@
 # picturesofparker
+[![Netlify Status](https://api.netlify.com/api/v1/badges/dcc955cf-3ce3-400e-ab39-c3fc16c17601/deploy-status)](https://app.netlify.com/sites/upbeat-cori-45e8c5/deploys)
 
            __.                                              
         .-".'                      .--.            _..._    

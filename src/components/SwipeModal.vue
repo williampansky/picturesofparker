@@ -13,9 +13,10 @@
  * @see [masonry]{@link https://codepen.io/chriscoyier/pen/bOQqXv}
  */
 import { format } from 'date-fns';
+import connection from '@/mixins/connection.js';
 export default {
     name: 'SwipeModal',
-
+    mixins: [connection],
     props: {
         images: {
             type: Array,
@@ -144,8 +145,13 @@ export default {
          * @param {Object} img Image object
          */
         parseSrc(img) {
-            // return Large 1600 (1600 x 900) or Original (3840 x 2160)
-            return img.url_h ? img.url_h : img.url_o;
+            if (this.connection.effectiveType === '4g') {
+                // return original image if user is on wifi/4g
+                return img.url_o;
+            } else {
+                // return Large 1600 (1600 x 900) or Original (3840 x 2160)
+                return img.url_h ? img.url_h : img.url_o;
+            }
         },
 
         /**
