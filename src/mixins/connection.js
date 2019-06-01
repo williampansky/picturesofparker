@@ -1,3 +1,11 @@
+/**
+ * Uses the Network Information API to return information regarding
+ * a users connection type; such as 4g/3g speeds or cell/wifi type.
+ *
+ * @mixin connection
+ * @see [MDN]{@link https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API}
+ * @see [caniuse]{@link https://caniuse.com/#feat=netinfo}
+ */
 export default {
     name: 'connection',
     created() {
@@ -12,12 +20,11 @@ export default {
     },
     computed: {
         connection() {
-            const connection = navigator.connection ||
-                navigator.mozConnection ||
-                navigator.webkitConnection;
-            return connection;
+            return navigator.connection ||
+            navigator.mozConnection ||
+            navigator.webkitConnection;
         },
-        type() {
+        connectionFrom() {
             return this.connection.effectiveType;
         }
     },
@@ -25,7 +32,7 @@ export default {
         updateConnectionStatus() {
             console.log(
                 'Connection type changed from ' +
-                `${this.type} to ${this.connection.effectiveType}`
+                `${this.connectionFrom} to ${this.connection.effectiveType}`
             );
         }
     }
