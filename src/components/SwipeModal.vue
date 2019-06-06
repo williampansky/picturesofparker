@@ -49,20 +49,14 @@ export default {
                         ? img.description._content
                         : 'A picture of Parker.',
                     // return title string or default
-                    title: img.title
-                        ? img.title
-                        : 'A picture of Parker.',
-                    // return Large 1600 height or Original height
-                    h: img.height_h
-                        ? Number(img.height_h)
-                        : Number(img.height_o),
-                    // return Large 1600 width or Original width
-                    w: img.width_h
-                        ? Number(img.width_h)
-                        : Number(img.width_o),
+                    title: this.parseTitle(img.title),
+                    // return height depending on connection
+                    h: this.parseImageDimensions('height', img),
+                    // return width depending on connection
+                    w: this.parseImageDimensions('width', img),
                     // return kebab-cased title or img.id
                     pid: img.title
-                        ? this.parseTitle(img.title)
+                        ? this.convertTitleToPID(img.title)
                         : img.id,
 
                     /**
@@ -141,7 +135,7 @@ export default {
         handleOpen(payload) { this.modal = payload; },
 
         /**
-         * Parses string param & returns url sizing.
+         * Parses param & returns url string depending on connection.
          * @param {Object} img Image object
          */
         parseSrc(img) {
@@ -165,6 +159,44 @@ export default {
         },
 
         /**
+         * Parses img object param & returns dimensions depending on the key.
+         * @param {String} key Switch key for height or width
+         * @param {Object} img Image object
+         */
+        parseImageDimensions(key, img) {
+            const connection = this.connection;
+            const type = this.connection.type;
+            const effType = this.connection.effectiveType;
+            const saveData = connection.saveData;
+
+            if (connection && (type === 'wifi' || effType === '4g')
+            ) {
+                // return original image if user is on wifi
+                switch (key) {
+                    case 'height': return img.height_o;
+                    case 'width': return img.width_o;
+                }
+            } else if (connection && saveData) {
+                // if user's device has saveData on (true), return the
+                // Large 1024 (1024 x 576) or Original (3840 x 2160)
+                switch (key) {
+                    case 'height':
+                        return img.height_l ? img.height_l : img.height_o;
+                    case 'width':
+                        return img.width_l ? img.width_l : img.width_o;
+                }
+            } else {
+                // return Large 1600 (1600 x 900) or Original (3840 x 2160)
+                switch (key) {
+                    case 'height':
+                        return img.height_h ? img.height_h : img.height_o;
+                    case 'width':
+                        return img.width_h ? img.width_h : img.width_o;
+                }
+            }
+        },
+
+        /**
          * Parses string param & returns url sizing for mobile devices;
          * first checks original size url and returns that if it's a gif.
          * This allows gifs to play during the grid/gallery view.
@@ -178,11 +210,22 @@ export default {
         },
 
         /**
-         * Parses string param & returns it kebab-cased.
+         * If the string doesn't match a generated title, e.g. IMG_1234,
+         * then return the string; else return the default.
+         * @param {String} string String to parse
+         */
+        parseTitle(string) {
+            const isGeneratedTitle = string.match(/((img_)|(download_))\w+/gi);
+            if (!isGeneratedTitle) return string;
+            else return 'A picture of Parker.';
+        },
+
+        /**
+         * Parses string param & returns it kebab-cased for id use.
          * @param {String} string String to parse
          * @see [StackOverflow]{@link https://stackoverflow.com/a/1983661}
          */
-        parseTitle(string) {
+        convertTitleToPID(string) {
             return string.replace(/\W+/g, '-').toLowerCase();
         },
 
