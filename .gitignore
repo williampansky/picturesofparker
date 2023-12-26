@@ -1,72 +1,24 @@
-# ====================================================
-# macOS stuff
-.DS_Store
-
-
-# ====================================================
-# NPM packages; with additional sub-directory check via **/* for /ui dir
-node_modules
-**/*/node_modules
-
-
-# ====================================================
-# Although we don't want compiled files managed in version control, it is
-# necessary for now and could change depending on the deployment process.
-# /dist
-src/auth
-
-
-# ====================================================
-# Map files; only needed for local development sourcemaps
-*.map
-
-
-# ====================================================
-# Cypress-generated captures
-/tests/e2e/videos/
-/tests/e2e/screenshots/
-
-
-# ====================================================
-# local env files
-.env.local
-.env.*.local
-
-
-# ====================================================
-# Log files
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
+node_modules
+dist
+dist-ssr
+*.local
 
-# ====================================================
 # Editor directories and files
+.vscode/*
+!.vscode/extensions.json
 .idea
+.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw*
-!*.swagger*
-
-# ====================================================
-# Composer lock and hash files need to be re-generated based on
-# composer.json (to avoid pushing hashes)
-* /tests/coverage/*
-* /lib/vendor/autoload.php
-/lib/vendor
-/lib/composer.lock
-
-# ====================================================
-# Local symlink folders
-ui/uikit
-ui/jsdoc
-ui/jsdoc/jsdoc
-ui/jsdoc/jsdoc-api
-ui/jsdoc/jsdoc-vue-component
-
-# ====================================================
-# Local Environment Variables
-ui/*.env.local
-ui/*.env.development.local
+*.sw?
