@@ -9,14 +9,18 @@
 export default {
     name: 'connection',
     created() {
-        this.connection.addEventListener(
-            'change', this.updateConnectionStatus
-        );
+        if (this.connection) {
+            this.connection.addEventListener(
+                'change', this.updateConnectionStatus
+            );
+        }
     },
     beforeDestroy() {
-        this.connection.removeEventListener(
-            'change', this.updateConnectionStatus
-        );
+        if (this.connection) {
+            this.connection.removeEventListener(
+                'change', this.updateConnectionStatus
+            );
+        }
     },
     computed: {
         connection() {
