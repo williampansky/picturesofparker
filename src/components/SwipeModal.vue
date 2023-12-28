@@ -140,12 +140,11 @@ export default {
          */
         parseSrc(img) {
             const connection = this.connection;
-            const type = this.connection.type;
-            const effType = this.connection.effectiveType;
-            const saveData = connection.saveData;
+            const type = connection && connection.type;
+            const effType = connection && connection.effectiveType;
+            const saveData = connection && connection.saveData;
 
-            if (connection && (type === 'wifi' || effType === '4g')
-            ) {
+            if (connection && (type === 'wifi' || effType === '4g')) {
                 // return original image if user is on wifi
                 return img.url_o;
             } else if (connection && saveData) {
